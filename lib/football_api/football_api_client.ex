@@ -1,4 +1,4 @@
-defmodule FootballRatings.FootballAPI do
+defmodule FootballRatings.FootballAPIClient do
   use HTTPoison.Base
 
   @endpoint "https://v3.football.api-sports.io"
