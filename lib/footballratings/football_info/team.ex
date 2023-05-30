@@ -1,8 +1,8 @@
-defmodule FootballApi.Teams.Team do
+defmodule Footballratings.FootballInfo.Team do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias FootballApi.Teams.Player
+  alias Footballratings.FootballInfo.Player
 
   schema "teams" do
     field :code, :string

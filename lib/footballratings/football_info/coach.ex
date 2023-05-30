@@ -1,10 +1,10 @@
-defmodule FootballApi.Teams.Player do
+defmodule Footballratings.FootballInfo.Coach do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias FootballApi.Teams.Team
+  alias Footballratings.FootballInfo.Team
 
-  schema "players" do
+  schema "coaches" do
     field :name, :string
     field :firstname, :string
     field :lastname, :string
@@ -16,8 +16,8 @@ defmodule FootballApi.Teams.Player do
     belongs_to :team, Team
   end
 
-  def changeset(player, attrs) do
-    player
+  def changeset(coach, attrs) do
+    coach
     |> cast(attrs, [:name, :firstname, :lastname, :age, :photo, :id, :team_id])
     |> validate_required([:name, :id, :team_id])
     |> unique_constraint(:id)
