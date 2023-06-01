@@ -8,7 +8,6 @@ defmodule Footballratings.FootballInfo.Team do
     field :code, :string
     field :country, :string
     field :founded, :integer
-    field :logo, :string
     field :name, :string
     field :national, :boolean
 
@@ -19,8 +18,8 @@ defmodule Footballratings.FootballInfo.Team do
 
   def changeset(team, attrs) do
     team
-    |> cast(attrs, [:code, :country, :founded, :logo, :name, :national, :id])
-    |> validate_required([:code, :country, :founded, :logo, :name, :national, :id])
+    |> cast(attrs, [:code, :country, :founded, :name, :national, :id])
+    |> validate_required([:code, :country, :founded, :name, :national, :id])
     |> unique_constraint(:id)
   end
 end

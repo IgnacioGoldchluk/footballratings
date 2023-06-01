@@ -9,7 +9,6 @@ defmodule Footballratings.FootballInfo.Coach do
     field :firstname, :string
     field :lastname, :string
     field :age, :integer
-    field :photo, :string
 
     timestamps()
 
@@ -18,7 +17,7 @@ defmodule Footballratings.FootballInfo.Coach do
 
   def changeset(coach, attrs) do
     coach
-    |> cast(attrs, [:name, :firstname, :lastname, :age, :photo, :id, :team_id])
+    |> cast(attrs, [:name, :firstname, :lastname, :age, :id, :team_id])
     |> validate_required([:name, :id, :team_id])
     |> unique_constraint(:id)
   end
