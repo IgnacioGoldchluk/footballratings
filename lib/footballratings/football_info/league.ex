@@ -4,6 +4,8 @@ defmodule Footballratings.FootballInfo.League do
 
   schema "leagues" do
     field :name, :string
+
+    timestamps()
   end
 
   def changeset(league, attrs) do
