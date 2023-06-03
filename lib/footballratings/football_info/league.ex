@@ -3,14 +3,15 @@ defmodule Footballratings.FootballInfo.League do
   import Ecto.Changeset
 
   schema "leagues" do
-    field :name, :string
+    field(:name, :string)
+    field(:season, :integer)
 
     timestamps()
   end
 
   def changeset(league, attrs) do
     league
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, [:name, :season, :id])
+    |> validate_required([:season, :id])
   end
 end
