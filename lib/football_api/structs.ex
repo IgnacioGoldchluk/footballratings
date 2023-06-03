@@ -1,7 +1,7 @@
 defmodule FootballApi.Structs do
   alias FootballApi.Models
 
-  def match_struct() do
+  def match() do
     %Models.Response{
       response: [
         %Models.Match{
@@ -14,6 +14,19 @@ defmodule FootballApi.Structs do
           },
           teams: %Models.Teams{away: %Models.Team{}, home: %Models.Team{}},
           league: %Models.League{}
+        }
+      ]
+    }
+  end
+
+  def lineups() do
+    %Models.Response{
+      response: [
+        %Models.Lineup{
+          coach: %Models.CoachLineup{},
+          startXI: [%Models.PlayerLineup{player: %Models.PlayerIdLineup{}}],
+          substitutes: [%Models.PlayerLineup{player: %Models.PlayerIdLineup{}}],
+          team: %Models.Team{}
         }
       ]
     }

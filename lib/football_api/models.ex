@@ -34,4 +34,20 @@ defmodule FootballApi.Models do
   defmodule League do
     defstruct [:id, :season, :round]
   end
+
+  defmodule Lineup do
+    defstruct [:coach, :startXI, :substitutes, :team]
+  end
+
+  defmodule CoachLineup do
+    defstruct [:id]
+  end
+
+  defmodule PlayerLineup do
+    defstruct [:player]
+  end
+
+  defmodule PlayerIdLineup do
+    defstruct [:id]
+  end
 end
