@@ -17,9 +17,10 @@ defmodule Footballratings.Application do
       # Start Finch
       {Finch, name: Footballratings.Finch},
       # Start the Endpoint (http/https)
-      FootballratingsWeb.Endpoint
+      FootballratingsWeb.Endpoint,
       # Start a worker by calling: Footballratings.Worker.start_link(arg)
       # {Footballratings.Worker, arg}
+      {Oban, Application.fetch_env!(:footballratings, Oban)}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -51,6 +51,7 @@ defmodule Footballratings.MixProject do
       {:jason, "~> 1.2"},
       {:httpoison, "~> 2.0"},
       {:poison, "~> 5.0"},
+      {:oban, "~> 2.14"},
       {:plug_cowboy, "~> 2.5"}
     ]
   end
