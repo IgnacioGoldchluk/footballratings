@@ -8,9 +8,7 @@ defmodule FootballApi do
   def matches(league, season, from, to) do
     url_query_params = %{"league" => league, "season" => season, "from" => from, "to" => to}
     {:ok, response} = FootballApiClient.get("/fixtures", [], params: url_query_params)
-    {:ok, response} = Poison.decode(response.body, as: Models.Matches.Struct.match())
-
-    response
+    Poison.decode(response.body, as: Models.Matches.Struct.match())
   end
 
   @doc """
@@ -19,10 +17,7 @@ defmodule FootballApi do
   def lineups_by_fixture_id(fixture_id) do
     url_query_params = %{"fixture" => fixture_id}
     {:ok, response} = FootballApiClient.get("/fixtures/lineups", [], params: url_query_params)
-
-    {:ok, response} = Poison.decode(response.body, as: Models.Lineups.Struct.lineups())
-
-    response
+    Poison.decode(response.body, as: Models.Lineups.Struct.lineups())
   end
 
   @doc """
@@ -32,12 +27,7 @@ defmodule FootballApi do
     url_query_params = %{"fixture" => fixture_id}
     {:ok, response} = FootballApiClient.get("/fixtures/players", [], params: url_query_params)
 
-    {:ok, response} =
-      Poison.decode(response.body,
-        as: Models.PlayersStatistics.Struct.players_statistics()
-      )
-
-    response
+    Poison.decode(response.body, as: Models.PlayersStatistics.Struct.players_statistics())
   end
 
   @doc """
@@ -46,8 +36,6 @@ defmodule FootballApi do
   def team_squad(team_id) do
     url_query_params = %{"team" => team_id}
     {:ok, response} = FootballApiClient.get("/players/squads", [], params: url_query_params)
-    {:ok, response} = Poison.decode(response.body, as: Models.Squads.Struct.squad())
-
-    response
+    Poison.decode(response.body, as: Models.Squads.Struct.squad())
   end
 end
