@@ -50,6 +50,7 @@ defmodule Footballratings.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:httpoison, "~> 2.0"},
+      {:poison, "~> 5.0"},
       {:plug_cowboy, "~> 2.5"}
     ]
   end
