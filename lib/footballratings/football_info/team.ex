@@ -5,21 +5,16 @@ defmodule Footballratings.FootballInfo.Team do
   alias Footballratings.FootballInfo.Player
 
   schema "teams" do
-    field :code, :string
-    field :country, :string
-    field :founded, :integer
-    field :name, :string
-    field :national, :boolean
-
-    has_many :players, Player
+    field(:name, :string)
+    has_many(:players, Player)
 
     timestamps()
   end
 
   def changeset(team, attrs) do
     team
-    |> cast(attrs, [:code, :country, :founded, :name, :national, :id])
-    |> validate_required([:code, :country, :founded, :name, :national, :id])
+    |> cast(attrs, [:name, :id])
+    |> validate_required([:name, :id])
     |> unique_constraint(:id)
   end
 end
