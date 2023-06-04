@@ -8,7 +8,7 @@ defmodule FootballApi.Models.PlayersStatistics do
   end
 
   defmodule Players do
-    defstruct [:players]
+    defstruct [:players, :team]
   end
 
   defmodule Player do
@@ -35,6 +35,7 @@ defmodule FootballApi.Models.PlayersStatistics.Struct do
     %Stats.Response{
       response: [
         %Stats.Players{
+          team: %Stats.Team{},
           players: [
             %Stats.Player{
               player: %Stats.PlayerInfo{},

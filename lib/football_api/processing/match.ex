@@ -70,6 +70,12 @@ defmodule FootballApi.Processing.Match do
     Map.merge(base_schema, score)
   end
 
+  def extract_league(%Match{league: league}), do: league
+
+  def extract_teams(%Match{teams: %{home: home_team, away: away_team}}) do
+    [home_team, away_team]
+  end
+
   # Match went to extra-time
   defp convert_score(%Score{extratime: %{home: home, away: away}} = score)
        when is_integer(home) and is_integer(away) do

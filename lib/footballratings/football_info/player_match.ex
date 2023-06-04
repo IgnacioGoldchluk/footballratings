@@ -15,7 +15,7 @@ defmodule Footballratings.FootballInfo.PlayerMatch do
   def changeset(player_match, attrs) do
     player_match
     |> cast(attrs, [:match_id, :player_id, :team_id, :minutes_played])
-    |> validate_required([:match_id, :player_d, :team_id, :minutes_played])
+    |> validate_required([:match_id, :player_id, :team_id, :minutes_played])
     |> validate_number(:minutes_played, greater_than: 0)
   end
 end

@@ -7,20 +7,40 @@ defmodule Footballratings.Workers.FixturesFetch do
     yesterday = Date.add(today, -1)
     {:ok, response} = FootballApi.matches(league_id, season, yesterday, today)
 
-    %{teams: %{home: home_team, away: away_team}, league: league} = response
+    # Insert leagues if they don't exist
+    response
+    |> Enum.map(&FootballApi.Processing.Match.extract_league/1)
+    |> Enum.map(&FootballApi.Processing.League.to_internal_league_schema/1)
+    |> Enum.uniq_by(&Map.get(&1, "id"))
+    |> Footballratings.FootballInfo.maybe_create_leagues()
 
-    # match =
-    #   response
-    #   |> Enum.filter(&FootballApi.Processing.Match.match_finished?/1)
-    #   |> Enum.map(&FootballApi.Processing.Match.to_internal_match_schema/1)
+    # Insert teams if they don't exist
+    teams =
+      response
+      |> Enum.flat_map(&FootballApi.Processing.Match.extract_teams/1)
+      |> Enum.map(&FootballApi.Processing.Team.to_internal_team_schema/1)
+      |> Enum.uniq_by(&Map.get(&1, "id"))
 
-    home_team = FootballApi.Processing.Team.to_internal_team_schema(home_team)
-    away_team = FootballApi.Processing.Team.to_internal_team_schema(away_team)
-    Footballratings.FootballInfo.maybe_create_team(home_team)
-    Footballratings.FootballInfo.maybe_create_team(away_team)
+    Footballratings.FootballInfo.maybe_create_teams(teams)
 
-    league = FootballApi.Processing.League.to_internal_league_schema(league)
-    Footballratings.FootballInfo.maybe_create_league(league)
+    # Create jobs to fetch and insert all teams squads
+    teams
+    |> Enum.map(&%{team_id: Map.get(&1, "id")})
+    |> Enum.map(&Footballratings.Workers.TeamProcessor.new/1)
+    |> Oban.insert_all()
+
+    # Create all matches
+    matches =
+      response
+      |> Enum.map(&FootballApi.Processing.Match.to_internal_match_schema/1)
+
+    Footballratings.FootballInfo.maybe_create_matches(matches)
+
+    # Create jobs to fetch and insert all matches statistics
+    matches
+    |> Enum.map(&%{match_id: Map.get(&1, "id")})
+    |> Enum.map(&Footballratings.Workers.StatisticsProcessor.new/1)
+    |> Oban.insert_all()
 
     :ok
   end
