@@ -3,30 +3,51 @@ defmodule FootballApi.Models.PlayersStatistics do
   Players statistics structs.
   """
   defmodule Response do
+    @moduledoc """
+    Response
+    """
     defstruct [:response]
   end
 
   defmodule Team do
+    @moduledoc """
+    Team
+    """
     defstruct [:id]
   end
 
   defmodule Players do
+    @moduledoc """
+    Players
+    """
     defstruct [:players, :team]
   end
 
   defmodule Player do
+    @moduledoc """
+    Player
+    """
     defstruct [:player, :statistics]
   end
 
   defmodule PlayerInfo do
+    @moduledoc """
+    PlayerInfo
+    """
     defstruct [:id]
   end
 
   defmodule Games do
+    @moduledoc """
+    Games
+    """
     defstruct [:games]
   end
 
   defmodule GameStatistics do
+    @moduledoc """
+    GameStatistics
+    """
     defstruct [:minutes]
   end
 end

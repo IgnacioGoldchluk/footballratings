@@ -4,14 +4,23 @@ defmodule FootballApi.Models.Squads do
   """
 
   defmodule Response do
+    @moduledoc """
+    Response
+    """
     defstruct [:response]
   end
 
   defmodule Players do
+    @moduledoc """
+    Players
+    """
     defstruct [:players]
   end
 
   defmodule Player do
+    @moduledoc """
+    Player
+    """
     defstruct [:id, :name, :age]
   end
 end
