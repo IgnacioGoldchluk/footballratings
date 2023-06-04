@@ -25,7 +25,7 @@ defmodule Footballratings.FootballInfo do
   def maybe_create_league(attrs \\ %{}) do
     %League{}
     |> League.changeset(attrs)
-    |> Repo.insert!(on_conflict: :replace_all)
+    |> Repo.insert(on_conflict: :replace_all, conflict_target: :id)
   end
 
   def maybe_create_leagues(leagues) do
