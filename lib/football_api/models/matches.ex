@@ -1,4 +1,7 @@
 defmodule FootballApi.Models.Matches do
+  @moduledoc """
+  Match struct
+  """
   defmodule Response do
     defstruct [:response]
   end

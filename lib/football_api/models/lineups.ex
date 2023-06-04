@@ -1,4 +1,7 @@
 defmodule FootballApi.Models.Lineups do
+  @moduledoc """
+  Lineup struct
+  """
   defmodule Response do
     defstruct [:response]
   end
