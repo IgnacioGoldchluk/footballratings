@@ -1,4 +1,8 @@
 defmodule Footballratings.FootballInfo.League do
+  @moduledoc """
+  League schema
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

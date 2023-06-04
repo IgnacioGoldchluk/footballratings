@@ -1,4 +1,8 @@
 defmodule FootballApi.Processing.Team do
+  @moduledoc """
+  Manages API-fetched Team information, such as filtering and processing
+  before inserting into internal repo.
+  """
   alias FootballApi.Models.Matches.{Team}
 
   def to_internal_team_schema(%Team{} = team) do
