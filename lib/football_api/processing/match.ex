@@ -1,4 +1,9 @@
 defmodule FootballApi.Processing.Match do
+  @moduledoc """
+  Manages API-fetched Match information, such as filtering and processing
+  before inserting into internal repo.
+  """
+
   alias FootballApi.Models.Matches.{Match, Score}
 
   @finished_match_status [

@@ -1,4 +1,14 @@
 defmodule Footballratings.Workers.FixturesFetch do
+  @moduledoc """
+  Fetches information for a given league and season.
+
+  This worker should be called as a cron job and performs the following
+  1. Fetches all the matches.
+  2. Inserts any league that hasn't been seen before.
+  3. Inserts any team that hasn't been seen before.
+  4. Keep matches that have finished.
+  5. Trigger jobs to fill with players statistics.
+  """
   use Oban.Worker, queue: :default
 
   @impl Oban.Worker
@@ -6,6 +16,8 @@ defmodule Footballratings.Workers.FixturesFetch do
     today = Date.utc_today()
     yesterday = Date.add(today, -1)
     {:ok, response} = FootballApi.matches(league_id, season, yesterday, today)
+
+    # FIXME: Filter only for matches that have finished.
 
     # Insert leagues if they don't exist
     response

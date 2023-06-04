@@ -1,4 +1,8 @@
 defmodule Footballratings.FootballInfo do
+  @moduledoc """
+  Context module for managing football information data.
+  """
+
   alias Footballratings.Repo
   alias Footballratings.FootballInfo.{Team, League, Player, Match, PlayerMatch}
 

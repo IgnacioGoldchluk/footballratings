@@ -1,8 +1,12 @@
 defmodule Footballratings.FootballInfo.PlayerMatch do
+  @moduledoc """
+  Join table for every player present in a match.
+  """
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "players_matches" do
+    # minutes_played = nil means the player did not participate.
     field(:minutes_played, :integer)
 
     belongs_to(:match, Footballratings.FootballInfo.Match)

@@ -1,4 +1,8 @@
 defmodule FootballratingsWeb.Telemetry do
+  @moduledoc """
+  Telemetry application
+  """
+
   use Supervisor
   import Telemetry.Metrics
 

@@ -1,4 +1,8 @@
 defmodule Footballratings.FootballInfo.Player do
+  @moduledoc """
+  Player information schema.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

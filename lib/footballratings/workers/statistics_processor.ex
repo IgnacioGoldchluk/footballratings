@@ -1,4 +1,8 @@
 defmodule Footballratings.Workers.StatisticsProcessor do
+  @moduledoc """
+  Oban job that fetches players statistics for a given match (both teams)
+  and fills the database.
+  """
   use Oban.Worker, queue: :default
 
   @impl Oban.Worker

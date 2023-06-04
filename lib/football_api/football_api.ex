@@ -1,4 +1,9 @@
 defmodule FootballApi do
+  @moduledoc """
+  Wrapper of the football API. Always returns the "response" field of the data
+  as structs.
+  """
+
   alias FootballApi.FootballApiClient
   alias FootballApi.Models
 

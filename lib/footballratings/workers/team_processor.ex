@@ -1,4 +1,7 @@
 defmodule Footballratings.Workers.TeamProcessor do
+  @moduledoc """
+  Oban job that creates player rows for a given team.
+  """
   use Oban.Worker, queue: :default
 
   @impl Oban.Worker
