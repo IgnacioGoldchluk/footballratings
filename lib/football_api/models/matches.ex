@@ -32,7 +32,7 @@ defmodule FootballApi.Models.Matches do
   end
 
   defmodule League do
-    defstruct [:id, :season, :round]
+    defstruct [:id, :season, :round, :name]
   end
 end
 

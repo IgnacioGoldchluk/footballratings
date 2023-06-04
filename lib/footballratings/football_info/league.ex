@@ -12,6 +12,6 @@ defmodule Footballratings.FootballInfo.League do
   def changeset(league, attrs) do
     league
     |> cast(attrs, [:name, :season, :id])
-    |> validate_required([:season, :id])
+    |> validate_required([:season, :id, :name])
   end
 end
