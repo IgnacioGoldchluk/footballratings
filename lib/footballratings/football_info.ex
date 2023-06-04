@@ -29,7 +29,23 @@ defmodule Footballratings.FootballInfo do
   end
 
   def maybe_create_leagues(leagues) do
-    Repo.insert_all(League, leagues, on_conflict: :replace_all)
+    timestamp = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+    placeholders = %{timestamp: timestamp}
+
+    leagues =
+      Enum.map(
+        leagues,
+        &Map.merge(&1, %{
+          inserted_at: {:placeholder, :timestamp},
+          updated_at: {:placeholder, :timestamp}
+        })
+      )
+
+    Repo.insert_all(League, leagues,
+      placeholders: placeholders,
+      on_conflict: :replace_all,
+      conflict_target: :id
+    )
   end
 
   def maybe_create_players(players) do
