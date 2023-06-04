@@ -3,26 +3,44 @@ defmodule FootballApi.Models.Lineups do
   Lineup struct
   """
   defmodule Response do
+    @moduledoc """
+    Response
+    """
     defstruct [:response]
   end
 
   defmodule Lineup do
+    @moduledoc """
+    Lineup
+    """
     defstruct [:coach, :startXI, :substitutes, :team]
   end
 
   defmodule CoachLineup do
+    @moduledoc """
+    CoachLineup
+    """
     defstruct [:id]
   end
 
   defmodule PlayerLineup do
+    @moduledoc """
+    PlayerLineup
+    """
     defstruct [:player]
   end
 
   defmodule PlayerIdLineup do
+    @moduledoc """
+    PlayerIdLineup
+    """
     defstruct [:id]
   end
 
   defmodule Team do
+    @moduledoc """
+    Team
+    """
     defstruct [:id]
   end
 end

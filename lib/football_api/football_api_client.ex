@@ -1,4 +1,7 @@
 defmodule FootballApi.FootballApiClient do
+  @moduledoc """
+  Custom client for Football API
+  """
   use HTTPoison.Base
 
   @endpoint "https://v3.football.api-sports.io"
