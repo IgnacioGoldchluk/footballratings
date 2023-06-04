@@ -24,7 +24,7 @@ defmodule FootballApi.Models.Matches do
   end
 
   defmodule Team do
-    defstruct [:id]
+    defstruct [:id, :name]
   end
 
   defmodule Status do

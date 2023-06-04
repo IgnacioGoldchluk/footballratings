@@ -15,6 +15,5 @@ defmodule Footballratings.FootballInfo.Team do
     team
     |> cast(attrs, [:name, :id])
     |> validate_required([:name, :id])
-    |> unique_constraint(:id)
   end
 end
