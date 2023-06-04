@@ -28,6 +28,9 @@ defmodule FootballApi.Models.Lineups do
 end
 
 defmodule FootballApi.Models.Lineups.Struct do
+  @moduledoc """
+  Lineups definitions.
+  """
   alias FootballApi.Models.Lineups
 
   def lineups() do

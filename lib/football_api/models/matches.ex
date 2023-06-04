@@ -40,6 +40,9 @@ defmodule FootballApi.Models.Matches do
 end
 
 defmodule FootballApi.Models.Matches.Struct do
+  @moduledoc """
+  Match definition.
+  """
   alias FootballApi.Models.Matches
 
   def match() do

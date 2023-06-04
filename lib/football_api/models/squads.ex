@@ -17,6 +17,9 @@ defmodule FootballApi.Models.Squads do
 end
 
 defmodule FootballApi.Models.Squads.Struct do
+  @moduledoc """
+  Squad struct.
+  """
   alias FootballApi.Models.Squads
 
   def squad() do

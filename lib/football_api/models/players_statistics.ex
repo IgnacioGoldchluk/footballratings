@@ -32,6 +32,9 @@ defmodule FootballApi.Models.PlayersStatistics do
 end
 
 defmodule FootballApi.Models.PlayersStatistics.Struct do
+  @moduledoc """
+  Player Statistics definition.
+  """
   alias FootballApi.Models.PlayersStatistics, as: Stats
 
   def players_statistics() do
