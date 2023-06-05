@@ -51,11 +51,9 @@ defmodule FootballApi.Processing.Match do
 
   @match_status @in_progress_match_status ++ @not_started_match_status ++ @finished_match_status
 
-  def match_finished?(%Match{} = match) do
-    status_finished?(match.fixture.status.short)
+  def finished?(%Match{fixture: %{status: %{short: status}}}) do
+    Enum.member?(@finished_match_status, status)
   end
-
-  defp status_finished?(match_status), do: Enum.member?(@finished_match_status, match_status)
 
   def to_internal_match_schema(%Match{fixture: fixture, league: league, teams: teams} = match) do
     base_schema = %{
