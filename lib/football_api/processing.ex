@@ -3,7 +3,7 @@ defmodule FootballApi.Processing do
     matches
     |> Enum.map(&FootballApi.Processing.Match.extract_league/1)
     |> Enum.map(&FootballApi.Processing.League.to_internal_schema/1)
-    |> Enum.uniq_by(&Map.get(&1, "id"))
+    |> Enum.uniq_by(& &1[:id])
   end
 
   def unique_teams(matches) do
@@ -15,12 +15,9 @@ defmodule FootballApi.Processing do
 
   def unique_matches(matches) do
     matches
-    |> Enum.map(&FootballApi.Processing.Match.to_internal_match_schema/1)
+    |> Enum.map(&FootballApi.Processing.Match.to_internal_schema/1)
     |> Enum.uniq_by(&Map.get(&1, "id"))
   end
 
-  def finished_matches(matches) do
-    matches
-    |> Enum.filter(&FootballApi.Processing.Match.finished?/1)
-  end
+  def match_finished?(match), do: FootballApi.Processing.Match.finished?(match)
 end

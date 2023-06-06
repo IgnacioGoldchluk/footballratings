@@ -17,25 +17,26 @@ defmodule Footballratings.Workers.FixturesFetch do
     yesterday = Date.add(today, -1)
     {:ok, matches} = FootballApi.matches(league_id, season, yesterday, today)
 
-    matches = FootballApi.Processing.finished_matches(matches)
+    new_finished_matches =
+      matches
+      |> Enum.filter(&FootballApi.Processing.match_finished?/1)
+      |> Enum.filter(fn %{fixture: %{id: match_id}} ->
+        not Footballratings.FootballInfo.match_exists?(match_id)
+      end)
 
     # Insert leagues if they don't exist
-    matches
-    |> FootballApi.Processing.unique_leagues()
-    |> Footballratings.FootballInfo.maybe_create_leagues()
+    leagues = FootballApi.Processing.unique_leagues(new_finished_matches)
+    Footballratings.FootballInfo.maybe_create_leagues(leagues)
 
     # Insert teams if they don't exist
-    teams = FootballApi.Processing.unique_teams(matches)
+    teams = FootballApi.Processing.unique_teams(new_finished_matches)
     Footballratings.FootballInfo.maybe_create_teams(teams)
 
-    matches = FootballApi.Processing.unique_matches(matches)
-
-    matches
-    |> Enum.map(&FootballApi.Processing.Match.to_internal_schema/1)
-    |> Footballratings.FootballInfo.maybe_create_matches()
+    new_finished_matches_schemas = FootballApi.Processing.unique_matches(new_finished_matches)
+    Footballratings.FootballInfo.create_matches(new_finished_matches_schemas)
 
     Footballratings.JobCreator.new_jobs_for_teams_squads(teams)
-    Footballratings.JobCreator.new_jobs_for_matches_statistics(matches)
+    Footballratings.JobCreator.new_jobs_for_matches_statistics(new_finished_matches_schemas)
 
     :ok
   end

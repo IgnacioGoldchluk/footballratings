@@ -55,20 +55,24 @@ defmodule FootballApi.Processing.Match do
     Enum.member?(@finished_match_status, status)
   end
 
-  def to_internal_match_schema(%Match{fixture: fixture, league: league, teams: teams} = match) do
+  def to_internal_schema(%Match{fixture: fixture, league: league, teams: teams, score: score}) do
+    %{id: fixture_id, timestamp: fixture_timestamp} = fixture
+    %{id: league_id, round: league_round, season: league_season} = league
+    %{home: %{id: home_team_id}, away: %{id: away_team_id}} = teams
+
     base_schema = %{
-      "id" => fixture.id,
-      "timestamp" => fixture.timestamp,
+      "id" => fixture_id,
+      "timestamp" => fixture_timestamp,
       "status" => "not_ready_yet",
-      "round" => league.round,
-      "league_id" => league.id,
-      "home_team_id" => teams.home.id,
-      "away_team_id" => teams.away.id,
-      "season" => league.season
+      "round" => league_round,
+      "league_id" => league_id,
+      "home_team_id" => home_team_id,
+      "away_team_id" => away_team_id,
+      "season" => league_season
     }
 
     # Need goals_home, goals_away, penalties_home, penalties_away
-    score = convert_score(match.score)
+    score = convert_score(score)
 
     Map.merge(base_schema, score)
   end

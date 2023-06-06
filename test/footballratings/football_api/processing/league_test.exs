@@ -7,8 +7,8 @@ defmodule Footballratings.FootballApi.Processing.LeagueTest do
     @league %League{id: 123, season: 2023, name: "First Division"}
     @duplicated_league %League{id: 123, season: 2022, name: "Second Division"}
 
-    test "to_internal_league_schema/1 converts to a valid schema and inserts in the DB" do
-      internal_schema = FootballApi.Processing.League.to_internal_league_schema(@league)
+    test "to_internal_schema/1 converts to a valid schema and inserts in the DB" do
+      internal_schema = FootballApi.Processing.League.to_internal_schema(@league)
 
       {:ok, league_in_db} = Footballratings.FootballInfo.maybe_create_league(internal_schema)
 
@@ -19,11 +19,11 @@ defmodule Footballratings.FootballApi.Processing.LeagueTest do
 
     test "a duplicated league overrides the first one" do
       @league
-      |> FootballApi.Processing.League.to_internal_league_schema()
+      |> FootballApi.Processing.League.to_internal_schema()
       |> Footballratings.FootballInfo.maybe_create_league()
 
       [@duplicated_league]
-      |> Enum.map(&FootballApi.Processing.League.to_internal_league_schema/1)
+      |> Enum.map(&FootballApi.Processing.League.to_internal_schema/1)
       |> Footballratings.FootballInfo.maybe_create_leagues()
 
       league = Repo.get(Footballratings.FootballInfo.League, @duplicated_league.id)
