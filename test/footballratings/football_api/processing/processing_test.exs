@@ -54,5 +54,43 @@ defmodule Footballratings.FootballApi.Processing.ProcessingTest do
 
       assert length(unique_matches) == 6
     end
+
+    test "match_finished? identifies correctly finished matches" do
+      # Not started yet
+      not_started_match_status = ["TBD", "NS", "ABD"] |> Enum.map(&create_status/1)
+
+      matches = for _ <- 1..length(not_started_match_status), do: create_match()
+
+      matches =
+        [matches, not_started_match_status]
+        |> Enum.zip()
+        |> Enum.map(fn {match, status} -> insert_match_status(match, status) end)
+
+      assert not Enum.any?(matches, &FootballApi.Processing.match_finished?/1)
+
+      # In progress
+      in_progress_match_status = ["1H", "HT", "2H", "ET", "BT", "P", "SUSP", "PST", "LIVE"]
+      in_progress_match_status = Enum.map(in_progress_match_status, &create_status/1)
+
+      matches = for _ <- 1..length(in_progress_match_status), do: create_match()
+
+      matches =
+        [matches, in_progress_match_status]
+        |> Enum.zip()
+        |> Enum.map(fn {match, status} -> insert_match_status(match, status) end)
+
+      assert not Enum.any?(matches, &FootballApi.Processing.match_finished?/1)
+
+      # Finished
+      finished_match_status = ["FT", "AET", "PEN", "AWD", "WO"] |> Enum.map(&create_status/1)
+      matches = for _ <- 1..length(finished_match_status), do: create_match()
+
+      matches =
+        [matches, finished_match_status]
+        |> Enum.zip()
+        |> Enum.map(fn {match, status} -> insert_match_status(match, status) end)
+
+      assert Enum.all?(matches, &FootballApi.Processing.match_finished?/1)
+    end
   end
 end

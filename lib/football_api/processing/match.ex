@@ -87,20 +87,20 @@ defmodule FootballApi.Processing.Match do
   defp convert_score(%Score{extratime: %{home: home, away: away}} = score)
        when is_integer(home) and is_integer(away) do
     %{
-      "goals_home" => home,
-      "goals_away" => away,
-      "penalties_home" => score.penalty.home,
-      "penalties_away" => score.penalty.away
+      goals_home: home,
+      goals_away: away,
+      penalties_home: score.penalty.home,
+      penalties_away: score.penalty.away
     }
   end
 
   # Match finished in full time
   defp convert_score(%Score{fulltime: %{home: home, away: away}} = score) do
     %{
-      "goals_home" => home,
-      "goals_away" => away,
-      "penalties_home" => score.penalty.home,
-      "penalties_away" => score.penalty.away
+      goals_home: home,
+      goals_away: away,
+      penalties_home: score.penalty.home,
+      penalties_away: score.penalty.away
     }
   end
 end
