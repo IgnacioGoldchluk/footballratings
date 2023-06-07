@@ -20,7 +20,7 @@ defmodule FootballApi.Models.Lineups do
     @moduledoc """
     CoachLineup
     """
-    defstruct [:id]
+    defstruct [:id, :name]
   end
 
   defmodule PlayerLineup do

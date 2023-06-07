@@ -1,9 +1,9 @@
 defmodule Footballratings.FootballApi.Processing.ProcessingTest do
   use Footballratings.DataCase
 
-  import Footballratings.ExternalMatchesFixtures
-
   describe "matches processing" do
+    import Footballratings.ExternalMatchesFixtures
+
     test "unique leagues returns unique leagues" do
       leagues = [1, 2, 3, 4, 4, 2, 4, 1] |> Enum.map(&create_league/1)
 
@@ -91,6 +91,21 @@ defmodule Footballratings.FootballApi.Processing.ProcessingTest do
         |> Enum.map(fn {match, status} -> insert_match_status(match, status) end)
 
       assert Enum.all?(matches, &FootballApi.Processing.match_finished?/1)
+    end
+  end
+
+  describe "lineups processing" do
+    import Footballratings.ExternalLineupsFixtures
+
+    test "extract coach from lineup" do
+      coach = create_coach_lineup()
+
+      lineup = create_lineup() |> insert_coach(coach)
+
+      retrieved_coach = FootballApi.Processing.coach_from_lineup(lineup)
+
+      assert retrieved_coach.name == coach.name
+      assert retrieved_coach.id == coach.id
     end
   end
 end

@@ -20,4 +20,6 @@ defmodule FootballApi.Processing do
   end
 
   def match_finished?(match), do: FootballApi.Processing.Match.finished?(match)
+
+  def coach_from_lineup(lineup), do: FootballApi.Processing.Lineups.extract_coach(lineup)
 end
