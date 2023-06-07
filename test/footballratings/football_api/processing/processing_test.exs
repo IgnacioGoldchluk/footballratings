@@ -39,5 +39,20 @@ defmodule Footballratings.FootballApi.Processing.ProcessingTest do
 
       assert length(unique_teams) == 5
     end
+
+    test "unique matches returns unique matches" do
+      fixtures = [1, 2, 4, 5, 5, 6, 1, 2, 3] |> Enum.map(&create_fixture/1)
+
+      matches = for _ <- 1..length(fixtures), do: create_match()
+
+      matches =
+        [matches, fixtures]
+        |> Enum.zip()
+        |> Enum.map(fn {match, fixture} -> insert_fixture(match, fixture) end)
+
+      unique_matches = FootballApi.Processing.unique_matches(matches)
+
+      assert length(unique_matches) == 6
+    end
   end
 end

@@ -90,6 +90,10 @@ defmodule Footballratings.ExternalMatchesFixtures do
     }
   end
 
+  def insert_fixture(%Match{} = match, %Fixture{} = fixture) do
+    %Match{match | fixture: fixture}
+  end
+
   def insert_league(%Match{} = match, %League{} = league) do
     %Match{match | league: league}
   end
