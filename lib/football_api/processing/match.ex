@@ -61,14 +61,14 @@ defmodule FootballApi.Processing.Match do
     %{home: %{id: home_team_id}, away: %{id: away_team_id}} = teams
 
     base_schema = %{
-      "id" => fixture_id,
-      "timestamp" => fixture_timestamp,
-      "status" => "not_ready_yet",
-      "round" => league_round,
-      "league_id" => league_id,
-      "home_team_id" => home_team_id,
-      "away_team_id" => away_team_id,
-      "season" => league_season
+      id: fixture_id,
+      timestamp: fixture_timestamp,
+      status: "not_ready_yet",
+      round: league_round,
+      league_id: league_id,
+      home_team_id: home_team_id,
+      away_team_id: away_team_id,
+      season: league_season
     }
 
     # Need goals_home, goals_away, penalties_home, penalties_away
