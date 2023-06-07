@@ -19,5 +19,25 @@ defmodule Footballratings.FootballApi.Processing.ProcessingTest do
 
       assert length(unique_leagues) == 4
     end
+
+    test "unique teams returns unique teams" do
+      teams = [1, 2, 3, 4, 2, 5] |> Enum.map(&create_team/1)
+      # Create number of matches equal to half of the teams, since
+      # a match always contains HOME + AWAY team
+      matches = for _ <- 1..div(length(teams), 2), do: create_match()
+
+      matches =
+        [matches, Enum.chunk_every(teams, 2)]
+        |> Enum.zip()
+        |> Enum.map(fn {match, [home_team, away_team]} ->
+          match
+          |> insert_home_team(home_team)
+          |> insert_away_team(away_team)
+        end)
+
+      unique_teams = FootballApi.Processing.unique_teams(matches)
+
+      assert length(unique_teams) == 5
+    end
   end
 end

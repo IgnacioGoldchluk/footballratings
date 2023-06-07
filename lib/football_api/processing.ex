@@ -10,7 +10,7 @@ defmodule FootballApi.Processing do
     matches
     |> Enum.flat_map(&FootballApi.Processing.Match.extract_teams/1)
     |> Enum.map(&FootballApi.Processing.Team.to_internal_schema/1)
-    |> Enum.uniq_by(&Map.get(&1, "id"))
+    |> Enum.uniq_by(&Map.get(&1, :id))
   end
 
   def unique_matches(matches) do
