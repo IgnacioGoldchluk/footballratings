@@ -44,6 +44,9 @@ defmodule Footballratings.FootballInfo.Match do
       :status,
       :id
     ])
+    |> foreign_key_constraint(:league_id)
+    |> foreign_key_constraint(:home_team_id)
+    |> foreign_key_constraint(:away_team_id)
     |> validate_required([
       :season,
       :timestamp,
@@ -51,9 +54,6 @@ defmodule Footballratings.FootballInfo.Match do
       :goals_home,
       :goals_away,
       :status,
-      :league_id,
-      :home_team_id,
-      :away_team_id,
       :id
     ])
   end

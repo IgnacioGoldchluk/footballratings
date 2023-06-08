@@ -60,8 +60,20 @@ defmodule Footballratings.FootballInfo do
     )
   end
 
+  def create_match(attrs) do
+    %Match{}
+    |> Match.changeset(attrs)
+    |> Repo.insert()
+  end
+
   def create_matches(matches) do
     Repo.insert_all(Match, matches)
+  end
+
+  def create_player_match(attrs) do
+    %PlayerMatch{}
+    |> PlayerMatch.changeset(attrs)
+    |> Repo.insert()
   end
 
   def create_players_match(players) do

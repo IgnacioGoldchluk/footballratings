@@ -1,7 +1,9 @@
 defmodule Footballratings.FootballInfo.FootballInfoTest do
   use Footballratings.DataCase
 
-  alias Footballratings.FootballInfo.{Team, Player}
+  alias Footballratings.FootballInfo.{Team, Player, Match}
+
+  import Footballratings.InternalDataFixtures
 
   describe "teams" do
     test "create_team/1 creates a team" do
@@ -20,7 +22,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
 
   describe "players" do
     test "create_player/1 with valid params creates a player" do
-      team = %{id: System.unique_integer([:positive]), name: "Chelsea FC"}
+      team = create_team()
 
       player_attrs = %{
         name: "M Kovacic",
@@ -28,8 +30,6 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
         id: System.unique_integer([:positive]),
         team_id: team.id
       }
-
-      Footballratings.FootballInfo.create_team(team)
 
       {:ok, player} = Footballratings.FootballInfo.create_player(player_attrs)
 
@@ -39,8 +39,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       assert player.team_id == player_attrs.team_id
 
       # He switched to Manchester City
-      team = %{id: System.unique_integer([:positive]), name: "Manchester City FC"}
-      Footballratings.FootballInfo.create_team(team)
+      team = create_team(%{name: "Manchester City FC"})
       player_attrs = %{player_attrs | team_id: team.id}
 
       Footballratings.FootballInfo.maybe_create_players([player_attrs])
@@ -48,6 +47,43 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       player = Repo.get(Player, player_attrs[:id]) |> Repo.preload(:team)
 
       assert player.team.name == "Manchester City FC"
+    end
+  end
+
+  describe "matches" do
+    test "create_match/1 with valid attrs creates a match" do
+      home_team = create_team()
+      away_team = create_team()
+      league = create_league()
+
+      match_attrs = %{
+        season: 2023,
+        timestamp: System.unique_integer([:positive]),
+        round: "1 of 38",
+        goals_home: 1,
+        goals_away: 2,
+        penalties_home: nil,
+        penalties_away: nil,
+        league_id: league.id,
+        home_team_id: home_team.id,
+        away_team_id: away_team.id,
+        status: :ready,
+        id: System.unique_integer([:positive])
+      }
+
+      {:ok, %Match{} = match} = Footballratings.FootballInfo.create_match(match_attrs)
+
+      assert match.season == match_attrs[:season]
+      assert match.timestamp == match_attrs[:timestamp]
+      assert match.round == match_attrs[:round]
+      assert match.goals_home == match_attrs[:goals_home]
+      assert match.goals_away == match_attrs[:goals_away]
+      assert match.penalties_home == match_attrs[:penalties_home]
+      assert match.penalties_away == match_attrs[:penalties_away]
+      assert match.home_team_id == match_attrs[:home_team_id]
+      assert match.away_team_id == match_attrs[:away_team_id]
+      assert match.status == match_attrs[:status]
+      assert match.id == match_attrs[:id]
     end
   end
 end
