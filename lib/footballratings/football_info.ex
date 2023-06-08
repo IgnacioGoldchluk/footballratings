@@ -15,11 +15,17 @@ defmodule Footballratings.FootballInfo do
   def maybe_create_team(attrs \\ %{}) do
     %Team{}
     |> Team.changeset(attrs)
-    |> Repo.insert!(on_conflict: :nothing)
+    |> Repo.insert(on_conflict: :replace_all, conflict_target: :id)
   end
 
   def maybe_create_teams(teams) do
-    Repo.insert_all(Team, teams, on_conflict: :replace_all)
+    {teams, placeholders} = insert_timestamp_placeholders(teams)
+
+    Repo.insert_all(Team, teams,
+      placeholders: placeholders,
+      on_conflict: :replace_all,
+      conflict_target: :id
+    )
   end
 
   def maybe_create_league(attrs \\ %{}) do
@@ -29,17 +35,7 @@ defmodule Footballratings.FootballInfo do
   end
 
   def maybe_create_leagues(leagues) do
-    timestamp = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
-    placeholders = %{timestamp: timestamp}
-
-    leagues =
-      Enum.map(
-        leagues,
-        &Map.merge(&1, %{
-          inserted_at: {:placeholder, :timestamp},
-          updated_at: {:placeholder, :timestamp}
-        })
-      )
+    {leagues, placeholders} = insert_timestamp_placeholders(leagues)
 
     Repo.insert_all(League, leagues,
       placeholders: placeholders,
@@ -65,5 +61,21 @@ defmodule Footballratings.FootballInfo do
       nil -> false
       %Match{} -> true
     end
+  end
+
+  defp insert_timestamp_placeholders(structs) do
+    timestamp = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+    placeholders = %{timestamp: timestamp}
+
+    new_structs =
+      Enum.map(
+        structs,
+        &Map.merge(&1, %{
+          inserted_at: {:placeholder, :timestamp},
+          updated_at: {:placeholder, :timestamp}
+        })
+      )
+
+    {new_structs, placeholders}
   end
 end
