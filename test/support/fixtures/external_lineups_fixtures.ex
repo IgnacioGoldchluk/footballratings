@@ -9,19 +9,19 @@ defmodule Footballratings.ExternalLineupsFixtures do
 
   @letters 'abcdefghijklmnopqrstuvwxyz'
 
-  def create_coach_lineup(id \\ :rand.uniform(200)) do
+  def create_coach_lineup(id \\ System.unique_integer([:positive])) do
     %CoachLineup{id: id, name: Enum.take_random(@letters, 10)}
   end
 
-  def create_playerid_lineup(id \\ :rand.uniform(200)) do
+  def create_playerid_lineup(id \\ System.unique_integer([:positive])) do
     %PlayerIdLineup{id: id}
   end
 
-  def create_player(id \\ :rand.uniform(200)) do
+  def create_player(id \\ System.unique_integer([:positive])) do
     %PlayerLineup{player: create_playerid_lineup(id)}
   end
 
-  def create_team(id \\ :rand.uniform(200)) do
+  def create_team(id \\ System.unique_integer([:positive])) do
     %Team{id: id}
   end
 

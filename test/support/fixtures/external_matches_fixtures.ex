@@ -16,7 +16,7 @@ defmodule Footballratings.ExternalMatchesFixtures do
     for _ <- 1..10, into: "", do: <<Enum.random(@letters)>>
   end
 
-  def create_league(id \\ :rand.uniform(200)) do
+  def create_league(id \\ System.unique_integer([:positive])) do
     %League{
       id: id,
       season: :rand.uniform(10) + 2000,
@@ -29,7 +29,7 @@ defmodule Footballratings.ExternalMatchesFixtures do
     %Status{short: status}
   end
 
-  def create_team(id \\ :rand.uniform(200)) do
+  def create_team(id \\ System.unique_integer([:positive])) do
     %Team{
       id: id,
       name: "#{random_string()} F.C."
@@ -73,8 +73,8 @@ defmodule Footballratings.ExternalMatchesFixtures do
 
   def create_teams() do
     # Make sure both teams are different
-    team1_id = :rand.uniform(200)
-    team2_id = team1_id + 10
+    team1_id = System.unique_integer([:positive])
+    team2_id = System.unique_integer([:positive])
 
     %Teams{
       home: create_team(team1_id),
@@ -82,11 +82,11 @@ defmodule Footballratings.ExternalMatchesFixtures do
     }
   end
 
-  def create_fixture(id \\ :rand.uniform(200)) do
+  def create_fixture(id \\ System.unique_integer([:positive])) do
     %Fixture{
       status: create_status(),
       id: id,
-      timestamp: 1_686_024_322 + :rand.uniform(10000)
+      timestamp: System.unique_integer([:positive])
     }
   end
 

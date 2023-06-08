@@ -5,7 +5,7 @@ defmodule Footballratings.FootballApi.Processing.TeamTest do
     alias FootballApi.Models.Matches.Team
 
     test "to_internal_schema/1 converts to a valid schema and inserts in the DB" do
-      team = %Team{id: System.unique_integer(), name: "Team FC"}
+      team = %Team{id: System.unique_integer([:positive]), name: "Team FC"}
 
       internal_schema = FootballApi.Processing.Team.to_internal_schema(team)
 
@@ -16,7 +16,7 @@ defmodule Footballratings.FootballApi.Processing.TeamTest do
     end
 
     test "a duplicated team overrides the first one" do
-      team = %Team{id: System.unique_integer(), name: "Team FC"}
+      team = %Team{id: System.unique_integer([:positive]), name: "Team FC"}
 
       team
       |> FootballApi.Processing.Team.to_internal_schema()
