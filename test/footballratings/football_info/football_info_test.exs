@@ -85,5 +85,28 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       assert match.status == match_attrs[:status]
       assert match.id == match_attrs[:id]
     end
+
+    test "create_match/1 with null goals returns error" do
+      league = create_league()
+      home = create_team()
+      away = create_team()
+
+      match_attrs = %{
+        season: 2023,
+        timestamp: System.unique_integer([:positive]),
+        round: "1 of 38",
+        goals_home: nil,
+        goals_away: nil,
+        penalties_home: nil,
+        penalties_away: nil,
+        league_id: league.id,
+        home_team_id: home.id,
+        away_team_id: away.id,
+        status: :ready,
+        id: System.unique_integer([:positive])
+      }
+
+      assert {:error, %Ecto.Changeset{}} = Footballratings.FootballInfo.create_match(match_attrs)
+    end
   end
 end
