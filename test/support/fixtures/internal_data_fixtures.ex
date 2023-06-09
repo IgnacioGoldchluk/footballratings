@@ -38,6 +38,9 @@ defmodule Footballratings.InternalDataFixtures do
         penalties_home: nil,
         penalties_away: nil,
         status: :ready,
+        home_team_id: create_team().id,
+        league_id: create_league().id,
+        away_team_id: create_team().id,
         id: System.unique_integer([:positive])
       })
       |> Footballratings.FootballInfo.create_match()

@@ -112,23 +112,13 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
 
   describe "players_matches" do
     test "create_player_match/1 with valid attrs creates a player_match" do
-      league = create_league()
-      home_team = create_team()
-      away_team = create_team()
-
-      match =
-        create_match(%{
-          league_id: league.id,
-          home_team_id: home_team.id,
-          away_team_id: away_team.id
-        })
-
-      player = create_player(%{team_id: home_team.id})
+      match = create_match()
+      player = create_player(%{team_id: match.home_team_id})
 
       attrs = %{
         match_id: match.id,
         player_id: player.id,
-        team_id: home_team.id,
+        team_id: match.home_team_id,
         minutes_played: 90
       }
 
@@ -139,6 +129,26 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       assert player_match.player_id == attrs[:player_id]
       assert player_match.team_id == attrs[:team_id]
       assert player_match.minutes_played == attrs[:minutes_played]
+    end
+
+    test "create_player_match creates multiple players" do
+      match = create_match()
+      players = for _ <- 1..11, do: create_player(team_id: match.home_team_id)
+
+      players
+      |> Enum.map(fn player ->
+        %{
+          match_id: match.id,
+          player_id: player.id,
+          minutes_played: :rand.uniform(90) + 1,
+          team_id: player.team_id
+        }
+      end)
+      |> Footballratings.FootballInfo.create_players_matches()
+
+      total = PlayerMatch |> Ecto.Query.where(match_id: ^match.id) |> Repo.all()
+
+      assert length(total) == 11
     end
   end
 end
