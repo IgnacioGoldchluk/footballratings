@@ -1,7 +1,7 @@
 defmodule Footballratings.FootballInfo.FootballInfoTest do
   use Footballratings.DataCase
 
-  alias Footballratings.FootballInfo.{Team, Player, Match}
+  alias Footballratings.FootballInfo.{Team, Player, Match, PlayerMatch}
 
   import Footballratings.InternalDataFixtures
 
@@ -107,6 +107,38 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       }
 
       assert {:error, %Ecto.Changeset{}} = Footballratings.FootballInfo.create_match(match_attrs)
+    end
+  end
+
+  describe "players_matches" do
+    test "create_player_match/1 with valid attrs creates a player_match" do
+      league = create_league()
+      home_team = create_team()
+      away_team = create_team()
+
+      match =
+        create_match(%{
+          league_id: league.id,
+          home_team_id: home_team.id,
+          away_team_id: away_team.id
+        })
+
+      player = create_player(%{team_id: home_team.id})
+
+      attrs = %{
+        match_id: match.id,
+        player_id: player.id,
+        team_id: home_team.id,
+        minutes_played: 90
+      }
+
+      {:ok, %PlayerMatch{} = player_match} =
+        Footballratings.FootballInfo.create_player_match(attrs)
+
+      assert player_match.match_id == attrs[:match_id]
+      assert player_match.player_id == attrs[:player_id]
+      assert player_match.team_id == attrs[:team_id]
+      assert player_match.minutes_played == attrs[:minutes_played]
     end
   end
 end

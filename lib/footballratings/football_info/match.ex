@@ -17,6 +17,7 @@ defmodule Footballratings.FootballInfo.Match do
     # Score and final result
     field(:goals_home, :integer)
     field(:goals_away, :integer)
+    # FIXME: Penalties home and penalties away should both be NULL or NOT NULL
     field(:penalties_home, :integer)
     field(:penalties_away, :integer)
     field(:status, Ecto.Enum, values: [:not_ready_yet, :ready, :expired])

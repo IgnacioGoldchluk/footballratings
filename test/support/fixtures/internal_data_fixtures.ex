@@ -37,7 +37,8 @@ defmodule Footballratings.InternalDataFixtures do
         goals_away: :rand.uniform(6),
         penalties_home: nil,
         penalties_away: nil,
-        status: :ready
+        status: :ready,
+        id: System.unique_integer([:positive])
       })
       |> Footballratings.FootballInfo.create_match()
 
