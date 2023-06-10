@@ -1,4 +1,7 @@
 defmodule Footballratings.InternalDataFixtures do
+  @moduledoc """
+  Fixtures for processed data i.e. data out of the DB or ready to be inserted.
+  """
   def create_league(attrs \\ %{}) do
     {:ok, league} =
       attrs

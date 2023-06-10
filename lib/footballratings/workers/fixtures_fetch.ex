@@ -19,9 +19,9 @@ defmodule Footballratings.Workers.FixturesFetch do
 
     new_finished_matches =
       matches
-      |> Enum.filter(&FootballApi.Processing.match_finished?/1)
-      |> Enum.filter(fn %{fixture: %{id: match_id}} ->
-        not Footballratings.FootballInfo.match_exists?(match_id)
+      |> Enum.filter(fn %{fixture: %{id: match_id}} = match ->
+        FootballApi.Processing.match_finished?(match) and
+          Footballratings.FootballInfo.match_exists?(match_id)
       end)
 
     # Insert leagues if they don't exist

@@ -1,4 +1,7 @@
 defmodule Footballratings.JobCreator do
+  @moduledoc """
+  Convencience module for creating multiple Oban jobs.
+  """
   def new_jobs_for_teams_squads(teams) do
     teams
     |> Enum.map(&%{team_id: Map.get(&1, "id")})

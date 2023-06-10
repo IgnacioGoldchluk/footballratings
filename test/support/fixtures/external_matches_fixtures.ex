@@ -1,4 +1,8 @@
 defmodule Footballratings.ExternalMatchesFixtures do
+  @moduledoc """
+  Fixtures for data coming from the 3rd party API
+  """
+
   alias FootballApi.Models.Matches.{
     Score,
     TemporalScore,

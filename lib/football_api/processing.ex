@@ -1,4 +1,7 @@
 defmodule FootballApi.Processing do
+  @moduledoc """
+  Module to process, filter and convert 3rd party API data to internal data
+  """
   def unique_leagues(matches) do
     matches
     |> Enum.map(&FootballApi.Processing.Match.extract_league/1)
