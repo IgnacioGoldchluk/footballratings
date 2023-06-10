@@ -47,4 +47,18 @@ defmodule Footballratings.InternalDataFixtures do
 
     match
   end
+
+  def create_coach(attrs \\ %{}) do
+    {:ok, coach} =
+      attrs
+      |> Enum.into(%{
+        name: "Guardiola",
+        age: 50,
+        team_id: create_team().id,
+        id: System.unique_integer([:positive])
+      })
+      |> Footballratings.FootballInfo.create_coach()
+
+    coach
+  end
 end

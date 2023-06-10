@@ -172,4 +172,19 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       assert coach.team_id == attrs[:team_id]
     end
   end
+
+  describe "coaches_matches" do
+    test "create_coach_match with valid attrs creates a coach match" do
+      coach = create_coach()
+      match = create_match()
+
+      attrs = %{match_id: match.id, coach_id: coach.id, team_id: coach.team_id}
+
+      {:ok, coach_match} = Footballratings.FootballInfo.create_coach_match(attrs)
+
+      assert coach_match.match_id == attrs[:match_id]
+      assert coach_match.coach_id == attrs[:coach_id]
+      assert coach_match.team_id == attrs[:team_id]
+    end
+  end
 end

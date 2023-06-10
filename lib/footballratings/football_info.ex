@@ -4,7 +4,7 @@ defmodule Footballratings.FootballInfo do
   """
 
   alias Footballratings.Repo
-  alias Footballratings.FootballInfo.{Team, League, Player, Match, PlayerMatch, Coach}
+  alias Footballratings.FootballInfo.{Team, League, Player, Match, PlayerMatch, Coach, CoachMatch}
 
   def create_team(attrs) do
     %Team{}
@@ -53,6 +53,12 @@ defmodule Footballratings.FootballInfo do
   def create_coach(attrs) do
     %Coach{}
     |> Coach.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def create_coach_match(attrs) do
+    %CoachMatch{}
+    |> CoachMatch.changeset(attrs)
     |> Repo.insert()
   end
 
