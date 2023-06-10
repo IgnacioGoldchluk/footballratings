@@ -151,4 +151,25 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       assert length(total) == 11
     end
   end
+
+  describe "coaches" do
+    test "create_coach with valid parameters inserts a new coach" do
+      team = create_team()
+
+      attrs = %{
+        name: "Guardiola",
+        age: 50,
+        id: System.unique_integer([:positive]),
+        team_id: team.id
+      }
+
+      {:ok, coach} = Footballratings.FootballInfo.create_coach(attrs)
+
+      assert coach.name == attrs[:name]
+      assert coach.age == attrs[:age]
+      assert coach.firstname == nil
+      assert coach.lastname == nil
+      assert coach.team_id == attrs[:team_id]
+    end
+  end
 end
