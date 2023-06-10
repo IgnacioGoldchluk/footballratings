@@ -108,6 +108,41 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
 
       assert {:error, %Ecto.Changeset{}} = Footballratings.FootballInfo.create_match(match_attrs)
     end
+
+    test "match_exists? correctly returns whether a match exists" do
+      match = create_match()
+
+      assert Footballratings.FootballInfo.match_exists?(match.id)
+      assert not Footballratings.FootballInfo.match_exists?(System.unique_integer([:positive]))
+    end
+
+    test "create_matches inserts multiple matches at once" do
+      home_team = create_team()
+      away_team = create_team()
+      league = create_league()
+
+      match1 = %{
+        season: 2023,
+        timestamp: System.unique_integer([:positive]),
+        round: "1 of 38",
+        goals_home: 1,
+        goals_away: 2,
+        penalties_home: nil,
+        penalties_away: nil,
+        league_id: league.id,
+        home_team_id: home_team.id,
+        away_team_id: away_team.id,
+        status: :ready,
+        id: System.unique_integer([:positive])
+      }
+
+      # Yeah I'm being lazy here
+      match2 = %{match1 | id: System.unique_integer([:positive])}
+
+      [match1, match2] |> Footballratings.FootballInfo.create_matches()
+      assert Repo.get(Match, match1.id)
+      assert Repo.get(Match, match2.id)
+    end
   end
 
   describe "players_matches" do

@@ -79,7 +79,13 @@ defmodule Footballratings.FootballInfo do
   end
 
   def create_matches(matches) do
-    Repo.insert_all(Match, matches)
+    {matches, placeholders} = insert_timestamp_placeholders(matches)
+
+    Repo.insert_all(Match, matches,
+      placeholders: placeholders,
+      on_conflict: :replace_all,
+      conflict_target: :id
+    )
   end
 
   def create_player_match(attrs) do
