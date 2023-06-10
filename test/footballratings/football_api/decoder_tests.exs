@@ -3,39 +3,33 @@ defmodule Footballratings.FootballApi.DecoderTests do
 
   alias FootballApi.Models
 
-  @path "test/footballratings/football_api/responses"
+  import FootballApi.ApiResponsesFixtures
 
   describe "decoders structs" do
     test "squads" do
-      {:ok, contents} = File.read("#{@path}/squads.txt")
-
       assert {:ok, %Models.Lineups.Response{}} =
-               Poison.decode(contents, as: Models.Lineups.Struct.lineups())
+               Poison.decode(squads_body(), as: Models.Lineups.Struct.lineups())
     end
 
     test "matches" do
-      {:ok, contents} = File.read("#{@path}/matches.txt")
-
       assert {:ok, %Models.Matches.Response{}} =
                Poison.decode(
-                 contents,
+                 matches_body(),
                  as: Models.Matches.Struct.match()
                )
     end
 
     test "players_statistics" do
-      {:ok, contents} = File.read("#{@path}/players_statistics.txt")
-
       assert {:ok, %Models.PlayersStatistics.Response{}} =
-               Poison.decode(contents, as: Models.PlayersStatistics.Struct.players_statistics())
+               Poison.decode(players_statistics_body(),
+                 as: Models.PlayersStatistics.Struct.players_statistics()
+               )
     end
 
     test "lineups" do
-      {:ok, contents} = File.read("#{@path}/lineups.txt")
-
       assert {:ok, %Models.Lineups.Response{}} =
                Poison.decode(
-                 contents,
+                 lineups_body(),
                  as: Models.Lineups.Struct.lineups()
                )
     end
