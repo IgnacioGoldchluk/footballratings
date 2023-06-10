@@ -29,5 +29,15 @@ defmodule Footballratings.FootballApi.DecoderTests do
       assert {:ok, %Models.PlayersStatistics.Response{}} =
                Poison.decode(contents, as: Models.PlayersStatistics.Struct.players_statistics())
     end
+
+    test "lineups" do
+      {:ok, contents} = File.read("#{@path}/lineups.txt")
+
+      assert {:ok, %Models.Lineups.Response{}} =
+               Poison.decode(
+                 contents,
+                 as: Models.Lineups.Struct.lineups()
+               )
+    end
   end
 end
