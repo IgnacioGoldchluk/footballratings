@@ -13,11 +13,11 @@ defmodule Footballratings.ExternalLineupsFixtures do
     %CoachLineup{id: id, name: Enum.take_random(@letters, 10)}
   end
 
-  def create_playerid_lineup(id \\ System.unique_integer([:positive])) do
+  def create_playerid_lineup(id) do
     %PlayerIdLineup{id: id}
   end
 
-  def create_player(id \\ System.unique_integer([:positive])) do
+  def create_player(id) do
     %PlayerLineup{player: create_playerid_lineup(id)}
   end
 

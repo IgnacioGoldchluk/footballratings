@@ -43,7 +43,9 @@ defmodule Footballratings.FootballApi.Processing.ProcessingTest do
     test "unique matches returns unique matches" do
       fixtures = [1, 2, 4, 5, 5, 6, 1, 2, 3] |> Enum.map(&create_fixture/1)
 
-      matches = for _ <- 1..length(fixtures), do: create_match()
+      matches = for _ <- 1..(length(fixtures) - 1), do: create_match()
+      # Add a match that went to penalties
+      matches = [create_match() |> insert_score(valid_penalties_score_attrs()) | matches]
 
       matches =
         [matches, fixtures]

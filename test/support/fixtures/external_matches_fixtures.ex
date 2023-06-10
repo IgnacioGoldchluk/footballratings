@@ -113,4 +113,8 @@ defmodule Footballratings.ExternalMatchesFixtures do
     new_fixure = %Fixture{fixture | status: new_status}
     %Match{match | fixture: new_fixure}
   end
+
+  def insert_score(%Match{} = match, %Score{} = score) do
+    %Match{match | score: score}
+  end
 end
