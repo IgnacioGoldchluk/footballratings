@@ -3,13 +3,15 @@ defmodule FootballApi do
   Wrapper of the football API. Always returns the "response" field of the data
   as structs.
   """
-
-  alias FootballApi.FootballApiClient
   alias FootballApi.Models
   alias FootballApi.ResponseValidation
 
+  defp client_impl() do
+    Application.get_env(:footballratings, :api_client, FootballApi.FootballApiClient)
+  end
+
   defp get_and_parse(url, url_query_params, decode_struct) do
-    with {:ok, response} <- FootballApiClient.get(url, [], params: url_query_params),
+    with {:ok, response} <- client_impl().get(url, url_query_params),
          {:ok, result} <- ResponseValidation.validate_response(response, decode_struct) do
       {:ok, result.response}
     else

@@ -53,6 +53,7 @@ defmodule Footballratings.MixProject do
       {:poison, "~> 5.0"},
       {:oban, "~> 2.14"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:mox, "~> 1.0", only: :test},
       {:plug_cowboy, "~> 2.5"}
     ]
   end
