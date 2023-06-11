@@ -9,6 +9,10 @@ defmodule FootballApi.Processing.Player do
     Map.from_struct(player)
   end
 
+  def insert_team_id(player, team_id) do
+    Map.put(player, :team_id, team_id)
+  end
+
   def to_player_match_schemas(%{team: %{id: team_id}, players: players}, match_id) do
     players
     |> Enum.map(fn %{player: %{id: id}} = player ->
