@@ -9,8 +9,7 @@ defmodule Footballratings.Workers.TeamProcessor do
     {:ok, [%{players: players}]} = FootballApi.team_squad(team_id)
 
     players
-    |> Enum.map(&FootballApi.Processing.Player.to_internal_player_schema/1)
-    |> Enum.map(&FootballApi.Processing.Player.insert_team_id(&1, team_id))
+    |> Enum.map(&FootballApi.Processing.player_with_team(&1, team_id))
     |> Footballratings.FootballInfo.maybe_create_players()
 
     :ok

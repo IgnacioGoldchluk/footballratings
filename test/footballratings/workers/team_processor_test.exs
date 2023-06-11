@@ -17,6 +17,13 @@ defmodule Footballratings.Workers.TeamProcessorTest do
       create_team(name: "Club Atletico Lanus", id: lanus_id)
 
       assert :ok == perform_job(Footballratings.Workers.TeamProcessor, %{"team_id" => lanus_id})
+
+      players =
+        Footballratings.FootballInfo.Player
+        |> Ecto.Query.where([p], p.team_id == ^lanus_id)
+        |> Repo.aggregate(:count)
+
+      assert players == 36
     end
   end
 end

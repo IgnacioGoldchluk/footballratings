@@ -10,7 +10,7 @@ defmodule Footballratings.Workers.StatisticsProcessor do
     {:ok, statistics} = FootballApi.players_statistics(match_id)
 
     statistics
-    |> Enum.flat_map(&FootballApi.Processing.Player.to_player_match_schemas(&1, match_id))
+    |> Enum.flat_map(&FootballApi.Processing.player_match_schemas(&1, match_id))
     |> Footballratings.FootballInfo.create_players_matches()
 
     :ok
