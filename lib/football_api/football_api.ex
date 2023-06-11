@@ -6,10 +6,11 @@ defmodule FootballApi do
 
   alias FootballApi.FootballApiClient
   alias FootballApi.Models
+  alias FootballApi.ResponseValidation
 
   defp get_and_parse(url, url_query_params, decode_struct) do
     with {:ok, response} <- FootballApiClient.get(url, [], params: url_query_params),
-         {:ok, result} <- FootballApiClient.validate_response(response, decode_struct) do
+         {:ok, result} <- ResponseValidation.validate_response(response, decode_struct) do
       {:ok, result.response}
     else
       {:error, reason} -> {:error, reason}
