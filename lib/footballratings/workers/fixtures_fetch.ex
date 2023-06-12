@@ -12,7 +12,7 @@ defmodule Footballratings.Workers.FixturesFetch do
   use Oban.Worker, queue: :default
 
   @impl Oban.Worker
-  def perform(%Oban.Job{args: %{"id" => league_id, "season" => season}}) do
+  def perform(%Oban.Job{args: %{"league" => league_id, "season" => season}}) do
     today = Date.utc_today()
     yesterday = Date.add(today, -1)
     {:ok, matches} = FootballApi.matches(league_id, season, yesterday, today)
@@ -21,7 +21,7 @@ defmodule Footballratings.Workers.FixturesFetch do
       matches
       |> Enum.filter(fn %{fixture: %{id: match_id}} = match ->
         FootballApi.Processing.match_finished?(match) and
-          Footballratings.FootballInfo.match_exists?(match_id)
+          not Footballratings.FootballInfo.match_exists?(match_id)
       end)
 
     # Insert leagues if they don't exist

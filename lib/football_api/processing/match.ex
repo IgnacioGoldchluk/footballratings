@@ -63,7 +63,7 @@ defmodule FootballApi.Processing.Match do
     base_schema = %{
       id: fixture_id,
       timestamp: fixture_timestamp,
-      status: "not_ready_yet",
+      status: :not_ready_yet,
       round: league_round,
       league_id: league_id,
       home_team_id: home_team_id,
