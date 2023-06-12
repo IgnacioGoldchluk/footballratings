@@ -15,6 +15,16 @@ defmodule Footballratings.Workers.StatisticsProcessor do
     |> FootballApi.Processing.exclude_new_players_from_stats()
     |> Footballratings.FootballInfo.create_players_matches()
 
+    {:ok, lineups} = FootballApi.lineups(match_id)
+
+    coaches = Enum.map(lineups, &FootballApi.Processing.coach_from_lineup/1)
+
+    Footballratings.FootballInfo.maybe_create_coaches(coaches)
+
+    coaches
+    |> Enum.map(&FootballApi.Processing.to_coach_match(&1, match_id))
+    |> Footballratings.FootballInfo.create_coaches_matches()
+
     Footballratings.FootballInfo.set_match_status_to_ready(match_id)
     :ok
   end

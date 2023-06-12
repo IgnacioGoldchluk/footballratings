@@ -26,6 +26,9 @@ defmodule Footballratings.Workers.FixturesFetchTest do
 
         "/fixtures/players", %{"fixture" => ^match_id} ->
           Footballratings.ApiResponsesFixtures.players_statistics_response()
+
+        "/fixtures/lineups", %{"fixture" => ^match_id} ->
+          Footballratings.ApiResponsesFixtures.lineups_lanus_boca_response()
       end)
 
       :ok =
@@ -67,6 +70,8 @@ defmodule Footballratings.Workers.FixturesFetchTest do
         |> Repo.aggregate(:count)
 
       assert players_who_played_for_lanus == 15
+
+      assert length(Repo.all(FootballInfo.Coach)) == 2
     end
   end
 end

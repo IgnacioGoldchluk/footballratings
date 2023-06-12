@@ -48,4 +48,8 @@ defmodule FootballApi.Processing do
     # These players have id=0, they must be filtered and ignored unfortunately.
     Enum.filter(players_stats, &(Map.get(&1, :player_id) != 0))
   end
+
+  def to_coach_match(%{id: coach_id, team_id: team_id}, match_id) do
+    %{coach_id: coach_id, team_id: team_id, match_id: match_id}
+  end
 end

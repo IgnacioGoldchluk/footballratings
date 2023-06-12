@@ -30,7 +30,7 @@ defmodule FootballApi do
   @doc """
   Return lineups for a given match
   """
-  def lineups_by_fixture_id(fixture_id) do
+  def lineups(fixture_id) do
     url_query_params = %{"fixture" => fixture_id}
     get_and_parse("/fixtures/lineups", url_query_params, Models.Lineups.Struct.lineups())
   end
