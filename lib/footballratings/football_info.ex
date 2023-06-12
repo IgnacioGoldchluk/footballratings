@@ -111,6 +111,12 @@ defmodule Footballratings.FootballInfo do
     end
   end
 
+  def set_match_status_to_ready(match_id) do
+    Repo.get!(Match, match_id)
+    |> Ecto.Changeset.change(status: :ready)
+    |> Repo.update()
+  end
+
   defp insert_timestamp_placeholders(structs) do
     timestamp = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
     placeholders = %{timestamp: timestamp}
