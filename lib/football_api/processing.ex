@@ -42,4 +42,10 @@ defmodule FootballApi.Processing do
     players_that_played
     |> Enum.map(&FootballApi.Processing.PlayersStatistics.insert_match_id(&1, match_id))
   end
+
+  def exclude_new_players_from_stats(players_stats) do
+    # 3rd party API sometimes does not have data on new players.
+    # These players have id=0, they must be filtered and ignored unfortunately.
+    Enum.filter(players_stats, &(Map.get(&1, :player_id) != 0))
+  end
 end

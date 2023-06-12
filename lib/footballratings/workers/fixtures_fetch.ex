@@ -35,9 +35,7 @@ defmodule Footballratings.Workers.FixturesFetch do
     new_finished_matches_schemas = FootballApi.Processing.unique_matches(new_finished_matches)
     Footballratings.FootballInfo.create_matches(new_finished_matches_schemas)
 
-    Footballratings.JobCreator.new_jobs_for_teams_squads(teams)
-    Footballratings.JobCreator.new_jobs_for_matches_statistics(new_finished_matches_schemas)
-
+    Footballratings.JobCreator.new_jobs_for_teams_squads(new_finished_matches_schemas)
     :ok
   end
 end

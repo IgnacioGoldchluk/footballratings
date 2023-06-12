@@ -11,8 +11,11 @@ defmodule Footballratings.Workers.StatisticsProcessor do
 
     statistics
     |> Enum.flat_map(&FootballApi.Processing.player_match_schemas(&1, match_id))
+    # Temporal
+    |> FootballApi.Processing.exclude_new_players_from_stats()
     |> Footballratings.FootballInfo.create_players_matches()
 
+    Footballratings.FootballInfo.set_match_status_to_ready(match_id)
     :ok
   end
 end
