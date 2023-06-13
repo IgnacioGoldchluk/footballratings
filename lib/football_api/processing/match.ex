@@ -49,8 +49,6 @@ defmodule FootballApi.Processing.Match do
     "ABD"
   ]
 
-  @match_status @in_progress_match_status ++ @not_started_match_status ++ @finished_match_status
-
   def finished?(%Match{fixture: %{status: %{short: status}}}) do
     Enum.member?(@finished_match_status, status)
   end
