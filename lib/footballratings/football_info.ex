@@ -6,6 +6,8 @@ defmodule Footballratings.FootballInfo do
   alias Footballratings.Repo
   alias Footballratings.FootballInfo.{Team, League, Player, Match, PlayerMatch, Coach, CoachMatch}
 
+  import Ecto.Query
+
   def create_team(attrs) do
     %Team{}
     |> Team.changeset(attrs)
@@ -131,6 +133,26 @@ defmodule Footballratings.FootballInfo do
     Repo.get!(Match, match_id)
     |> Ecto.Changeset.change(status: :ready)
     |> Repo.update()
+  end
+
+  def matches_available_for_rating() do
+    from(m in Match,
+      join: ht in Team,
+      on: m.home_team_id == ht.id,
+      join: at in Team,
+      on: m.away_team_id == at.id,
+      join: l in League,
+      on: l.id == m.league_id,
+      where: m.status == :ready,
+      order_by: [desc: m.timestamp],
+      select: %{
+        match: m,
+        home_team: %{name: ht.name, id: ht.id},
+        away_team: %{name: at.name, id: at.id},
+        league_name: l.name
+      }
+    )
+    |> Repo.all()
   end
 
   defp insert_timestamp_placeholders(structs) do

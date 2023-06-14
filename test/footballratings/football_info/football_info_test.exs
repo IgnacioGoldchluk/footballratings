@@ -154,6 +154,29 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       assert Repo.get(Match, match1.id)
       assert Repo.get(Match, match2.id)
     end
+
+    test "matches_available_for_rating returns the expected_matches" do
+      now = DateTime.utc_now() |> DateTime.to_unix()
+      yesterday = now - 24 * 60 * 60
+
+      matches =
+        [
+          # 2 matches that we should get back
+          %{status: :ready, timestamp: yesterday},
+          %{status: :ready, timestamp: now},
+          # 2 matches that we should not get back
+          %{status: :expired},
+          %{status: :not_ready_yet}
+        ]
+        |> Enum.map(&create_match/1)
+
+      [yesterday_match, today_match | _rest] = matches
+
+      results = Footballratings.FootballInfo.matches_available_for_rating()
+      [first_match, second_match] = results
+      assert today_match == first_match[:match]
+      assert yesterday_match == second_match[:match]
+    end
   end
 
   describe "players_matches" do
