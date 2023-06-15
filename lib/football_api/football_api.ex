@@ -5,12 +5,15 @@ defmodule FootballApi do
   """
   alias FootballApi.Models
   alias FootballApi.ResponseValidation
+  require Logger
 
   defp client_impl() do
     Application.get_env(:footballratings, :api_client, FootballApi.FootballApiClient)
   end
 
   defp get_and_parse(url, url_query_params, decode_struct) do
+    Logger.debug("Querying #{url} with #{query_args_to_string(url_query_params)}")
+
     with {:ok, response} <- client_impl().get(url, url_query_params),
          {:ok, result} <- ResponseValidation.validate_response(response, decode_struct) do
       {:ok, result.response}
@@ -54,5 +57,9 @@ defmodule FootballApi do
   def team_squad(team_id) do
     url_query_params = %{"team" => team_id}
     get_and_parse("/players/squads", url_query_params, Models.Squads.Struct.squad())
+  end
+
+  defp query_args_to_string(query_args) do
+    Enum.map_join(query_args, ", ", fn {k, v} -> "#{k}: #{v}" end)
   end
 end
