@@ -18,6 +18,25 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       invalid_attrs = %{}
       assert {:error, %Ecto.Changeset{}} = Footballratings.FootballInfo.create_team(invalid_attrs)
     end
+
+    test "matches_available_for_rating_for_team/1 returns only where team id matches" do
+      match1 = create_match()
+      _match2 = create_match()
+
+      existing_team = match1.home_team_id
+
+      matches = Footballratings.FootballInfo.matches_available_for_rating_for_team(existing_team)
+      assert length(matches) == 1
+      [%{match: %{id: match_id}}] = matches
+      assert match_id == match1.id
+
+      non_existing_team_id = System.unique_integer([:positive])
+
+      matches =
+        Footballratings.FootballInfo.matches_available_for_rating_for_team(non_existing_team_id)
+
+      assert length(matches) == 0
+    end
   end
 
   describe "players" do
