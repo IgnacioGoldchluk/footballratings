@@ -39,11 +39,9 @@ defmodule FootballratingsWeb.UsersResetPasswordLiveTest do
       result =
         lv
         |> element("#reset_password_form")
-        |> render_change(
-          users: %{"password" => "secret12", "confirmation_password" => "secret123456"}
-        )
+        |> render_change(users: %{"password" => "S_123", "confirmation_password" => "s_12A"})
 
-      assert result =~ "should be at least 12 character"
+      assert result =~ "should be at least 8 character"
       assert result =~ "does not match password"
     end
   end
@@ -56,8 +54,8 @@ defmodule FootballratingsWeb.UsersResetPasswordLiveTest do
         lv
         |> form("#reset_password_form",
           users: %{
-            "password" => "new valid password",
-            "password_confirmation" => "new valid password"
+            "password" => "NewV4lidPassword!",
+            "password_confirmation" => "NewV4lidPassword!"
           }
         )
         |> render_submit()
@@ -65,7 +63,7 @@ defmodule FootballratingsWeb.UsersResetPasswordLiveTest do
 
       refute get_session(conn, :users_token)
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Password reset successfully"
-      assert Accounts.get_users_by_email_and_password(users.email, "new valid password")
+      assert Accounts.get_users_by_email_and_password(users.email, "NewV4lidPassword!")
     end
 
     test "does not reset password on invalid data", %{conn: conn, token: token} do
@@ -75,14 +73,14 @@ defmodule FootballratingsWeb.UsersResetPasswordLiveTest do
         lv
         |> form("#reset_password_form",
           users: %{
-            "password" => "too short",
-            "password_confirmation" => "does not match"
+            "password" => "short",
+            "password_confirmation" => "nomatch"
           }
         )
         |> render_submit()
 
       assert result =~ "Reset Password"
-      assert result =~ "should be at least 12 character(s)"
+      assert result =~ "should be at least 8 character(s)"
       assert result =~ "does not match password"
     end
   end

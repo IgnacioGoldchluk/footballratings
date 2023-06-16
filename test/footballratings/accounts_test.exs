@@ -54,7 +54,8 @@ defmodule Footballratings.AccountsTest do
 
       assert %{
                password: ["can't be blank"],
-               email: ["can't be blank"]
+               email: ["can't be blank"],
+               username: ["can't be blank"]
              } = errors_on(changeset)
     end
 
@@ -63,7 +64,10 @@ defmodule Footballratings.AccountsTest do
 
       assert %{
                email: ["must have the @ sign and no spaces"],
-               password: ["should be at least 12 character(s)"]
+               password: [
+                 "at least one digit or punctuation character",
+                 "at least one upper case character"
+               ]
              } = errors_on(changeset)
     end
 
@@ -97,7 +101,7 @@ defmodule Footballratings.AccountsTest do
   describe "change_users_registration/2" do
     test "returns a changeset" do
       assert %Ecto.Changeset{} = changeset = Accounts.change_users_registration(%Users{})
-      assert changeset.required == [:password, :email]
+      assert changeset.required == [:password, :username, :email]
     end
 
     test "allows fields to be set" do
@@ -200,7 +204,11 @@ defmodule Footballratings.AccountsTest do
 
       token =
         extract_users_token(fn url ->
-          Accounts.deliver_users_update_email_instructions(%{users | email: email}, users.email, url)
+          Accounts.deliver_users_update_email_instructions(
+            %{users | email: email},
+            users.email,
+            url
+          )
         end)
 
       %{users: users, token: token, email: email}
@@ -245,11 +253,11 @@ defmodule Footballratings.AccountsTest do
     test "allows fields to be set" do
       changeset =
         Accounts.change_users_password(%Users{}, %{
-          "password" => "new valid password"
+          "password" => "NewV4lidPassword!"
         })
 
       assert changeset.valid?
-      assert get_change(changeset, :password) == "new valid password"
+      assert get_change(changeset, :password) == "NewV4lidPassword!"
       assert is_nil(get_change(changeset, :hashed_password))
     end
   end
@@ -262,12 +270,16 @@ defmodule Footballratings.AccountsTest do
     test "validates password", %{users: users} do
       {:error, changeset} =
         Accounts.update_users_password(users, valid_users_password(), %{
-          password: "not valid",
-          password_confirmation: "another"
+          password: "no",
+          password_confirmation: "other"
         })
 
       assert %{
-               password: ["should be at least 12 character(s)"],
+               password: [
+                 "at least one digit or punctuation character",
+                 "at least one upper case character",
+                 "should be at least 8 character(s)"
+               ],
                password_confirmation: ["does not match password"]
              } = errors_on(changeset)
     end
@@ -291,11 +303,11 @@ defmodule Footballratings.AccountsTest do
     test "updates the password", %{users: users} do
       {:ok, users} =
         Accounts.update_users_password(users, valid_users_password(), %{
-          password: "new valid password"
+          password: "NewValidP4ssword!"
         })
 
       assert is_nil(users.password)
-      assert Accounts.get_users_by_email_and_password(users.email, "new valid password")
+      assert Accounts.get_users_by_email_and_password(users.email, "NewValidP4ssword!")
     end
 
     test "deletes all tokens for the given users", %{users: users} do
@@ -303,7 +315,7 @@ defmodule Footballratings.AccountsTest do
 
       {:ok, _} =
         Accounts.update_users_password(users, valid_users_password(), %{
-          password: "new valid password"
+          password: "NewV4lidPassword!"
         })
 
       refute Repo.get_by(UsersToken, users_id: users.id)
@@ -476,7 +488,10 @@ defmodule Footballratings.AccountsTest do
         })
 
       assert %{
-               password: ["should be at least 12 character(s)"],
+               password: [
+                 "at least one digit or punctuation character",
+                 "at least one upper case character"
+               ],
                password_confirmation: ["does not match password"]
              } = errors_on(changeset)
     end
@@ -488,14 +503,16 @@ defmodule Footballratings.AccountsTest do
     end
 
     test "updates the password", %{users: users} do
-      {:ok, updated_users} = Accounts.reset_users_password(users, %{password: "new valid password"})
+      {:ok, updated_users} =
+        Accounts.reset_users_password(users, %{password: "NewV4lidPassword!"})
+
       assert is_nil(updated_users.password)
-      assert Accounts.get_users_by_email_and_password(users.email, "new valid password")
+      assert Accounts.get_users_by_email_and_password(users.email, "NewV4lidPassword!")
     end
 
     test "deletes all tokens for the given users", %{users: users} do
       _ = Accounts.generate_users_session_token(users)
-      {:ok, _} = Accounts.reset_users_password(users, %{password: "new valid password"})
+      {:ok, _} = Accounts.reset_users_password(users, %{password: "NewV4lidPassword!"})
       refute Repo.get_by(UsersToken, users_id: users.id)
     end
   end

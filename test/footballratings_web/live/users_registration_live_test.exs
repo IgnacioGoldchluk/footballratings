@@ -28,11 +28,16 @@ defmodule FootballratingsWeb.UsersRegistrationLiveTest do
       result =
         lv
         |> element("#registration_form")
-        |> render_change(users: %{"email" => "with spaces", "password" => "too short"})
+        |> render_change(
+          users: %{"email" => "with spaces", "password" => "short", "username" => "a a"}
+        )
 
       assert result =~ "Register"
       assert result =~ "must have the @ sign and no spaces"
-      assert result =~ "should be at least 12 character"
+      assert result =~ "username can only contain letters, numbers and underscore"
+      assert result =~ "should be at least 8 character"
+      assert result =~ "at least one digit or punctuation character"
+      assert result =~ "at least one upper case character"
     end
   end
 

@@ -26,13 +26,20 @@ defmodule FootballratingsWeb.UsersLoginLiveTest do
 
   describe "users login" do
     test "redirects if users login with valid credentials", %{conn: conn} do
-      password = "123456789abcd"
+      password = "123456789abcD"
       users = users_fixture(%{password: password})
 
       {:ok, lv, _html} = live(conn, ~p"/users/log_in")
 
       form =
-        form(lv, "#login_form", users: %{email: users.email, password: password, remember_me: true})
+        form(lv, "#login_form",
+          users: %{
+            email: users.email,
+            password: password,
+            remember_me: true,
+            username: users.username
+          }
+        )
 
       conn = submit_form(form, conn)
 

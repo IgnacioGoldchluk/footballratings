@@ -127,13 +127,13 @@ defmodule FootballratingsWeb.UsersSettingsLiveTest do
         |> render_change(%{
           "current_password" => "invalid",
           "users" => %{
-            "password" => "too short",
+            "password" => "short",
             "password_confirmation" => "does not match"
           }
         })
 
       assert result =~ "Change Password"
-      assert result =~ "should be at least 12 character(s)"
+      assert result =~ "should be at least 8 character(s)"
       assert result =~ "does not match password"
     end
 
@@ -145,14 +145,14 @@ defmodule FootballratingsWeb.UsersSettingsLiveTest do
         |> form("#password_form", %{
           "current_password" => "invalid",
           "users" => %{
-            "password" => "too short",
+            "password" => "short",
             "password_confirmation" => "does not match"
           }
         })
         |> render_submit()
 
       assert result =~ "Change Password"
-      assert result =~ "should be at least 12 character(s)"
+      assert result =~ "should be at least 8 character(s)"
       assert result =~ "does not match password"
       assert result =~ "is not valid"
     end
@@ -165,7 +165,11 @@ defmodule FootballratingsWeb.UsersSettingsLiveTest do
 
       token =
         extract_users_token(fn url ->
-          Accounts.deliver_users_update_email_instructions(%{users | email: email}, users.email, url)
+          Accounts.deliver_users_update_email_instructions(
+            %{users | email: email},
+            users.email,
+            url
+          )
         end)
 
       %{conn: log_in_users(conn, users), token: token, email: email, users: users}
