@@ -50,6 +50,9 @@ defmodule FootballratingsWeb.Router do
   scope "/", FootballratingsWeb do
     pipe_through [:browser, :redirect_if_users_is_authenticated]
 
+    live "/matches", MatchLive.Index, :index
+    live "/matches/:id", MatchLive.Show, :show
+
     live_session :redirect_if_users_is_authenticated,
       on_mount: [{FootballratingsWeb.UsersAuth, :redirect_if_users_is_authenticated}] do
       live "/users/register", UsersRegistrationLive, :new
