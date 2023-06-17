@@ -135,7 +135,7 @@ defmodule Footballratings.FootballInfo do
     |> Repo.update()
   end
 
-  defp matches_available_for_rating_query() do
+  defp matches_with_teams_and_league() do
     from(m in Match,
       join: ht in Team,
       on: m.home_team_id == ht.id,
@@ -143,7 +143,6 @@ defmodule Footballratings.FootballInfo do
       on: m.away_team_id == at.id,
       join: l in League,
       on: l.id == m.league_id,
-      where: m.status == :ready,
       order_by: [desc: m.timestamp],
       select: %{
         match: m,
@@ -155,12 +154,19 @@ defmodule Footballratings.FootballInfo do
   end
 
   def matches_available_for_rating() do
-    matches_available_for_rating_query()
+    matches_with_teams_and_league()
+    |> where([m], m.status == :ready)
     |> Repo.all()
   end
 
+  def get_match_with_team_and_league(match_id) do
+    matches_with_teams_and_league()
+    |> where([m], m.id == ^match_id)
+    |> Repo.one()
+  end
+
   def matches_available_for_rating_for_team(team_id) do
-    matches_available_for_rating_query()
+    matches_with_teams_and_league()
     |> where([m, ht, at, l], ht.id == ^team_id or at.id == ^team_id)
     |> Repo.all()
   end

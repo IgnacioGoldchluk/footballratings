@@ -196,6 +196,20 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       assert today_match == first_match[:match]
       assert yesterday_match == second_match[:match]
     end
+
+    test "get_match_with_team_and_league/1 returns the expected format" do
+      match = create_match()
+
+      match_with_team_and_league =
+        Footballratings.FootballInfo.get_match_with_team_and_league(match.id)
+
+      %{match: queried_match} = match_with_team_and_league
+      assert queried_match.id == match.id
+
+      %{home_team: %{id: ht_id}, away_team: %{id: at_id}} = match_with_team_and_league
+      assert ht_id == match.home_team_id
+      assert at_id == match.away_team_id
+    end
   end
 
   describe "players_matches" do
