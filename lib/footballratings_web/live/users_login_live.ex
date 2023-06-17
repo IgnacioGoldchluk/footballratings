@@ -8,7 +8,7 @@ defmodule FootballratingsWeb.UsersLoginLive do
         Sign in to account
         <:subtitle>
           Don't have an account?
-          <.link navigate={~p"/users/register"} class="font-semibold text-brand hover:underline">
+          <.link navigate={~p"/users/register"} class="link font-semibold hover:underline">
             Sign up
           </.link>
           for an account now.
@@ -26,7 +26,7 @@ defmodule FootballratingsWeb.UsersLoginLive do
           </.link>
         </:actions>
         <:actions>
-          <.button phx-disable-with="Signing in..." class="w-full">
+          <.button phx-disable-with="Signing in..." class="btn-primary">
             Sign in <span aria-hidden="true">→</span>
           </.button>
         </:actions>

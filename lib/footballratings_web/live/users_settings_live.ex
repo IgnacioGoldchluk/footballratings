@@ -29,7 +29,7 @@ defmodule FootballratingsWeb.UsersSettingsLive do
             required
           />
           <:actions>
-            <.button phx-disable-with="Changing...">Change Email</.button>
+            <.button phx-disable-with="Changing..." class="btn-secondary">Change Email</.button>
           </:actions>
         </.simple_form>
       </div>
@@ -65,7 +65,7 @@ defmodule FootballratingsWeb.UsersSettingsLive do
             required
           />
           <:actions>
-            <.button phx-disable-with="Changing...">Change Password</.button>
+            <.button phx-disable-with="Changing..." class="btn-secondary">Change Password</.button>
           </:actions>
         </.simple_form>
       </div>
