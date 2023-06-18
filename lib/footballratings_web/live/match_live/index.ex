@@ -60,9 +60,9 @@ defmodule FootballratingsWeb.MatchLive.Index do
         <img src={"https://media.api-sports.io/football/teams/#{@team.id}.png"} width="50" />
         <p class="w-48 font-semibold pl-4 py-2"><%= @team.name %></p>
         <.result goals={@goals} penalties={@penalties} />
-        <a href={"/matches/#{@match_id}/rate/#{@team.id}"} class="py-1 px-2">
+        <.link navigate={"/matches/#{@match_id}/rate/#{@team.id}"} class="py-1 px-2">
           <button class="btn btn-primary">Rate players</button>
-        </a>
+        </.link>
       </div>
     </div>
     """

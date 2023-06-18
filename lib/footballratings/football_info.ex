@@ -165,6 +165,21 @@ defmodule Footballratings.FootballInfo do
     |> Repo.one()
   end
 
+  def players_for_match(match_id, team_id) do
+    from(pm in PlayerMatch,
+      join: p in Player,
+      on: pm.player_id == p.id,
+      join: t in Team,
+      on: pm.team_id == t.id
+    )
+    |> where([pm], pm.match_id == ^match_id)
+    |> where([pm, p, t], t.id == ^team_id)
+    |> order_by([pm, p, t], asc: p.name)
+    |> select([pm, p, t], %{player: %{name: p.name, id: p.id}, team_id: t.id})
+    |> Repo.all()
+    |> Enum.group_by(&Map.get(&1, :team_id))
+  end
+
   def matches_available_for_rating_for_team(team_id) do
     matches_with_teams_and_league()
     |> where([m, ht, at, l], ht.id == ^team_id or at.id == ^team_id)

@@ -4,23 +4,28 @@ defmodule FootballratingsWeb.Router do
   import FootballratingsWeb.UsersAuth
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, {FootballratingsWeb.Layouts, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
-    plug :fetch_current_users
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_live_flash)
+    plug(:put_root_layout, {FootballratingsWeb.Layouts, :root})
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
+    plug(:fetch_current_users)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   scope "/", FootballratingsWeb do
-    pipe_through :browser
+    pipe_through(:browser)
 
-    get "/", PageController, :home
+    get("/", PageController, :home)
+
+    live_session :main do
+      live("/matches", MatchLive.Index, :index)
+      live("/matches/:match_id/rate/:team_id", MatchLive.Rate, :rate)
+    end
   end
 
   # Other scopes may use custom stacks.
@@ -38,51 +43,48 @@ defmodule FootballratingsWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      live_dashboard "/dashboard", metrics: FootballratingsWeb.Telemetry
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+      live_dashboard("/dashboard", metrics: FootballratingsWeb.Telemetry)
+      forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end
 
   ## Authentication routes
 
   scope "/", FootballratingsWeb do
-    pipe_through [:browser, :redirect_if_users_is_authenticated]
-
-    live "/matches", MatchLive.Index, :index
-    live "/matches/:id", MatchLive.Show, :show
+    pipe_through([:browser, :redirect_if_users_is_authenticated])
 
     live_session :redirect_if_users_is_authenticated,
       on_mount: [{FootballratingsWeb.UsersAuth, :redirect_if_users_is_authenticated}] do
-      live "/users/register", UsersRegistrationLive, :new
-      live "/users/log_in", UsersLoginLive, :new
-      live "/users/reset_password", UsersForgotPasswordLive, :new
-      live "/users/reset_password/:token", UsersResetPasswordLive, :edit
+      live("/users/register", UsersRegistrationLive, :new)
+      live("/users/log_in", UsersLoginLive, :new)
+      live("/users/reset_password", UsersForgotPasswordLive, :new)
+      live("/users/reset_password/:token", UsersResetPasswordLive, :edit)
     end
 
-    post "/users/log_in", UsersSessionController, :create
+    post("/users/log_in", UsersSessionController, :create)
   end
 
   scope "/", FootballratingsWeb do
-    pipe_through [:browser, :require_authenticated_users]
+    pipe_through([:browser, :require_authenticated_users])
 
     live_session :require_authenticated_users,
       on_mount: [{FootballratingsWeb.UsersAuth, :ensure_authenticated}] do
-      live "/users/settings", UsersSettingsLive, :edit
-      live "/users/settings/confirm_email/:token", UsersSettingsLive, :confirm_email
+      live("/users/settings", UsersSettingsLive, :edit)
+      live("/users/settings/confirm_email/:token", UsersSettingsLive, :confirm_email)
     end
   end
 
   scope "/", FootballratingsWeb do
-    pipe_through [:browser]
+    pipe_through([:browser])
 
-    delete "/users/log_out", UsersSessionController, :delete
+    delete("/users/log_out", UsersSessionController, :delete)
 
     live_session :current_users,
       on_mount: [{FootballratingsWeb.UsersAuth, :mount_current_users}] do
-      live "/users/confirm/:token", UsersConfirmationLive, :edit
-      live "/users/confirm", UsersConfirmationInstructionsLive, :new
+      live("/users/confirm/:token", UsersConfirmationLive, :edit)
+      live("/users/confirm", UsersConfirmationInstructionsLive, :new)
     end
   end
 end
