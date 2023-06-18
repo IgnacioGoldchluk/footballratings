@@ -19,35 +19,35 @@ defmodule FootballApi.Processing.Match do
     "WO"
   ]
 
-  @in_progress_match_status [
-    # First half
-    "1H",
-    # Halftime
-    "HT",
-    # Second half
-    "2H",
-    # Extra time
-    "ET",
-    # Break time
-    "BT",
-    # Penalties
-    "P",
-    # Suspended temporarily
-    "SUSP",
-    # Postponed
-    "PST",
-    # In progress
-    "LIVE"
-  ]
+  # @in_progress_match_status [
+  #   # First half
+  #   "1H",
+  #   # Halftime
+  #   "HT",
+  #   # Second half
+  #   "2H",
+  #   # Extra time
+  #   "ET",
+  #   # Break time
+  #   "BT",
+  #   # Penalties
+  #   "P",
+  #   # Suspended temporarily
+  #   "SUSP",
+  #   # Postponed
+  #   "PST",
+  #   # In progress
+  #   "LIVE"
+  # ]
 
-  @not_started_match_status [
-    # Time to be defined
-    "TBD",
-    # Not started
-    "NS",
-    # Abandoned due to external factors
-    "ABD"
-  ]
+  # @not_started_match_status [
+  #   # Time to be defined
+  #   "TBD",
+  #   # Not started
+  #   "NS",
+  #   # Abandoned due to external factors
+  #   "ABD"
+  # ]
 
   def finished?(%Match{fixture: %{status: %{short: status}}}) do
     Enum.member?(@finished_match_status, status)

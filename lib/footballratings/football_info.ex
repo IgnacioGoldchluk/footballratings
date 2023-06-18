@@ -175,9 +175,8 @@ defmodule Footballratings.FootballInfo do
     |> where([pm], pm.match_id == ^match_id)
     |> where([pm, p, t], t.id == ^team_id)
     |> order_by([pm, p, t], asc: p.name)
-    |> select([pm, p, t], %{player: %{name: p.name, id: p.id}, team_id: t.id})
+    |> select([pm, p, t], %{name: p.name, id: p.id})
     |> Repo.all()
-    |> Enum.group_by(&Map.get(&1, :team_id))
   end
 
   def matches_available_for_rating_for_team(team_id) do
