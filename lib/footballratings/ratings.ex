@@ -39,7 +39,9 @@ defmodule Footballratings.Ratings do
     |> select(
       [pr, p, mr, t, u],
       %{
-        player: %{id: p.id, name: p.name, score: pr.score},
+        id: p.id,
+        name: p.name,
+        score: pr.score,
         team: %{id: t.id, name: t.name},
         user: %{id: u.id, name: u.username}
       }

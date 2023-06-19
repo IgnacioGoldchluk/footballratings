@@ -62,13 +62,13 @@ defmodule FootballratingsWeb.MatchLive.Rate do
   def handle_event(
         "submit",
         scores,
-        %{assigns: %{players: players, team_id: team_id, match_id: match_id, user_id: user_id}} =
-          socket
+        %{assigns: %{players: players, team_id: team_id, match_id: match_id}} = socket
       ) do
+    user_id = socket.assigns.current_users.id
+
     {:ok, match_ratings_id} =
       Ratings.create_match_and_players_ratings(players, scores, team_id, match_id, user_id)
 
-    # FIXME: Create the endpoint
-    # {:noreply, push_navigate(socket, to: ~p"/players_ratings/#{match_ratings_id}")}
+    {:noreply, push_navigate(socket, to: ~p"/ratings/#{match_ratings_id}")}
   end
 end
