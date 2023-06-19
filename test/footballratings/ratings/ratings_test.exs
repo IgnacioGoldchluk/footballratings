@@ -7,6 +7,8 @@ defmodule Footballratings.Ratings.RatingsTest do
   alias Footballratings.AccountsFixtures
 
   alias Footballratings.Ratings
+  alias Footballratings.FootballInfo
+  import Ecto.Query
 
   describe "ratings" do
     test "create_rating/1 creates a rating" do
@@ -68,12 +70,67 @@ defmodule Footballratings.Ratings.RatingsTest do
 
     test "create_match_and_players_ratings executes successfully in a transaction" do
       match = InternalDataFixtures.create_match()
+      user = AccountsFixtures.users_fixture()
 
-      players = 1..15 |> Enum.map(&%{id: &1}) |> Enum.map(&InternalDataFixtures.create_player/1)
+      players =
+        1..15
+        |> Enum.map(&%{id: &1, team_id: match.home_team_id})
+        |> Enum.map(&InternalDataFixtures.create_player/1)
+        |> Enum.map(fn %FootballInfo.Player{id: id, name: name} -> %{id: id, name: name} end)
 
-      team_id = match.away_team_id
+      scores =
+        players
+        |> Enum.map(fn %{id: player_id} ->
+          {Integer.to_string(player_id), Integer.to_string(Enum.random(1..10))}
+        end)
+        |> Map.new()
 
-      assert {:ok, results} = Ratings.create_match_and_players_ratings(players)
+      assert {:ok, match_ratings_id} =
+               Ratings.create_match_and_players_ratings(
+                 players,
+                 scores,
+                 match.home_team_id,
+                 match.id,
+                 user.id
+               )
+
+      results =
+        from(pr in Ratings.PlayerRatings, where: pr.match_rating_id == ^match_ratings_id)
+        |> Repo.all()
+
+      assert length(results) == 15
+    end
+
+    test "create_match_and_players_ratings rolls back if there are any errors" do
+      match = InternalDataFixtures.create_match()
+      user = AccountsFixtures.users_fixture()
+
+      players =
+        1..15
+        |> Enum.map(&%{id: &1, team_id: match.home_team_id})
+        |> Enum.map(&InternalDataFixtures.create_player/1)
+        |> Enum.map(fn %FootballInfo.Player{id: id, name: name} -> %{id: id, name: name} end)
+        # add an invalid player
+        |> Enum.concat([%{id: System.unique_integer([:positive]), name: "invalid player"}])
+
+      scores =
+        players
+        |> Enum.map(fn %{id: player_id} ->
+          {Integer.to_string(player_id), Integer.to_string(Enum.random(1..10))}
+        end)
+        |> Map.new()
+
+      assert {:error, :rollback} =
+               Ratings.create_match_and_players_ratings(
+                 players,
+                 scores,
+                 match.home_team_id,
+                 match.id,
+                 user.id
+               )
+
+      results = Repo.all(Ratings.PlayerRatings)
+      assert length(results) == 0
     end
   end
 end

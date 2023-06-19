@@ -3,6 +3,8 @@ defmodule FootballratingsWeb.MatchLive.Rate do
 
   @initial_score "5"
 
+  alias Footballratings.Ratings
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -39,7 +41,9 @@ defmodule FootballratingsWeb.MatchLive.Rate do
     {:ok,
      socket
      |> assign(:players, players)
-     |> assign(:scores, scores)}
+     |> assign(:scores, scores)
+     |> assign(:team_id, team_id)
+     |> assign(:match_id, match_id)}
   end
 
   @impl true
@@ -55,8 +59,16 @@ defmodule FootballratingsWeb.MatchLive.Rate do
   end
 
   @impl true
-  def handle_event("save", scores, socket) do
-    # TODO: Save scores
-    # push_naviate()
+  def handle_event(
+        "submit",
+        scores,
+        %{assigns: %{players: players, team_id: team_id, match_id: match_id, user_id: user_id}} =
+          socket
+      ) do
+    {:ok, match_ratings_id} =
+      Ratings.create_match_and_players_ratings(players, scores, team_id, match_id, user_id)
+
+    # FIXME: Create the endpoint
+    # {:noreply, push_navigate(socket, to: ~p"/players_ratings/#{match_ratings_id}")}
   end
 end
