@@ -21,7 +21,7 @@ defmodule Footballratings.FootballInfo do
   end
 
   def maybe_create_teams(teams) do
-    {teams, placeholders} = insert_timestamp_placeholders(teams)
+    {teams, placeholders} = Repo.insert_timestamp_placeholders(teams)
 
     Repo.insert_all(Team, teams,
       placeholders: placeholders,
@@ -37,7 +37,7 @@ defmodule Footballratings.FootballInfo do
   end
 
   def maybe_create_leagues(leagues) do
-    {leagues, placeholders} = insert_timestamp_placeholders(leagues)
+    {leagues, placeholders} = Repo.insert_timestamp_placeholders(leagues)
 
     Repo.insert_all(League, leagues,
       placeholders: placeholders,
@@ -59,7 +59,7 @@ defmodule Footballratings.FootballInfo do
   end
 
   def maybe_create_coaches(coaches) do
-    {coaches, placeholders} = insert_timestamp_placeholders(coaches)
+    {coaches, placeholders} = Repo.insert_timestamp_placeholders(coaches)
 
     Repo.insert_all(Coach, coaches,
       placeholders: placeholders,
@@ -75,13 +75,13 @@ defmodule Footballratings.FootballInfo do
   end
 
   def create_coaches_matches(coaches_matches) do
-    {coaches_matches, placeholders} = insert_timestamp_placeholders(coaches_matches)
+    {coaches_matches, placeholders} = Repo.insert_timestamp_placeholders(coaches_matches)
 
     Repo.insert_all(CoachMatch, coaches_matches, placeholders: placeholders)
   end
 
   def maybe_create_players(players) do
-    {players, placeholders} = insert_timestamp_placeholders(players)
+    {players, placeholders} = Repo.insert_timestamp_placeholders(players)
 
     Repo.insert_all(Player, players,
       placeholders: placeholders,
@@ -97,7 +97,7 @@ defmodule Footballratings.FootballInfo do
   end
 
   def create_matches(matches) do
-    {matches, placeholders} = insert_timestamp_placeholders(matches)
+    {matches, placeholders} = Repo.insert_timestamp_placeholders(matches)
 
     Repo.insert_all(Match, matches,
       placeholders: placeholders,
@@ -113,7 +113,7 @@ defmodule Footballratings.FootballInfo do
   end
 
   def create_players_matches(players_matches) do
-    {players_matches, placeholders} = insert_timestamp_placeholders(players_matches)
+    {players_matches, placeholders} = Repo.insert_timestamp_placeholders(players_matches)
 
     Repo.insert_all(PlayerMatch, players_matches,
       placeholders: placeholders,
@@ -183,21 +183,5 @@ defmodule Footballratings.FootballInfo do
     matches_with_teams_and_league()
     |> where([m, ht, at, l], ht.id == ^team_id or at.id == ^team_id)
     |> Repo.all()
-  end
-
-  defp insert_timestamp_placeholders(structs) do
-    timestamp = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
-    placeholders = %{timestamp: timestamp}
-
-    new_structs =
-      Enum.map(
-        structs,
-        &Map.merge(&1, %{
-          inserted_at: {:placeholder, :timestamp},
-          updated_at: {:placeholder, :timestamp}
-        })
-      )
-
-    {new_structs, placeholders}
   end
 end
