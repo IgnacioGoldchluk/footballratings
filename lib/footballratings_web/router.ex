@@ -24,7 +24,7 @@ defmodule FootballratingsWeb.Router do
 
     live_session :main do
       live("/matches", MatchLive.Index, :index)
-      live("/matches/:match_id/rate/:team_id", MatchLive.Rate, :rate)
+      live("/ratings/:match_rating_id", RatingLive.Show, :show)
     end
   end
 
@@ -73,6 +73,7 @@ defmodule FootballratingsWeb.Router do
       on_mount: [{FootballratingsWeb.UsersAuth, :ensure_authenticated}] do
       live("/users/settings", UsersSettingsLive, :edit)
       live("/users/settings/confirm_email/:token", UsersSettingsLive, :confirm_email)
+      live("/matches/:match_id/rate/:team_id", MatchLive.Rate, :rate)
     end
   end
 

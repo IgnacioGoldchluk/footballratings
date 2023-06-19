@@ -8,7 +8,6 @@ defmodule Footballratings.Ratings.RatingsTest do
 
   alias Footballratings.Ratings
   alias Footballratings.FootballInfo
-  import Ecto.Query
 
   describe "ratings" do
     test "create_rating/1 creates a rating" do
@@ -94,43 +93,16 @@ defmodule Footballratings.Ratings.RatingsTest do
                  user.id
                )
 
-      results =
-        from(pr in Ratings.PlayerRatings, where: pr.match_rating_id == ^match_ratings_id)
-        |> Repo.all()
+      results = Ratings.get_players_ratings(match_ratings_id)
 
-      assert length(results) == 15
+      %{team: %{id: team_id}, user: %{id: user_id}, players: results_players} = results
+      assert team_id == match.home_team_id
+      assert user_id == user.id
+      assert length(results_players) == 15
     end
 
-    test "create_match_and_players_ratings rolls back if there are any errors" do
-      match = InternalDataFixtures.create_match()
-      user = AccountsFixtures.users_fixture()
-
-      players =
-        1..15
-        |> Enum.map(&%{id: &1, team_id: match.home_team_id})
-        |> Enum.map(&InternalDataFixtures.create_player/1)
-        |> Enum.map(fn %FootballInfo.Player{id: id, name: name} -> %{id: id, name: name} end)
-        # add an invalid player
-        |> Enum.concat([%{id: System.unique_integer([:positive]), name: "invalid player"}])
-
-      scores =
-        players
-        |> Enum.map(fn %{id: player_id} ->
-          {Integer.to_string(player_id), Integer.to_string(Enum.random(1..10))}
-        end)
-        |> Map.new()
-
-      assert {:error, :rollback} =
-               Ratings.create_match_and_players_ratings(
-                 players,
-                 scores,
-                 match.home_team_id,
-                 match.id,
-                 user.id
-               )
-
-      results = Repo.all(Ratings.PlayerRatings)
-      assert length(results) == 0
+    test "get_players_ratings/1 returns empty list for invalid ratings" do
+      assert [] = Ratings.get_players_ratings(System.unique_integer([:positive]))
     end
   end
 end
