@@ -1,7 +1,7 @@
 defmodule Footballratings.Ratings do
   alias Footballratings.Repo
   alias Footballratings.Ratings.{PlayerRatings, MatchRatings}
-  alias Footballratings.FootballInfo.{Player, Team}
+  alias Footballratings.FootballInfo.{Player, Team, Match}
   alias Footballratings.Accounts.{Users}
 
   import Ecto.Query
@@ -73,6 +73,19 @@ defmodule Footballratings.Ratings do
 
       match_ratings.id
     end)
+  end
+
+  def get_ratings_by_user(user_id) do
+    from(mr in MatchRatings,
+      join: u in assoc(mr, :user),
+      join: m in assoc(mr, :match),
+      join: ht in assoc(m, :home_team),
+      join: at in assoc(m, :away_team),
+      join: l in assoc(m, :league),
+      where: u.id == ^user_id,
+      preload: [user: u, match: {m, [home_team: ht, away_team: at, league: l]}]
+    )
+    |> Repo.all()
   end
 
   defp players_ratings_maps(players, scores, match_rating_id) do

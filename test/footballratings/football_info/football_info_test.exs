@@ -27,7 +27,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
 
       matches = Footballratings.FootballInfo.matches_available_for_rating_for_team(existing_team)
       assert length(matches) == 1
-      [%{match: %{id: match_id}}] = matches
+      [%{id: match_id}] = matches
       assert match_id == match1.id
 
       non_existing_team_id = System.unique_integer([:positive])
@@ -193,8 +193,8 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
 
       results = Footballratings.FootballInfo.matches_available_for_rating()
       [first_match, second_match] = results
-      assert today_match == first_match[:match]
-      assert yesterday_match == second_match[:match]
+      assert today_match.id == first_match.id
+      assert yesterday_match.id == second_match.id
     end
 
     test "get_match_with_team_and_league/1 returns the expected format" do
@@ -203,7 +203,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       match_with_team_and_league =
         Footballratings.FootballInfo.get_match_with_team_and_league(match.id)
 
-      %{match: queried_match} = match_with_team_and_league
+      queried_match = match_with_team_and_league
       assert queried_match.id == match.id
 
       %{home_team: %{id: ht_id}, away_team: %{id: at_id}} = match_with_team_and_league

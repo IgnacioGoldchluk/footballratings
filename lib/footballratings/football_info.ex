@@ -137,19 +137,11 @@ defmodule Footballratings.FootballInfo do
 
   defp matches_with_teams_and_league() do
     from(m in Match,
-      join: ht in Team,
-      on: m.home_team_id == ht.id,
-      join: at in Team,
-      on: m.away_team_id == at.id,
-      join: l in League,
-      on: l.id == m.league_id,
+      join: ht in assoc(m, :home_team),
+      join: at in assoc(m, :away_team),
+      join: l in assoc(m, :league),
       order_by: [desc: m.timestamp],
-      select: %{
-        match: m,
-        home_team: %{name: ht.name, id: ht.id},
-        away_team: %{name: at.name, id: at.id},
-        league_name: l.name
-      }
+      preload: [home_team: ht, away_team: at, league: l]
     )
   end
 

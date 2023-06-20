@@ -6,7 +6,7 @@ defmodule FootballratingsWeb.MatchLive.Index do
   def mount(_params, _session, socket) do
     matches = FootballInfo.matches_available_for_rating()
 
-    {:ok, stream(socket, :matches, matches, dom_id: &"matches-#{&1.match.id}", at: 0)}
+    {:ok, stream(socket, :matches, matches, at: 0)}
   end
 
   @impl true
@@ -28,19 +28,19 @@ defmodule FootballratingsWeb.MatchLive.Index do
 
   def match(assigns) do
     ~H"""
-    <h2 class="font-semibold"><%= @match.league_name %> - <%= @match.match.round %></h2>
+    <h2 class="font-semibold"><%= @match.league.name %> - <%= @match.round %></h2>
     <div class="join-vertical">
       <.team
         team={@match.home_team}
-        goals={@match.match.goals_home}
-        penalties={@match.match.penalties_home}
-        match_id={@match.match.id}
+        goals={@match.goals_home}
+        penalties={@match.penalties_home}
+        match_id={@match.id}
       />
       <.team
         team={@match.away_team}
-        goals={@match.match.goals_away}
-        penalties={@match.match.penalties_away}
-        match_id={@match.match.id}
+        goals={@match.goals_away}
+        penalties={@match.penalties_away}
+        match_id={@match.id}
       />
     </div>
     """
