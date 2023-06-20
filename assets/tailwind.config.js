@@ -22,12 +22,12 @@ module.exports = {
     themes: [
       {
         mytheme: {
-          "primary": "#22c55e",
+          "primary": "#3abff8",
           "secondary": "#f3f4f6",
           "accent": "#f3f4f6",
           "neutral": "#1c1917",
           "base-100": "#ffffff",
-          "info": "#3abff8",
+          "info": "#22c55e",
           "success": "#36d399",
           "warning": "#facc15",
           "error": "#e11d48",
