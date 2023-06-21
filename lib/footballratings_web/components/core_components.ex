@@ -354,6 +354,26 @@ defmodule FootballratingsWeb.CoreComponents do
     """
   end
 
+  attr(:value, :any)
+  attr(:name, :any)
+  attr(:field, :any)
+
+  def score_input(assigns) do
+    ~H"""
+      <.input
+      type="range"
+      min="1"
+      max="10"
+      value={@value}
+      step="1"
+      class="range range-primary w-80"
+      name={@name}
+      field={@field}
+      phx-change="player_changed"
+      />
+    """
+  end
+
   @doc """
   Renders a label.
   """

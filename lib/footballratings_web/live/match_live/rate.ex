@@ -45,4 +45,24 @@ defmodule FootballratingsWeb.MatchLive.Rate do
 
     {:noreply, push_navigate(socket, to: ~p"/ratings/#{match_ratings_id}")}
   end
+
+  def player_to_rate(assigns) do
+    ~H"""
+    <div class="grid grid-cols-2 justify-around bg-secondary border-2 border-primary rounded-lg w-96 px-4">
+    <div class="flex flex-col justify-items-start px-2">
+        <FootballratingsWeb.PlayerComponents.player name={@player.name} id={@player.id} />
+    </div>
+    <div class="flex items-center pl-10">
+        <FootballratingsWeb.PlayerComponents.score score={@score} />
+    </div>
+    <div class="flex px-1 py-1">
+        <.score_input
+            value={"#{@score}"}
+            name={@player.id}
+            field={@player.id}
+        />
+    </div>
+    </div>
+    """
+  end
 end
