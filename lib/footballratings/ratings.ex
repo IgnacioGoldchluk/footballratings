@@ -1,8 +1,6 @@
 defmodule Footballratings.Ratings do
   alias Footballratings.Repo
   alias Footballratings.Ratings.{PlayerRatings, MatchRatings}
-  alias Footballratings.FootballInfo.{Player, Team, Match}
-  alias Footballratings.Accounts.{Users}
 
   import Ecto.Query
 
@@ -24,41 +22,23 @@ defmodule Footballratings.Ratings do
     |> Repo.insert!()
   end
 
-  def get_players_ratings(match_rating_id) do
-    from(pr in PlayerRatings,
-      join: p in Player,
-      on: pr.player_id == p.id,
-      join: mr in MatchRatings,
-      on: mr.id == pr.match_rating_id,
-      join: t in Team,
-      on: mr.team_id == t.id,
-      join: u in Users,
-      on: mr.user_id == u.id
-    )
-    |> where([pr, p, mr, t, u], pr.match_rating_id == ^match_rating_id)
-    |> select(
-      [pr, p, mr, t, u],
-      %{
-        id: p.id,
-        name: p.name,
-        score: pr.score,
-        team: %{id: t.id, name: t.name},
-        user: %{id: u.id, name: u.username}
-      }
+  def get_players_ratings(match_ratings_id) do
+    from(mr in MatchRatings,
+      where: mr.id == ^match_ratings_id,
+      join: pr in assoc(mr, :player_ratings),
+      join: m in assoc(mr, :match),
+      join: u in assoc(mr, :user),
+      left_join: ht in assoc(m, :home_team),
+      left_join: at in assoc(m, :away_team),
+      left_join: l in assoc(m, :league),
+      left_join: p in assoc(pr, :player),
+      preload: [
+        match: {m, [home_team: ht, away_team: at, league: l]},
+        player_ratings: {pr, [player: p]},
+        user: u
+      ]
     )
     |> Repo.all()
-    |> format_players_ratings()
-  end
-
-  # Empty list case
-  defp format_players_ratings([]), do: []
-
-  defp format_players_ratings([%{team: team, user: user} | _rest] = players_ratings) do
-    players_without_team_and_user =
-      players_ratings
-      |> Enum.map(&Map.drop(&1, [:team, :user]))
-
-    %{team: team, user: user, players: players_without_team_and_user}
   end
 
   def create_match_and_players_ratings(players, scores, team_id, match_id, user_id) do
@@ -88,13 +68,13 @@ defmodule Footballratings.Ratings do
     |> Repo.all()
   end
 
-  defp players_ratings_maps(players, scores, match_rating_id) do
+  defp players_ratings_maps(players, scores, match_ratings_id) do
     players
     |> Enum.map(fn player ->
       player
       |> Map.delete(:name)
       |> Map.put(:player_id, Map.get(player, :id))
-      |> Map.put(:match_rating_id, match_rating_id)
+      |> Map.put(:match_ratings_id, match_ratings_id)
       |> Map.put(
         :score,
         Map.get(scores, player[:id] |> Integer.to_string()) |> String.to_integer()

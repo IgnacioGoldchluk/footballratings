@@ -52,18 +52,18 @@ defmodule Footballratings.Ratings.RatingsTest do
       match_ratings = RatingsFixtures.create_match_ratings()
       player = InternalDataFixtures.create_player(%{team_id: match_ratings.team_id})
 
-      attrs = %{score: 8, player_id: player.id, match_rating_id: match_ratings.id}
+      attrs = %{score: 8, player_id: player.id, match_ratings_id: match_ratings.id}
       assert {:ok, player_ratings} = Ratings.create_player_ratings(attrs)
       assert player_ratings.score == attrs[:score]
       assert player_ratings.player_id == attrs[:player_id]
-      assert player_ratings.match_rating_id == attrs[:match_rating_id]
+      assert player_ratings.match_ratings_id == attrs[:match_ratings_id]
     end
 
     test "create_player_ratings/1 fails if score out of range" do
       match_ratings = RatingsFixtures.create_match_ratings()
       player = InternalDataFixtures.create_player(%{team_id: match_ratings.team_id})
 
-      attrs = %{score: 11, player_id: player.id, match_rating_id: match_ratings.id}
+      attrs = %{score: 11, player_id: player.id, match_ratings_id: match_ratings.id}
       assert {:error, %Ecto.Changeset{}} = Ratings.create_player_ratings(attrs)
     end
 
@@ -95,7 +95,7 @@ defmodule Footballratings.Ratings.RatingsTest do
 
       results = Ratings.get_players_ratings(match_ratings_id)
 
-      %{team: %{id: team_id}, user: %{id: user_id}, players: results_players} = results
+      [%{team_id: team_id, user_id: user_id, player_ratings: results_players}] = results
       assert team_id == match.home_team_id
       assert user_id == user.id
       assert length(results_players) == 15

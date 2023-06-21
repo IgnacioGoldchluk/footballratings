@@ -6,18 +6,18 @@ defmodule Footballratings.Ratings.PlayerRatings do
   alias Footballratings.FootballInfo.Player
 
   schema "player_ratings" do
-    field :score, :integer
+    field(:score, :integer)
     belongs_to(:player, Player)
-    belongs_to(:match_rating, MatchRatings)
+    belongs_to(:match_ratings, MatchRatings)
 
     timestamps()
   end
 
   def changeset(player_rating, attrs) do
     player_rating
-    |> cast(attrs, [:score, :player_id, :match_rating_id])
+    |> cast(attrs, [:score, :player_id, :match_ratings_id])
     |> foreign_key_constraint(:player_id)
-    |> foreign_key_constraint(:match_rating_id)
+    |> foreign_key_constraint(:match_ratings_id)
     |> validate_inclusion(:score, 1..10)
   end
 end

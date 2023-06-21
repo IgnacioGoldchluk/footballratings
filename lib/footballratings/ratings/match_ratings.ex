@@ -4,11 +4,14 @@ defmodule Footballratings.Ratings.MatchRatings do
 
   alias Footballratings.FootballInfo.{Match, Team}
   alias Footballratings.Accounts.{Users}
+  alias Footballratings.Ratings.PlayerRatings
 
   schema "match_ratings" do
     belongs_to(:match, Match)
     belongs_to(:team, Team)
     belongs_to(:user, Users)
+
+    has_many(:player_ratings, PlayerRatings)
 
     timestamps()
   end
