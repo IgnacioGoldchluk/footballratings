@@ -24,4 +24,15 @@ defmodule FootballratingsWeb.PlayerComponents do
     </div>
     """
   end
+
+  def player_rating_box(assigns) do
+    ~H"""
+    <div class="flex flex-col justify-items-start px-2">
+        <FootballratingsWeb.PlayerComponents.player name={@player.name} id={@player.id} />
+      </div>
+      <div class="flex items-center pl-10">
+        <FootballratingsWeb.PlayerComponents.score score={@score} />
+    </div>
+    """
+  end
 end
