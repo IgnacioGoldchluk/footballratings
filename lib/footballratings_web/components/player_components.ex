@@ -9,7 +9,7 @@ defmodule FootballratingsWeb.PlayerComponents do
   def player(assigns) do
     ~H"""
     <img class="mask mask-circle" src="/images/player.jpg" width="75" />
-    <div class="text-xl"><%= @name %></div>
+    <div class="text-m"><%= @name %></div>
     """
   end
 
@@ -18,9 +18,9 @@ defmodule FootballratingsWeb.PlayerComponents do
   def score(assigns) do
     ~H"""
     <div class="flex justify-center rounded-lg border-2 border-primary bg-white w-24">
-    <div class="text-2xl text-black">
+      <div class="text-2xl text-black">
         <%= @score %>
-    </div>
+      </div>
     </div>
     """
   end
@@ -28,10 +28,10 @@ defmodule FootballratingsWeb.PlayerComponents do
   def player_rating_box(assigns) do
     ~H"""
     <div class="flex flex-col justify-items-start px-2">
-        <FootballratingsWeb.PlayerComponents.player name={@player.name} id={@player.id} />
-      </div>
-      <div class="flex items-center pl-10">
-        <FootballratingsWeb.PlayerComponents.score score={@score} />
+      <FootballratingsWeb.PlayerComponents.player name={@player.name} id={@player.id} />
+    </div>
+    <div class="flex items-center pl-10">
+      <FootballratingsWeb.PlayerComponents.score score={@score} />
     </div>
     """
   end

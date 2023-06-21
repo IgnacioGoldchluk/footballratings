@@ -8,13 +8,13 @@ defmodule FootballratingsWeb.TeamComponents do
   def team_name_and_logo(%{reverse: false} = assigns) do
     ~H"""
     <img class="mask mask-circle" src="/images/team.jpg" width="75" />
-    <div class="text-xl"><%= @name %></div>
+    <div class="text-m"><%= @name %></div>
     """
   end
 
   def team_name_and_logo(%{reverse: true} = assigns) do
     ~H"""
-    <div class="text-xl"><%= @name %></div>
+    <div class="text-m"><%= @name %></div>
     <img class="mask mask-circle" src="/images/team.jpg" width="75" />
     """
   end

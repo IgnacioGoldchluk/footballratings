@@ -48,12 +48,12 @@ defmodule FootballratingsWeb.MatchLive.Index do
 
   def team(assigns) do
     ~H"""
-    <div class="grid w-min bg-white border-solid border-2 border-primary join-item">
-      <div class="flex justify-between">
+    <div class="grid w-min bg-white border-solid border-2 border-primary join-item rounded-lg">
+      <div class="flex justify-between flex-auto">
         <img src={"https://media.api-sports.io/football/teams/#{@team.id}.png"} width="50" />
         <p class="w-48 font-semibold pl-4 py-2"><%= @team.name %></p>
         <.result goals={@goals} penalties={@penalties} />
-        <.link navigate={"/matches/#{@match_id}/rate/#{@team.id}"} class="py-1 px-2">
+        <.link navigate={"/matches/#{@match_id}/rate/#{@team.id}"} class="py-1 px-1">
           <button class="btn btn-primary">Rate players</button>
         </.link>
       </div>

@@ -3,13 +3,16 @@ defmodule FootballratingsWeb.MatchComponents do
 
   def match_result(assigns) do
     ~H"""
-    <div class="grid bg-secondary w-full">
-      <div class="col-span-3 text-center text-xl py-2"><%= @match.league.name %> - <%= @match.season %></div>
-      <div class="col-span-3 text-center text-xl"><%= @match.round %></div>
-      <div class="flex col-span-3 items-center justify-between py-2 px-2">
+    <div class="grid bg-secondary w-96">
+      <div class="col-span-3 text-center text-l py-2">
+        <%= @match.league.name %> - <%= @match.season %>
+      </div>
+      <div class="col-span-3 text-center text-l"><%= @match.round %></div>
+      <div class="flex col-span-3 items-center justify-between py-2 px-2 gap-2">
         <FootballratingsWeb.TeamComponents.team_name_and_logo
           name={@match.home_team.name}
-          id={@match.home_team.id} />
+          id={@match.home_team.id}
+        />
         <.result
           goals_home={@match.goals_home}
           goals_away={@match.goals_away}
@@ -20,7 +23,7 @@ defmodule FootballratingsWeb.MatchComponents do
           name={@match.away_team.name}
           id={@match.away_team.id}
           reverse
-          />
+        />
       </div>
     </div>
     """
@@ -34,13 +37,13 @@ defmodule FootballratingsWeb.MatchComponents do
   def result(assigns) do
     ~H"""
     <%= if @penalties_home do %>
-      <div class="text-xl">
+      <div class="text-m">
         <%= @goals_home %> (<%= @penalties_home %>) - (<%= @penalties_away %>) <%= @penalties_home %>
       </div>
     <% else %>
-      <div class="text-xl">
+      <div class="text-m">
         <%= @goals_home %> - <%= @goals_away %>
-        </div>
+      </div>
     <% end %>
     """
   end
