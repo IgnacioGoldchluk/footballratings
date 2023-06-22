@@ -1,8 +1,6 @@
 defmodule FootballratingsWeb.PlayerComponents do
   use Phoenix.Component
 
-  alias Footballratings.FootballInfo.Player
-
   attr(:name, :string, required: true)
   attr(:id, :integer, required: true)
 

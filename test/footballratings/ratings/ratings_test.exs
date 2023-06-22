@@ -60,8 +60,10 @@ defmodule Footballratings.Ratings.RatingsTest do
       ]
       |> Enum.map(&Ratings.create_match_ratings/1)
 
-      ratings = Ratings.get_ratings_by_user(user1.id)
-      assert length(ratings) == 2
+      ratings1 = Ratings.get_ratings_by_user(user1.id)
+      assert length(ratings1) == 2
+      ratings2 = Ratings.get_ratings_by_user(user2.id)
+      assert length(ratings2) == 1
     end
   end
 
