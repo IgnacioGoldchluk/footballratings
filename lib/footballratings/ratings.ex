@@ -58,12 +58,17 @@ defmodule Footballratings.Ratings do
   def get_ratings_by_user(users_id) do
     from(mr in MatchRatings,
       join: u in assoc(mr, :users),
+      join: t in assoc(mr, :team),
       join: m in assoc(mr, :match),
       join: ht in assoc(m, :home_team),
       join: at in assoc(m, :away_team),
       join: l in assoc(m, :league),
       where: u.id == ^users_id,
-      preload: [users: u, match: {m, [home_team: ht, away_team: at, league: l]}]
+      preload: [
+        users: u,
+        match: {m, [home_team: ht, away_team: at, league: l]},
+        team: t
+      ]
     )
     |> Repo.all()
   end

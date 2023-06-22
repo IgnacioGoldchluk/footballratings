@@ -47,6 +47,22 @@ defmodule Footballratings.Ratings.RatingsTest do
 
       assert {:error, %Ecto.Changeset{}} = Ratings.create_match_ratings(attrs)
     end
+
+    test "get_ratings_by_user/1 returns only the ratings for the expected user" do
+      match = InternalDataFixtures.create_match()
+      user1 = AccountsFixtures.users_fixture()
+      user2 = AccountsFixtures.users_fixture()
+
+      [
+        %{match_id: match.id, users_id: user1.id, team_id: match.home_team_id},
+        %{match_id: match.id, users_id: user2.id, team_id: match.home_team_id},
+        %{match_id: match.id, users_id: user1.id, team_id: match.away_team_id}
+      ]
+      |> Enum.map(&Ratings.create_match_ratings/1)
+
+      ratings = Ratings.get_ratings_by_user(user1.id)
+      assert length(ratings) == 2
+    end
   end
 
   describe "players_ratings" do
