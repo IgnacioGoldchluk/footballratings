@@ -32,7 +32,7 @@ defmodule FootballratingsWeb.RatingLive.Show do
 
   @impl true
   def mount(%{"match_ratings_id" => match_ratings_id}, _session, socket) do
-    [%{match: match, user: user, player_ratings: player_ratings, inserted_at: inserted_at}] =
+    [%{match: match, users: user, player_ratings: player_ratings, inserted_at: inserted_at}] =
       match_ratings_id
       |> String.to_integer()
       |> Ratings.get_players_ratings()

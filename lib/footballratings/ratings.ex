@@ -27,7 +27,7 @@ defmodule Footballratings.Ratings do
       where: mr.id == ^match_ratings_id,
       join: pr in assoc(mr, :player_ratings),
       join: m in assoc(mr, :match),
-      join: u in assoc(mr, :user),
+      join: u in assoc(mr, :users),
       left_join: ht in assoc(m, :home_team),
       left_join: at in assoc(m, :away_team),
       left_join: l in assoc(m, :league),
@@ -35,16 +35,16 @@ defmodule Footballratings.Ratings do
       preload: [
         match: {m, [home_team: ht, away_team: at, league: l]},
         player_ratings: {pr, [player: p]},
-        user: u
+        users: u
       ]
     )
     |> Repo.all()
   end
 
-  def create_match_and_players_ratings(players, scores, team_id, match_id, user_id) do
+  def create_match_and_players_ratings(players, scores, team_id, match_id, users_id) do
     Repo.transaction(fn ->
       {:ok, match_ratings} =
-        create_match_ratings(%{user_id: user_id, team_id: team_id, match_id: match_id})
+        create_match_ratings(%{users_id: users_id, team_id: team_id, match_id: match_id})
 
       # Must do it with changesets, otherwise the transaction raises instead of rolling back
       players
@@ -55,15 +55,15 @@ defmodule Footballratings.Ratings do
     end)
   end
 
-  def get_ratings_by_user(user_id) do
+  def get_ratings_by_user(users_id) do
     from(mr in MatchRatings,
-      join: u in assoc(mr, :user),
+      join: u in assoc(mr, :users),
       join: m in assoc(mr, :match),
       join: ht in assoc(m, :home_team),
       join: at in assoc(m, :away_team),
       join: l in assoc(m, :league),
-      where: u.id == ^user_id,
-      preload: [user: u, match: {m, [home_team: ht, away_team: at, league: l]}]
+      where: u.id == ^users_id,
+      preload: [users: u, match: {m, [home_team: ht, away_team: at, league: l]}]
     )
     |> Repo.all()
   end

@@ -9,7 +9,7 @@ defmodule Footballratings.Ratings.MatchRatings do
   schema "match_ratings" do
     belongs_to(:match, Match)
     belongs_to(:team, Team)
-    belongs_to(:user, Users)
+    belongs_to(:users, Users)
 
     has_many(:player_ratings, PlayerRatings)
 
@@ -18,10 +18,10 @@ defmodule Footballratings.Ratings.MatchRatings do
 
   def changeset(match_ratings, attrs) do
     match_ratings
-    |> cast(attrs, [:match_id, :team_id, :user_id])
+    |> cast(attrs, [:match_id, :team_id, :users_id])
     |> foreign_key_constraint(:match_id)
     |> foreign_key_constraint(:team_id)
-    |> foreign_key_constraint(:user_id)
-    |> unique_constraint([:match_id, :team_id, :user_id])
+    |> foreign_key_constraint(:users_id)
+    |> unique_constraint([:match_id, :team_id, :users_id])
   end
 end

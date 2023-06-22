@@ -14,10 +14,10 @@ defmodule Footballratings.Ratings.RatingsTest do
       match = InternalDataFixtures.create_match()
       user = AccountsFixtures.users_fixture()
 
-      attrs = %{match_id: match.id, user_id: user.id, team_id: match.home_team_id}
+      attrs = %{match_id: match.id, users_id: user.id, team_id: match.home_team_id}
       assert {:ok, match_rating} = Ratings.create_match_ratings(attrs)
       assert match_rating.match_id == attrs[:match_id]
-      assert match_rating.user_id == attrs[:user_id]
+      assert match_rating.users_id == attrs[:users_id]
       assert match_rating.team_id == attrs[:team_id]
     end
 
@@ -25,12 +25,14 @@ defmodule Footballratings.Ratings.RatingsTest do
       match = InternalDataFixtures.create_match()
       user = AccountsFixtures.users_fixture()
 
-      attrs = %{match_id: match.id, user_id: user.id, team_id: match.home_team_id}
+      attrs = %{match_id: match.id, users_id: user.id, team_id: match.home_team_id}
       assert {:ok, match_ratings_1} = Ratings.create_match_ratings(attrs)
 
       attrs = Map.put(attrs, :team_id, match.away_team_id)
       assert {:ok, match_ratings_2} = Ratings.create_match_ratings(attrs)
 
+      assert match_ratings_1.users_id == user.id
+      assert match_ratings_2.users_id == user.id
       assert match_ratings_2.team_id == match.away_team_id
       assert match_ratings_1.team_id == match.home_team_id
       assert match_ratings_2.id != match_ratings_1.team_id
@@ -40,7 +42,7 @@ defmodule Footballratings.Ratings.RatingsTest do
       match = InternalDataFixtures.create_match()
       user = AccountsFixtures.users_fixture()
 
-      attrs = %{match_id: match.id, user_id: user.id, team_id: match.home_team_id}
+      attrs = %{match_id: match.id, users_id: user.id, team_id: match.home_team_id}
       assert {:ok, _valid_match} = Ratings.create_match_ratings(attrs)
 
       assert {:error, %Ecto.Changeset{}} = Ratings.create_match_ratings(attrs)
@@ -95,9 +97,9 @@ defmodule Footballratings.Ratings.RatingsTest do
 
       results = Ratings.get_players_ratings(match_ratings_id)
 
-      [%{team_id: team_id, user_id: user_id, player_ratings: results_players}] = results
+      [%{team_id: team_id, users_id: users_id, player_ratings: results_players}] = results
       assert team_id == match.home_team_id
-      assert user_id == user.id
+      assert users_id == user.id
       assert length(results_players) == 15
     end
 

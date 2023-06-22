@@ -38,10 +38,10 @@ defmodule FootballratingsWeb.MatchLive.Rate do
         scores,
         %{assigns: %{players: players, team_id: team_id, match_id: match_id}} = socket
       ) do
-    user_id = socket.assigns.current_users.id
+    users_id = socket.assigns.current_users.id
 
     {:ok, match_ratings_id} =
-      Ratings.create_match_and_players_ratings(players, scores, team_id, match_id, user_id)
+      Ratings.create_match_and_players_ratings(players, scores, team_id, match_id, users_id)
 
     {:noreply, push_navigate(socket, to: ~p"/ratings/#{match_ratings_id}")}
   end
@@ -57,13 +57,8 @@ defmodule FootballratingsWeb.MatchLive.Rate do
 
   def rating_bar(assigns) do
     ~H"""
-
     <div class="flex px-1 py-1">
-        <.score_input
-            value={"#{@score}"}
-            name={@player.id}
-            field={@player.id}
-        />
+      <.score_input value={"#{@score}"} name={@player.id} field={@player.id} />
     </div>
     """
   end

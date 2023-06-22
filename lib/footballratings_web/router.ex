@@ -25,7 +25,7 @@ defmodule FootballratingsWeb.Router do
     live_session :main do
       live("/matches", MatchLive.Index, :index)
       live("/ratings/:match_ratings_id", RatingLive.Show, :show)
-      live("/ratings/users/:user_id", RatingLive.Users, :index)
+      live("/ratings/users/:users_id", RatingLive.Users, :index)
     end
   end
 
