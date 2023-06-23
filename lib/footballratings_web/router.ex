@@ -21,10 +21,10 @@ defmodule FootballratingsWeb.Router do
     pipe_through(:browser)
 
     get("/", PageController, :home)
+    get("/ratings/:match_ratings_id", MatchRatingsController, :show)
 
     live_session :main do
       live("/matches", MatchLive.Index, :index)
-      live("/ratings/:match_ratings_id", RatingLive.Show, :show)
       live("/ratings/users/:users_id", RatingLive.Users, :index)
       live("/ratings/match/:match_id", RatingLive.MatchStatistics, :match_statistics)
     end

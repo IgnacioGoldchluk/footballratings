@@ -1,5 +1,4 @@
 defmodule Footballratings.Ratings.RatingsTest do
-  alias Footballratings.Ratings.PlayerRatings
   use Footballratings.DataCase
 
   # Alias instead of import because I don't want to accidentally fill the local namespace.
@@ -156,14 +155,14 @@ defmodule Footballratings.Ratings.RatingsTest do
 
       results = Ratings.get_players_ratings(match_ratings_id)
 
-      [%{team_id: team_id, users_id: users_id, player_ratings: results_players}] = results
+      %{team_id: team_id, users_id: users_id, player_ratings: results_players} = results
       assert team_id == match.home_team_id
       assert users_id == user.id
       assert length(results_players) == 15
     end
 
-    test "get_players_ratings/1 returns empty list for invalid ratings" do
-      assert [] = Ratings.get_players_ratings(System.unique_integer([:positive]))
+    test "get_players_ratings/1 returns nil for invalid ratings" do
+      assert nil == Ratings.get_players_ratings(System.unique_integer([:positive]))
     end
   end
 end

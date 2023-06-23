@@ -38,7 +38,7 @@ defmodule Footballratings.Ratings do
         users: u
       ]
     )
-    |> Repo.all()
+    |> Repo.one()
   end
 
   def create_match_and_players_ratings(players, scores, team_id, match_id, users_id) do
