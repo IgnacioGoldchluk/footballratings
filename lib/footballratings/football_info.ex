@@ -164,10 +164,11 @@ defmodule Footballratings.FootballInfo do
       join: ht in assoc(m, :home_team),
       join: at in assoc(m, :away_team),
       join: l in assoc(m, :league),
-      join: p in assoc(m, :players),
+      join: pr in assoc(m, :players_matches),
+      join: p in assoc(pr, :player),
       where: m.id == ^match_id,
-      preload: [players: p, home_team: ht, away_team: at, league: l],
-      order_by: [desc: p.team_id]
+      preload: [players_matches: {pr, player: p}, home_team: ht, away_team: at, league: l],
+      order_by: [desc: pr.team_id]
     )
     |> Repo.one()
   end

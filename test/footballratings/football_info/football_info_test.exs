@@ -275,7 +275,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       total_away = Footballratings.FootballInfo.players_for_match(match.id, match.away_team_id)
       assert length(total_away) == 14
 
-      %{players: total} = Footballratings.FootballInfo.players_for_match(match.id)
+      %{players_matches: total} = Footballratings.FootballInfo.players_for_match(match.id)
       assert length(total) == 26
     end
   end

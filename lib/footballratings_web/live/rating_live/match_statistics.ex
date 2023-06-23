@@ -10,9 +10,9 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
     <div>Total ratings: <%= @number_of_ratings %></div>
     <FootballratingsWeb.MatchComponents.match_result match={@match} />
     <ul>
-    <%= for player <- @players do %>
-      <li><%= player.name %> - <%= Map.get(@average_ratings, player.id, "Not rated yet") %></li>
-    <% end %>
+      <%= for player <- @players do %>
+        <li><%= player.name %> - <%= Map.get(@average_ratings, player.id, "Not rated yet") %></li>
+      <% end %>
     </ul>
     """
   end
@@ -20,11 +20,13 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
   @impl true
   def mount(%{"match_id" => match_id}, _session, socket) do
     match_id_int = String.to_integer(match_id)
-    %{players: players} = match = FootballInfo.players_for_match(match_id_int)
+    %{players_matches: players_matches} = match = FootballInfo.players_for_match(match_id_int)
     number_of_ratings = Ratings.number_of_match_ratings(match_id_int)
     average_ratings = Ratings.average_player_ratings(match_id)
 
-    IO.inspect(average_ratings)
+    players =
+      players_matches
+      |> Enum.map(fn %{team_id: team_id, player: player} -> %{player | team_id: team_id} end)
 
     {:ok,
      socket
