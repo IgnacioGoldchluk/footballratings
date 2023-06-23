@@ -1,4 +1,5 @@
 defmodule Footballratings.Ratings.RatingsTest do
+  alias Footballratings.Ratings.PlayerRatings
   use Footballratings.DataCase
 
   # Alias instead of import because I don't want to accidentally fill the local namespace.
@@ -65,6 +66,21 @@ defmodule Footballratings.Ratings.RatingsTest do
       ratings2 = Ratings.get_ratings_by_user(user2.id)
       assert length(ratings2) == 1
     end
+
+    test "number_of_match_ratings/1 for a given match returns the total ratings by users" do
+      match = InternalDataFixtures.create_match()
+      user1 = AccountsFixtures.users_fixture()
+      user2 = AccountsFixtures.users_fixture()
+
+      [
+        %{match_id: match.id, users_id: user1.id, team_id: match.home_team_id},
+        %{match_id: match.id, users_id: user2.id, team_id: match.home_team_id},
+        %{match_id: match.id, users_id: user1.id, team_id: match.away_team_id}
+      ]
+      |> Enum.map(&Ratings.create_match_ratings/1)
+
+      assert Ratings.number_of_match_ratings(match.id) == 3
+    end
   end
 
   describe "players_ratings" do
@@ -77,6 +93,31 @@ defmodule Footballratings.Ratings.RatingsTest do
       assert player_ratings.score == attrs[:score]
       assert player_ratings.player_id == attrs[:player_id]
       assert player_ratings.match_ratings_id == attrs[:match_ratings_id]
+    end
+
+    test "average_player_ratings/1 returns the average" do
+      match = InternalDataFixtures.create_match()
+      player = InternalDataFixtures.create_player(%{team_id: match.home_team_id})
+
+      match_ratings =
+        for _ <- 1..3,
+            do:
+              RatingsFixtures.create_match_ratings(%{
+                match_id: match.id,
+                team_id: match.home_team_id
+              })
+
+      scores = [6, 7, 8]
+
+      [scores, match_ratings]
+      |> Enum.zip()
+      |> Enum.map(fn {score, match_rating} ->
+        %{score: score, player_id: player.id, match_ratings_id: match_rating.id}
+      end)
+      |> Enum.map(&Ratings.create_player_ratings/1)
+
+      averages = Ratings.average_player_ratings(match.id)
+      assert averages == %{player.id => 7.0}
     end
 
     test "create_player_ratings/1 fails if score out of range" do
