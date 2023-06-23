@@ -157,6 +157,21 @@ defmodule Footballratings.FootballInfo do
     |> Repo.one()
   end
 
+  def players_for_match(match_id) do
+    # FIXME: This orders players by their current team id instead of the
+    # team they played for
+    from(m in Match,
+      join: ht in assoc(m, :home_team),
+      join: at in assoc(m, :away_team),
+      join: l in assoc(m, :league),
+      join: p in assoc(m, :players),
+      where: m.id == ^match_id,
+      preload: [players: p, home_team: ht, away_team: at, league: l],
+      order_by: [desc: p.team_id]
+    )
+    |> Repo.one()
+  end
+
   def players_for_match(match_id, team_id) do
     from(pm in PlayerMatch,
       join: p in Player,

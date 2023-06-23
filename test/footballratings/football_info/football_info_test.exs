@@ -252,6 +252,32 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
 
       assert length(total) == 11
     end
+
+    test "players_for_match/1 and /2 returns the players for a given match" do
+      match = create_match()
+      home_players = for _ <- 1..12, do: create_player(%{team_id: match.home_team_id})
+      away_players = for _ <- 1..14, do: create_player(%{team_id: match.away_team_id})
+
+      home_players
+      |> Enum.concat(away_players)
+      |> Enum.map(fn player ->
+        %{
+          match_id: match.id,
+          player_id: player.id,
+          minutes_played: :rand.uniform(89) + 1,
+          team_id: player.team_id
+        }
+      end)
+      |> Footballratings.FootballInfo.create_players_matches()
+
+      total_home = Footballratings.FootballInfo.players_for_match(match.id, match.home_team_id)
+      assert length(total_home) == 12
+      total_away = Footballratings.FootballInfo.players_for_match(match.id, match.away_team_id)
+      assert length(total_away) == 14
+
+      %{players: total} = Footballratings.FootballInfo.players_for_match(match.id)
+      assert length(total) == 26
+    end
   end
 
   describe "coaches" do

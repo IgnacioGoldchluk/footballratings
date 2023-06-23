@@ -3,6 +3,8 @@ defmodule Footballratings.FootballInfo.Match do
   Match schema.
   """
 
+  alias Footballratings.FootballInfo.PlayerMatch
+
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -24,6 +26,9 @@ defmodule Footballratings.FootballInfo.Match do
     belongs_to(:league, Footballratings.FootballInfo.League)
     belongs_to(:home_team, Footballratings.FootballInfo.Team)
     belongs_to(:away_team, Footballratings.FootballInfo.Team)
+
+    has_many(:players_matches, PlayerMatch)
+    has_many(:players, through: [:players_matches, :player])
 
     timestamps()
   end
