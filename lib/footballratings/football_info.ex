@@ -158,8 +158,6 @@ defmodule Footballratings.FootballInfo do
   end
 
   def players_for_match(match_id) do
-    # FIXME: This orders players by their current team id instead of the
-    # team they played for
     from(m in Match,
       join: ht in assoc(m, :home_team),
       join: at in assoc(m, :away_team),
