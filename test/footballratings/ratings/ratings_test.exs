@@ -215,11 +215,11 @@ defmodule Footballratings.Ratings.RatingsTest do
 
       assert first[:average] == 7.5
       assert first[:match].id == match2.id
-      assert first[:team][:id] == team2.id
+      assert first[:team].id == team2.id
 
       assert second[:average] == 5.0
       assert second[:match].id == match.id
-      assert second[:team][:id] == team.id
+      assert second[:team].id == team.id
     end
   end
 end

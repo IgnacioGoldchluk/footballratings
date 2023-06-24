@@ -5,6 +5,19 @@ defmodule Footballratings.Ratings do
 
   import Ecto.Query
 
+  def match_ratings_id(match_id, team_id, users_id) do
+    result =
+      from(mr in MatchRatings,
+        where: mr.team_id == ^team_id and mr.match_id == ^match_id and mr.users_id == ^users_id
+      )
+      |> Repo.one()
+
+    case result do
+      nil -> nil
+      existing -> existing.id
+    end
+  end
+
   def create_match_ratings(attrs) do
     %MatchRatings{}
     |> MatchRatings.changeset(attrs)
@@ -106,8 +119,8 @@ defmodule Footballratings.Ratings do
       order_by: [asc: m.timestamp],
       select: %{
         average: type(avg(pr.score), :float),
-        match: m,
-        team: %{id: t.id, name: t.name}
+        match: struct(m, [:timestamp, :id]),
+        team: struct(t, [:id, :name])
       }
     )
     |> Repo.all()

@@ -183,7 +183,7 @@ defmodule Footballratings.FootballInfo do
     |> where([pm], pm.match_id == ^match_id)
     |> where([pm, p, t], t.id == ^team_id)
     |> order_by([pm, p, t], asc: p.name)
-    |> select([pm, p, t], %{name: p.name, id: p.id})
+    |> select([pm, p, t], struct(p, [:name, :id]))
     |> Repo.all()
   end
 

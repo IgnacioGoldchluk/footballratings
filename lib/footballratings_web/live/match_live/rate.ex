@@ -3,21 +3,34 @@ defmodule FootballratingsWeb.MatchLive.Rate do
 
   @initial_score "5"
 
-  alias Footballratings.Ratings
+  alias Footballratings.{Ratings, Accounts}
 
   @impl true
-  def mount(%{"match_id" => match_id, "team_id" => team_id}, _session, socket) do
-    {match_id, team_id} = {String.to_integer(match_id), String.to_integer(team_id)}
+  def mount(%{"match_id" => match_id, "team_id" => team_id}, %{"users_token" => token}, socket) do
+    [match_id, team_id] = [match_id, team_id] |> Enum.map(&String.to_integer/1)
+
+    user = Accounts.get_users_by_session_token(token)
+
+    case Ratings.match_ratings_id(match_id, team_id, user.id) do
+      nil -> {:ok, socket |> assign_information_to_rate(match_id, team_id)}
+      match_ratings_id -> {:ok, socket |> redirect_to_existing_ratings(match_ratings_id)}
+    end
+  end
+
+  defp assign_information_to_rate(socket, match_id, team_id) do
     players = Footballratings.FootballInfo.players_for_match(match_id, team_id)
 
-    scores = Map.new(players, fn %{id: id} -> {id, @initial_score} end)
+    socket
+    |> assign(:players, players)
+    |> assign(:scores, Map.new(players, fn %{id: id} -> {id, @initial_score} end))
+    |> assign(:team_id, team_id)
+    |> assign(:match_id, match_id)
+  end
 
-    {:ok,
-     socket
-     |> assign(:players, players)
-     |> assign(:scores, scores)
-     |> assign(:team_id, team_id)
-     |> assign(:match_id, match_id)}
+  defp redirect_to_existing_ratings(socket, match_ratings_id) do
+    socket
+    |> put_flash(:error, "You already voted for this match")
+    |> redirect(to: ~p"/ratings/#{match_ratings_id}")
   end
 
   @impl true
