@@ -21,6 +21,20 @@ defmodule Footballratings.Ratings.RatingsTest do
       assert match_rating.team_id == attrs[:team_id]
     end
 
+    test "get_match_ratings_id/3 return the id when exists, nil otherwise" do
+      match = InternalDataFixtures.create_match()
+      user = AccountsFixtures.users_fixture()
+
+      attrs = %{match_id: match.id, users_id: user.id, team_id: match.home_team_id}
+      assert {:ok, match_rating} = Ratings.create_match_ratings(attrs)
+
+      team_id = match.home_team_id
+
+      assert nil == Ratings.match_ratings_id(match.id, team_id, System.unique_integer())
+
+      assert match_rating.id == Ratings.match_ratings_id(match.id, match.home_team_id, user.id)
+    end
+
     test "create_rating/1 supports same user same match multiple teams" do
       match = InternalDataFixtures.create_match()
       user = AccountsFixtures.users_fixture()
