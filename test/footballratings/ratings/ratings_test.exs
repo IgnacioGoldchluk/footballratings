@@ -164,5 +164,62 @@ defmodule Footballratings.Ratings.RatingsTest do
     test "get_players_ratings/1 returns nil for invalid ratings" do
       assert nil == Ratings.get_players_ratings(System.unique_integer([:positive]))
     end
+
+    test "player_statistics/1 returns the average for a player grouped by match" do
+      # Will need date to consistently sort results
+      now = DateTime.utc_now() |> DateTime.to_unix()
+      team = InternalDataFixtures.create_team()
+      player = InternalDataFixtures.create_player(%{team_id: team.id}) |> Map.from_struct()
+      player_id_score = player.id |> Integer.to_string()
+
+      match = InternalDataFixtures.create_match(%{home_team_id: team.id, timestamp: now})
+
+      # Create 2 scores for a single match.
+      scores = [%{player_id_score => "4"}, %{player_id_score => "6"}]
+
+      scores
+      |> Enum.each(fn score ->
+        user = AccountsFixtures.users_fixture()
+
+        assert {:ok, _match_ratings_id} =
+                 Ratings.create_match_and_players_ratings(
+                   [player],
+                   score,
+                   match.home_team_id,
+                   match.id,
+                   user.id
+                 )
+      end)
+
+      a_week_ago = now - 24 * 60 * 60
+      # Pretend player switched team and do everything again.
+      team2 = InternalDataFixtures.create_team()
+      match2 = InternalDataFixtures.create_match(%{away_team_id: team2.id, timestamp: a_week_ago})
+      scores = [%{player_id_score => "8"}, %{player_id_score => "7"}]
+
+      scores
+      |> Enum.each(fn score ->
+        user = AccountsFixtures.users_fixture()
+
+        assert {:ok, _match_ratings_id} =
+                 Ratings.create_match_and_players_ratings(
+                   [player],
+                   score,
+                   match2.away_team_id,
+                   match2.id,
+                   user.id
+                 )
+      end)
+
+      assert [first, second] = Ratings.player_statistics(player.id)
+
+      assert first[:average] == 7.5
+      assert first[:match].id == match2.id
+      assert first[:team] == team2.id
+
+      assert second[:average] == 5.0
+      assert second[:match].id == match.id
+      assert second[:team] == team.id
+    end
   end
 end

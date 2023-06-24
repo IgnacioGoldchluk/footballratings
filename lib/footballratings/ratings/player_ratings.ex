@@ -10,6 +10,8 @@ defmodule Footballratings.Ratings.PlayerRatings do
     belongs_to(:player, Player)
     belongs_to(:match_ratings, MatchRatings)
 
+    has_one(:match, through: [:match_ratings, :match])
+
     timestamps()
   end
 

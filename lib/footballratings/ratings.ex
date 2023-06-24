@@ -93,6 +93,23 @@ defmodule Footballratings.Ratings do
     |> Map.new()
   end
 
+  def player_statistics(player_id) do
+    from(pr in PlayerRatings,
+      join: p in assoc(pr, :player),
+      join: m in assoc(pr, :match),
+      join: mr in assoc(pr, :match_ratings),
+      where: pr.player_id == ^player_id,
+      group_by: [m.id, mr.team_id],
+      order_by: [asc: m.timestamp],
+      select: %{
+        average: type(avg(pr.score), :float),
+        match: m,
+        team: mr.team_id
+      }
+    )
+    |> Repo.all()
+  end
+
   defp players_ratings_maps(players, scores, match_ratings_id) do
     players
     |> Enum.map(fn player ->
