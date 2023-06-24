@@ -228,12 +228,12 @@ defmodule Footballratings.Ratings.RatingsTest do
       assert [first, second] = Ratings.player_statistics(player.id)
 
       assert first[:average] == 7.5
-      assert first[:match].id == match2.id
-      assert first[:team].id == team2.id
+      assert first[:timestamp] == match2.timestamp
+      assert first[:team] == team2.name
 
       assert second[:average] == 5.0
-      assert second[:match].id == match.id
-      assert second[:team].id == team.id
+      assert second[:timestamp] == match.timestamp
+      assert second[:team] == team.name
     end
   end
 end

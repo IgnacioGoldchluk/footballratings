@@ -119,8 +119,8 @@ defmodule Footballratings.Ratings do
       order_by: [asc: m.timestamp],
       select: %{
         average: type(avg(pr.score), :float),
-        match: struct(m, [:timestamp, :id]),
-        team: struct(t, [:id, :name])
+        timestamp: m.timestamp,
+        team: t.name
       }
     )
     |> Repo.all()
