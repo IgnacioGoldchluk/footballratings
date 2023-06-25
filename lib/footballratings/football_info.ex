@@ -200,4 +200,12 @@ defmodule Footballratings.FootballInfo do
     |> order_by([p, t], desc: t.id)
     |> Repo.one()
   end
+
+  def search_teams(team_name) do
+    search_term = "%#{team_name}%"
+
+    Team
+    |> where([t], ilike(t.name, ^search_term))
+    |> Repo.all()
+  end
 end

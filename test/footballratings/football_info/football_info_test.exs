@@ -19,6 +19,21 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       assert {:error, %Ecto.Changeset{}} = Footballratings.FootballInfo.create_team(invalid_attrs)
     end
 
+    test "search_teams/1 returns teams that match, case insensitive" do
+      team = create_team(%{name: "FC Team warriors"})
+      team2 = create_team(%{name: "FC War"})
+      team3 = create_team(%{name: "WA River"})
+
+      found = Footballratings.FootballInfo.search_teams("war")
+
+      assert length(found) == 2
+      ids = Enum.map(found, &Map.get(&1, :id)) |> MapSet.new()
+
+      assert team.id in ids
+      assert team2.id in ids
+      assert team3.id not in ids
+    end
+
     test "matches_available_for_rating_for_team/1 returns only where team id matches" do
       match1 = create_match()
       _match2 = create_match()
