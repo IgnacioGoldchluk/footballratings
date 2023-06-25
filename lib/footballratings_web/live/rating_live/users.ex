@@ -7,7 +7,7 @@ defmodule FootballratingsWeb.RatingLive.Users do
   def render(assigns) do
     ~H"""
     <%= for match_rating <- @match_ratings do %>
-      <.link navigate={~p"/ratings/#{match_rating.id}"}>
+      <.link navigate={~p"/ratings/show/#{match_rating.id}"}>
         <div class="text-l">For team <%= match_rating.team.name %></div>
         <FootballratingsWeb.MatchComponents.match_result match={match_rating.match} />
       </.link>

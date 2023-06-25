@@ -30,7 +30,7 @@ defmodule FootballratingsWeb.MatchLive.Rate do
   defp redirect_to_existing_ratings(socket, match_ratings_id) do
     socket
     |> put_flash(:error, "You already voted for this match")
-    |> redirect(to: ~p"/ratings/#{match_ratings_id}")
+    |> redirect(to: ~p"/ratings/show/#{match_ratings_id}")
   end
 
   @impl true
