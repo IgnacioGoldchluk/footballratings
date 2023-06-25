@@ -12,7 +12,7 @@ defmodule Footballratings.Repo.Migrations.MatchAndPlayerRatings do
     create table(:player_ratings) do
       add(:score, :integer, null: false)
       add(:player_id, references(:players))
-      add(:match_ratings_id, references(:match_ratings))
+      add(:match_rating_id, references(:match_ratings))
       timestamps()
     end
 
