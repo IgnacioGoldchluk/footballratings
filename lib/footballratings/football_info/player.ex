@@ -6,7 +6,7 @@ defmodule Footballratings.FootballInfo.Player do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Footballratings.FootballInfo.Team
+  alias Footballratings.FootballInfo.{Team, PlayerMatch}
 
   schema "players" do
     field :name, :string
@@ -17,6 +17,8 @@ defmodule Footballratings.FootballInfo.Player do
     timestamps()
 
     belongs_to :team, Team
+    has_many :player_matches, PlayerMatch
+    has_many :teams, through: [:player_matches, :team]
   end
 
   def changeset(player, attrs) do

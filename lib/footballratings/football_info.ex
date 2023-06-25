@@ -190,4 +190,14 @@ defmodule Footballratings.FootballInfo do
     |> where([m, ht, at, l], ht.id == ^team_id or at.id == ^team_id)
     |> Repo.all()
   end
+
+  def teams_a_player_has_played_for(player_id) do
+    Player
+    |> where([p], p.id == ^player_id)
+    |> join(:left, [p], t in assoc(p, :teams))
+    |> preload([p, t], teams: t)
+    |> distinct([p, t], t.id)
+    |> order_by([p, t], desc: t.id)
+    |> Repo.one()
+  end
 end

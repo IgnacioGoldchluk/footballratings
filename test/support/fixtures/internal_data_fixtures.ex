@@ -64,4 +64,15 @@ defmodule Footballratings.InternalDataFixtures do
 
     coach
   end
+
+  def create_player_match(attrs \\ %{}) do
+    {:ok, player_match} =
+      attrs
+      |> Enum.into(%{
+        minutes_played: :rand.uniform(89) + 1
+      })
+      |> Footballratings.FootballInfo.create_player_match()
+
+    player_match
+  end
 end

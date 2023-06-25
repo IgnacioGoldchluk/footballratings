@@ -37,6 +37,28 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
 
       assert length(matches) == 0
     end
+
+    test "teams_a_player_has_played_for/1 returns unique teams" do
+      match1 = create_match()
+      match2 = create_match()
+      match3 = create_match(%{home_team_id: match2.home_team_id})
+      player = create_player(team_id: match2.away_team_id)
+
+      team1_id = player.team_id
+      team2_id = match1.home_team_id
+      team3_id = match1.home_team_id
+
+      create_player_match(%{player_id: player.id, team_id: team1_id, match_id: match1.id})
+      create_player_match(%{player_id: player.id, team_id: team2_id, match_id: match2.id})
+      create_player_match(%{player_id: player.id, team_id: team3_id, match_id: match3.id})
+
+      assert %{teams: teams} =
+               Footballratings.FootballInfo.teams_a_player_has_played_for(player.id)
+
+      teams_ids = teams |> Enum.map(&Map.get(&1, :id)) |> MapSet.new()
+
+      assert teams_ids == MapSet.new([team1_id, team2_id, team3_id])
+    end
   end
 
   describe "players" do

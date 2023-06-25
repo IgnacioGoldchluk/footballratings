@@ -3,6 +3,7 @@ defmodule FootballratingsWeb.RatingLive.PlayerStatistics do
   use FootballratingsWeb, :live_view
 
   alias Footballratings.Ratings
+  alias Footballratings.FootballInfo
 
   def render(assigns) do
     ~H"""
@@ -11,12 +12,12 @@ defmodule FootballratingsWeb.RatingLive.PlayerStatistics do
   end
 
   def mount(%{"player_id" => player_id}, _session, socket) do
-    player_statistics =
-      player_id
-      |> String.to_integer()
-      |> Ratings.player_statistics()
+    player_id_as_int = String.to_integer(player_id)
 
-    {:ok, socket |> assign_chart_svg(player_statistics)}
+    player_statistics = Ratings.player_statistics(player_id_as_int)
+    %{teams: teams} = FootballInfo.teams_a_player_has_played_for(player_id_as_int)
+
+    {:ok, socket |> assign_chart_svg(player_statistics) |> assign(:teams, teams)}
   end
 
   def assign_chart_svg(socket, player_statistics) do
