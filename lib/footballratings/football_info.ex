@@ -140,8 +140,8 @@ defmodule Footballratings.FootballInfo do
   end
 
   def matches_available_for_rating() do
-    matches_with_teams_and_league()
-    |> where([m], m.status == :ready)
+    Match.Query.available_for_rating()
+    |> order_by([m], desc: m.timestamp)
     |> Repo.all()
   end
 
