@@ -1,7 +1,7 @@
 defmodule Footballratings.Ratings do
   alias Footballratings.Repo
   alias Footballratings.Ratings.{PlayerRatings, MatchRatings}
-  alias Footballratings.FootballInfo.{Team}
+  alias Footballratings.FootballInfo.{Team, Match}
 
   import Ecto.Query
 
@@ -42,12 +42,9 @@ defmodule Footballratings.Ratings do
       join: pr in assoc(mr, :player_ratings),
       join: m in assoc(mr, :match),
       join: u in assoc(mr, :users),
-      left_join: ht in assoc(m, :home_team),
-      left_join: at in assoc(m, :away_team),
-      left_join: l in assoc(m, :league),
       left_join: p in assoc(pr, :player),
       preload: [
-        match: {m, [home_team: ht, away_team: at, league: l]},
+        match: ^Match.Query.preload_all_match_data(),
         player_ratings: {pr, [player: p]},
         users: u
       ]
@@ -74,13 +71,10 @@ defmodule Footballratings.Ratings do
       join: u in assoc(mr, :users),
       join: t in assoc(mr, :team),
       join: m in assoc(mr, :match),
-      join: ht in assoc(m, :home_team),
-      join: at in assoc(m, :away_team),
-      join: l in assoc(m, :league),
       where: u.id == ^users_id,
       preload: [
         users: u,
-        match: {m, [home_team: ht, away_team: at, league: l]},
+        match: ^Match.Query.preload_all_match_data(),
         team: t
       ]
     )

@@ -136,13 +136,7 @@ defmodule Footballratings.FootballInfo do
   end
 
   defp matches_with_teams_and_league() do
-    from(m in Match,
-      join: ht in assoc(m, :home_team),
-      join: at in assoc(m, :away_team),
-      join: l in assoc(m, :league),
-      order_by: [desc: m.timestamp],
-      preload: [home_team: ht, away_team: at, league: l]
-    )
+    Match.Query.preload_all_match_data() |> order_by([m], desc: m.timestamp)
   end
 
   def matches_available_for_rating() do
@@ -158,16 +152,12 @@ defmodule Footballratings.FootballInfo do
   end
 
   def players_for_match(match_id) do
-    from(m in Match,
-      join: ht in assoc(m, :home_team),
-      join: at in assoc(m, :away_team),
-      join: l in assoc(m, :league),
-      join: pr in assoc(m, :players_matches),
-      join: p in assoc(pr, :player),
-      where: m.id == ^match_id,
-      preload: [players_matches: {pr, player: p}, home_team: ht, away_team: at, league: l],
-      order_by: [desc: pr.team_id]
-    )
+    Match.Query.preload_all_match_data()
+    |> join(:left, [m], pr in assoc(m, :players_matches))
+    |> join(:left, [m, ht, at, l, pr], p in assoc(pr, :player))
+    |> where([m], m.id == ^match_id)
+    |> order_by([m, ht, at, l, pr, p], desc: pr.team_id)
+    |> preload([m, ht, at, l, pr, p], players_matches: {pr, [player: p]})
     |> Repo.one()
   end
 
