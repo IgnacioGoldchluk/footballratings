@@ -2,6 +2,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
   use Footballratings.DataCase
 
   alias Footballratings.FootballInfo.{Team, Player, Match, PlayerMatch}
+  alias Footballratings.FootballInfo
 
   import Footballratings.InternalDataFixtures
 
@@ -9,14 +10,14 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
     test "create_team/1 creates a team" do
       valid_attrs = %{name: "Team FC", id: System.unique_integer()}
 
-      assert {:ok, %Team{} = team} = Footballratings.FootballInfo.create_team(valid_attrs)
+      assert {:ok, %Team{} = team} = FootballInfo.create_team(valid_attrs)
       assert team.name == valid_attrs[:name]
       assert team.id == valid_attrs[:id]
     end
 
     test "create_team/1 without attributes fails" do
       invalid_attrs = %{}
-      assert {:error, %Ecto.Changeset{}} = Footballratings.FootballInfo.create_team(invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = FootballInfo.create_team(invalid_attrs)
     end
 
     test "search_teams/1 returns teams that match, case insensitive" do
@@ -24,7 +25,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       team2 = create_team(%{name: "FC War"})
       team3 = create_team(%{name: "WA River"})
 
-      found = Footballratings.FootballInfo.search_teams("war")
+      found = FootballInfo.search_teams("war")
 
       assert length(found) == 2
       ids = Enum.map(found, &Map.get(&1, :id)) |> MapSet.new()
@@ -40,15 +41,14 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
 
       existing_team = match1.home_team_id
 
-      matches = Footballratings.FootballInfo.matches_available_for_rating_for_team(existing_team)
+      matches = FootballInfo.matches_available_for_rating_for_team(existing_team)
       assert length(matches) == 1
       [%{id: match_id}] = matches
       assert match_id == match1.id
 
       non_existing_team_id = System.unique_integer([:positive])
 
-      matches =
-        Footballratings.FootballInfo.matches_available_for_rating_for_team(non_existing_team_id)
+      matches = FootballInfo.matches_available_for_rating_for_team(non_existing_team_id)
 
       assert length(matches) == 0
     end
@@ -67,8 +67,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       create_player_match(%{player_id: player.id, team_id: team2_id, match_id: match2.id})
       create_player_match(%{player_id: player.id, team_id: team3_id, match_id: match3.id})
 
-      assert %{teams: teams} =
-               Footballratings.FootballInfo.teams_a_player_has_played_for(player.id)
+      assert %{teams: teams} = FootballInfo.teams_a_player_has_played_for(player.id)
 
       teams_ids = teams |> Enum.map(&Map.get(&1, :id)) |> MapSet.new()
 
@@ -87,7 +86,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
         team_id: team.id
       }
 
-      {:ok, player} = Footballratings.FootballInfo.create_player(player_attrs)
+      {:ok, player} = FootballInfo.create_player(player_attrs)
 
       assert player.name == player_attrs[:name]
       assert player.age == player_attrs[:age]
@@ -98,7 +97,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       team = create_team(%{name: "Manchester City FC"})
       player_attrs = %{player_attrs | team_id: team.id}
 
-      Footballratings.FootballInfo.maybe_create_players([player_attrs])
+      FootballInfo.maybe_create_players([player_attrs])
 
       player = Repo.get(Player, player_attrs[:id]) |> Repo.preload(:team)
 
@@ -127,7 +126,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
         id: System.unique_integer([:positive])
       }
 
-      {:ok, %Match{} = match} = Footballratings.FootballInfo.create_match(match_attrs)
+      {:ok, %Match{} = match} = FootballInfo.create_match(match_attrs)
 
       assert match.season == match_attrs[:season]
       assert match.timestamp == match_attrs[:timestamp]
@@ -162,14 +161,14 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
         id: System.unique_integer([:positive])
       }
 
-      assert {:error, %Ecto.Changeset{}} = Footballratings.FootballInfo.create_match(match_attrs)
+      assert {:error, %Ecto.Changeset{}} = FootballInfo.create_match(match_attrs)
     end
 
     test "match_exists? correctly returns whether a match exists" do
       match = create_match()
 
-      assert Footballratings.FootballInfo.match_exists?(match.id)
-      assert not Footballratings.FootballInfo.match_exists?(System.unique_integer([:positive]))
+      assert FootballInfo.match_exists?(match.id)
+      assert not FootballInfo.match_exists?(System.unique_integer([:positive]))
     end
 
     test "set match as ready updates the match" do
@@ -177,8 +176,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
 
       assert match.status == :not_ready_yet
 
-      assert {:ok, updated_match} =
-               Footballratings.FootballInfo.set_match_status_to_ready(match.id)
+      assert {:ok, updated_match} = FootballInfo.set_match_status_to_ready(match.id)
 
       assert updated_match.status == :ready
     end
@@ -206,7 +204,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       # Yeah I'm being lazy here
       match2 = %{match1 | id: System.unique_integer([:positive])}
 
-      [match1, match2] |> Footballratings.FootballInfo.create_matches()
+      [match1, match2] |> FootballInfo.create_matches()
       assert Repo.get(Match, match1.id)
       assert Repo.get(Match, match2.id)
     end
@@ -228,7 +226,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
 
       [yesterday_match, today_match | _rest] = matches
 
-      results = Footballratings.FootballInfo.matches_available_for_rating()
+      results = FootballInfo.matches_available_for_rating()
       [first_match, second_match] = results
       assert today_match.id == first_match.id
       assert yesterday_match.id == second_match.id
@@ -237,8 +235,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
     test "get_match_with_team_and_league/1 returns the expected format" do
       match = create_match()
 
-      match_with_team_and_league =
-        Footballratings.FootballInfo.get_match_with_team_and_league(match.id)
+      match_with_team_and_league = FootballInfo.get_match_with_team_and_league(match.id)
 
       queried_match = match_with_team_and_league
       assert queried_match.id == match.id
@@ -246,6 +243,80 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       %{home_team: %{id: ht_id}, away_team: %{id: at_id}} = match_with_team_and_league
       assert ht_id == match.home_team_id
       assert at_id == match.away_team_id
+    end
+  end
+
+  describe "matches_for_search_params/1" do
+    setup do
+      [
+        base_query: %{
+          "before" => "",
+          "after" => "",
+          "home_team" => "",
+          "away_team" => "",
+          "available_for_rating" => ""
+        }
+      ]
+    end
+
+    test "filters by the teams names", %{base_query: base_query} do
+      home_team = create_team(%{name: "Green Team"})
+      away_team = create_team(%{name: "Black Team"})
+
+      match1 = create_match(%{home_team_id: home_team.id, away_team_id: away_team.id})
+      match2 = create_match(%{home_team_id: away_team.id, away_team_id: home_team.id})
+
+      search_params = base_query |> Map.put("home_team", away_team.name)
+
+      assert [result] = FootballInfo.matches_for_search_params(search_params)
+      assert result.id == match2.id
+
+      search_params = base_query |> Map.put("away_team", "lack")
+      assert [result] = FootballInfo.matches_for_search_params(search_params)
+      assert result.id == match1.id
+    end
+
+    test "filters by availability", %{base_query: base_query} do
+      match1 = create_match(%{status: :ready})
+
+      match2 = create_match(%{status: :expired})
+
+      search_params = base_query |> Map.put("available_for_rating", "true")
+
+      assert [result] = FootballInfo.matches_for_search_params(search_params)
+      assert result.id == match1.id
+
+      search_params = search_params |> Map.put("available_for_rating", "false")
+      assert result = FootballInfo.matches_for_search_params(search_params)
+
+      assert length(result) == 2
+      matches_ids = Enum.map(result, & &1.id) |> Enum.uniq()
+      assert match1.id in matches_ids
+      assert match2.id in matches_ids
+    end
+
+    test "filters by date", %{base_query: base_query} do
+      match = create_match()
+
+      tomorrow =
+        DateTime.utc_now() |> DateTime.add(1, :day) |> DateTime.to_date() |> Date.to_string()
+
+      search_params = base_query |> Map.put("after", tomorrow)
+      assert [] = FootballInfo.matches_for_search_params(search_params)
+
+      search_params = base_query |> Map.put("before", tomorrow)
+      assert [m] = FootballInfo.matches_for_search_params(search_params)
+      assert m.id == match.id
+
+      yesterday =
+        DateTime.utc_now() |> DateTime.add(-1, :day) |> DateTime.to_date() |> Date.to_string()
+
+      search_params = base_query |> Map.put("after", yesterday)
+      assert [m] = FootballInfo.matches_for_search_params(search_params)
+      assert m.id == match.id
+
+      search_params = base_query |> Map.put("before", yesterday)
+      assert [] = FootballInfo.matches_for_search_params(search_params)
     end
   end
 
@@ -261,8 +332,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
         minutes_played: 90
       }
 
-      {:ok, %PlayerMatch{} = player_match} =
-        Footballratings.FootballInfo.create_player_match(attrs)
+      {:ok, %PlayerMatch{} = player_match} = FootballInfo.create_player_match(attrs)
 
       assert player_match.match_id == attrs[:match_id]
       assert player_match.player_id == attrs[:player_id]
@@ -283,7 +353,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
           team_id: player.team_id
         }
       end)
-      |> Footballratings.FootballInfo.create_players_matches()
+      |> FootballInfo.create_players_matches()
 
       total = PlayerMatch |> Ecto.Query.where(match_id: ^match.id) |> Repo.all()
 
@@ -305,14 +375,14 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
           team_id: player.team_id
         }
       end)
-      |> Footballratings.FootballInfo.create_players_matches()
+      |> FootballInfo.create_players_matches()
 
-      total_home = Footballratings.FootballInfo.players_for_match(match.id, match.home_team_id)
+      total_home = FootballInfo.players_for_match(match.id, match.home_team_id)
       assert length(total_home) == 12
-      total_away = Footballratings.FootballInfo.players_for_match(match.id, match.away_team_id)
+      total_away = FootballInfo.players_for_match(match.id, match.away_team_id)
       assert length(total_away) == 14
 
-      %{players_matches: total} = Footballratings.FootballInfo.players_for_match(match.id)
+      %{players_matches: total} = FootballInfo.players_for_match(match.id)
       assert length(total) == 26
     end
   end
@@ -328,7 +398,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
         team_id: team.id
       }
 
-      {:ok, coach} = Footballratings.FootballInfo.create_coach(attrs)
+      {:ok, coach} = FootballInfo.create_coach(attrs)
 
       assert coach.name == attrs[:name]
       assert coach.age == attrs[:age]
@@ -345,7 +415,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
 
       attrs = %{match_id: match.id, coach_id: coach.id, team_id: coach.team_id}
 
-      {:ok, coach_match} = Footballratings.FootballInfo.create_coach_match(attrs)
+      {:ok, coach_match} = FootballInfo.create_coach_match(attrs)
 
       assert coach_match.match_id == attrs[:match_id]
       assert coach_match.coach_id == attrs[:coach_id]

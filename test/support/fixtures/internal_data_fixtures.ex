@@ -35,7 +35,7 @@ defmodule Footballratings.InternalDataFixtures do
       |> Enum.into(%{
         round: "1 of 38",
         season: 2023,
-        timestamp: System.unique_integer([:positive]),
+        timestamp: DateTime.utc_now() |> DateTime.to_unix(),
         goals_home: :rand.uniform(6),
         goals_away: :rand.uniform(6),
         penalties_home: nil,
