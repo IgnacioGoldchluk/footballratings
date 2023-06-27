@@ -44,6 +44,11 @@ defmodule FootballratingsWeb.MatchLive.Index do
           All available matches
         </.button>
       </div>
+      <div class="py-2">
+        <.button class="btn-primary disabled:bg-zinc-200" phx-click="clear">
+          Clear
+        </.button>
+      </div>
       <%= for match <- @matches do %>
         <.match match={match} />
       <% end %>
@@ -88,6 +93,11 @@ defmodule FootballratingsWeb.MatchLive.Index do
   @impl true
   def handle_event("all_available_matches", _, socket) do
     {:noreply, assign(socket, :matches, FootballInfo.matches_available_for_rating())}
+  end
+
+  @impl true
+  def handle_event("clear", _, socket) do
+    {:noreply, assign(socket, :matches, [])}
   end
 
   def match(assigns) do
