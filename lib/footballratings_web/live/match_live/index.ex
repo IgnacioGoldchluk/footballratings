@@ -81,7 +81,7 @@ defmodule FootballratingsWeb.MatchLive.Index do
   @impl true
   def handle_event("validate", %{"search" => search_params}, socket) do
     changeset = Search.changeset(%Search{}, search_params)
-    IO.inspect(changeset)
+
     {:noreply, assign_form(socket, Map.put(changeset, :action, :validate))}
   end
 

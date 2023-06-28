@@ -246,6 +246,33 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
     end
   end
 
+  describe "players_for_search_params/1" do
+    setup do
+      [base_query: %{"name" => ""}]
+    end
+
+    test "filters by player name", %{base_query: base_query} do
+      team = create_team()
+      player1 = create_player(%{name: "Courtois", team_id: team.id})
+      player2 = create_player(%{name: "Toimono", team_id: team.id})
+
+      search_params = base_query |> Map.put("name", "A name that does not exist")
+      assert [] = FootballInfo.players_for_search_params(search_params)
+
+      search_params = base_query |> Map.put("name", "RTOiS")
+      assert [result] = FootballInfo.players_for_search_params(search_params)
+      assert result.name == player1.name
+      assert result.id == player1.id
+
+      search_params = base_query |> Map.put("name", "toi")
+      assert [p1, p2] = FootballInfo.players_for_search_params(search_params)
+      assert p1.id == player1.id
+      assert p1.name == player1.name
+      assert p2.id == player2.id
+      assert p2.name == player2.name
+    end
+  end
+
   describe "matches_for_search_params/1" do
     setup do
       [

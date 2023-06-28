@@ -185,6 +185,10 @@ defmodule Footballratings.FootballInfo do
     Match.Query.for_search_params(search_params) |> Repo.all()
   end
 
+  def players_for_search_params(search_params) do
+    Player.Query.for_search_params(search_params) |> Repo.all()
+  end
+
   def teams_a_player_has_played_for(player_id) do
     Player
     |> where([p], p.id == ^player_id)

@@ -43,7 +43,6 @@ defmodule Footballratings.FootballInfo.Match.Query do
   def before_date(query, date) do
     # For before we want "00:00" to filter the lowest value
     date_timestamp = date_to_unix(date, "00:00:00")
-    IO.inspect(date_timestamp)
 
     query
     |> where([m], m.timestamp <= ^date_timestamp)
