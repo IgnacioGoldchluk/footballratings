@@ -189,6 +189,10 @@ defmodule Footballratings.FootballInfo do
     Player.Query.for_search_params(search_params) |> Repo.all()
   end
 
+  def teams_for_search_params(search_params) do
+    Team.Query.for_search_params(search_params) |> Repo.all()
+  end
+
   def teams_a_player_has_played_for(player_id) do
     Player
     |> where([p], p.id == ^player_id)
@@ -197,13 +201,5 @@ defmodule Footballratings.FootballInfo do
     |> distinct([p, t], t.id)
     |> order_by([p, t], desc: t.id)
     |> Repo.one()
-  end
-
-  def search_teams(team_name) do
-    search_term = "%#{team_name}%"
-
-    Team
-    |> where([t], ilike(t.name, ^search_term))
-    |> Repo.all()
   end
 end

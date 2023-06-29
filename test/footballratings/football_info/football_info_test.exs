@@ -20,21 +20,6 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       assert {:error, %Ecto.Changeset{}} = FootballInfo.create_team(invalid_attrs)
     end
 
-    test "search_teams/1 returns teams that match, case insensitive" do
-      team = create_team(%{name: "FC Team warriors"})
-      team2 = create_team(%{name: "FC War"})
-      team3 = create_team(%{name: "WA River"})
-
-      found = FootballInfo.search_teams("war")
-
-      assert length(found) == 2
-      ids = Enum.map(found, &Map.get(&1, :id)) |> MapSet.new()
-
-      assert team.id in ids
-      assert team2.id in ids
-      assert team3.id not in ids
-    end
-
     test "matches_available_for_rating_for_team/1 returns only where team id matches" do
       match1 = create_match()
       _match2 = create_match()
@@ -270,6 +255,29 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       assert p1.name == player1.name
       assert p2.id == player2.id
       assert p2.name == player2.name
+    end
+  end
+
+  describe "teams_for_search_params/1" do
+    setup do
+      [base_query: %{"name" => ""}]
+    end
+
+    test "filters by team name", %{base_query: base_query} do
+      team = create_team(%{name: "FC Team warriors"})
+      team2 = create_team(%{name: "FC War"})
+      team3 = create_team(%{name: "WA River"})
+
+      search_params = base_query |> Map.put("name", "war")
+
+      result = FootballInfo.teams_for_search_params(search_params)
+
+      assert length(result) == 2
+      ids = for team <- result, do: team.id, into: MapSet.new()
+
+      assert team.id in ids
+      assert team2.id in ids
+      assert team3.id not in ids
     end
   end
 
