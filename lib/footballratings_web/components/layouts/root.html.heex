@@ -19,37 +19,27 @@
             <%= @current_users.username %>
           </a>
         </li>
+        <li class="text-xl">
+          <%= @current_users.email %>
+        </li>
         <li>
-          <.link
-            href={~p"/users/settings"}
-            class="btn btn-primary"
-          >
+          <.link href={~p"/users/settings"} class="btn btn-primary">
             Settings
           </.link>
         </li>
         <li>
-          <.link
-            href={~p"/users/log_out"}
-            method="delete"
-            class="btn btn-primary"
-          >
+          <.link href={~p"/users/log_out"} method="delete" class="btn btn-primary">
             Log out
           </.link>
         </li>
       <% else %>
         <li>
-          <.link
-            href={~p"/users/register"}
-            class="btn btn-primary"
-          >
+          <.link href={~p"/users/register"} class="btn btn-primary">
             Register
           </.link>
         </li>
         <li>
-          <.link
-            href={~p"/users/log_in"}
-            class="btn btn-primary"
-          >
+          <.link href={~p"/users/log_in"} class="btn btn-primary">
             Log in
           </.link>
         </li>
