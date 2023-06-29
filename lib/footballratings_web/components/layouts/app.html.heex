@@ -5,21 +5,30 @@
         <img src={~p"/images/logo.svg"} width="80" />
       </a>
     </div>
-    <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
-      <a href="https://twitter.com/elixirphoenix" class="hover:text-zinc-700">
-        @elixirphoenix
-      </a>
-      <a href="https://github.com/phoenixframework/phoenix" class="hover:text-zinc-700">
-        GitHub
-      </a>
-      <a
-        href="https://hexdocs.pm/phoenix/overview.html"
-        class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80"
-      >
-        Get Started <span aria-hidden="true">&rarr;</span>
-      </a>
+<div class="navbar bg-base-100">
+  <div class="navbar-start">
+    <div class="dropdown">
+      <label tabindex="0" class="btn btn-ghost lg:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
+      </label>
+      <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+
+      <li><a href={~p"/matches"}>Matches</a></li>
+      <li><a href={~p"/teams"}>Teams</a></li>
+      <li><a href={~p"/players"}>Players</a></li>
+      </ul>
     </div>
+    <a class="font-bold normal-case text-xl">Uno por Uno</a>
   </div>
+  <div class="navbar-center hidden lg:flex">
+    <ul class="menu menu-horizontal px-1">
+      <li><a href={~p"/matches"} class="font-semibold">Matches</a></li>
+      <li><a href={~p"/teams"} class="font-semibold">Teams</a></li>
+      <li><a href={~p"/players"} class="font-semibold">Players</a></li>
+    </ul>
+  </div>
+</div>
+</div>
 </header>
 <main class="px-4 py-20 sm:px-6 lg:px-8">
   <div class="mx-auto max-w-2xl">
