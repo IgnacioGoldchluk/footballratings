@@ -13,8 +13,26 @@ defmodule FootballratingsWeb.TeamLive.Index do
       <.simple_form for={@form} id="search_team" phx-change="search" phx-throttle="300">
         <.input field={@form[:name]} type="text" label="Team name" class="rounded-lg w-full max-w-xs" />
       </.simple_form>
-      <%= for team <- @teams do %>
-        <div class="text-xl"><%= team.name %></div>
+
+      <%= if @teams != [] do %>
+        <table class="table table-zebra">
+          <thead>
+            <tr>
+              <th>Team</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= for team <- @teams do %>
+              <tr>
+                <td>
+                  <.link navigate={~p"/teams/#{team.id}"} class="hover:text-primary">
+                    <%= team.name %>
+                  </.link>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
       <% end %>
     </div>
     """

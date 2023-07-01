@@ -14,13 +14,13 @@
   <body class="bg-white antialiased">
     <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
       <%= if @current_users do %>
-        <li class="text-xl font-semibold">
+        <li class="text-m font-semibold hover:text-primary">
           <a href={~p"/ratings/users/#{@current_users.id}"}>
             <%= @current_users.username %>
           </a>
         </li>
-        <li class="text-xl">
-          <%= @current_users.email %>
+        <li class="text-m">
+          (<%= @current_users.email %>)
         </li>
         <li>
           <.link href={~p"/users/settings"} class="btn btn-primary">

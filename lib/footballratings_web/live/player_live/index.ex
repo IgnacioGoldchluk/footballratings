@@ -29,13 +29,21 @@ defmodule FootballratingsWeb.PlayerLive.Index do
           </thead>
           <tbody>
             <%= for player <- @players do %>
-                <tr>
-                <td><%= player.name %></td>
-                <td><.link href={~p"/teams/#{player.team.id}"} class="hover:text-primary"><%= player.team.name %></.link></td>
-                </tr>
+              <tr>
+                <td>
+                  <.link navigate={~p"/players/#{player.id}"} class="hover:text-primary">
+                    <%= player.name %>
+                  </.link>
+                </td>
+                <td>
+                  <.link navigate={~p"/teams/#{player.team.id}"} class="hover:text-primary">
+                    <%= player.team.name %>
+                  </.link>
+                </td>
+              </tr>
             <% end %>
-            </tbody>
-          </table>
+          </tbody>
+        </table>
       <% end %>
     </div>
     """
