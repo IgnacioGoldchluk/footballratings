@@ -283,6 +283,13 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       assert p1.name == player1.name
       assert p2.id == player2.id
       assert p2.name == player2.name
+
+      search_params = base_query
+      assert [p1, p2] = FootballInfo.players_for_search_params(search_params)
+      assert p1.id == player1.id
+      assert p1.name == player1.name
+      assert p2.id == player2.id
+      assert p2.name == player2.name
     end
   end
 
