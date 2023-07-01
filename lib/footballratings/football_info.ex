@@ -151,6 +151,10 @@ defmodule Footballratings.FootballInfo do
     |> Repo.one()
   end
 
+  def get_player(player_id) do
+    Repo.get(Player, player_id)
+  end
+
   def players_for_match(match_id) do
     Match.Query.preload_all_match_data()
     |> join(:left, [m], pr in assoc(m, :players_matches))

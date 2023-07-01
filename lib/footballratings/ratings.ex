@@ -1,7 +1,7 @@
 defmodule Footballratings.Ratings do
   alias Footballratings.Repo
   alias Footballratings.Ratings.{PlayerRatings, MatchRatings}
-  alias Footballratings.FootballInfo.{Team, Match}
+  alias Footballratings.FootballInfo.Match
 
   import Ecto.Query
 
@@ -102,21 +102,15 @@ defmodule Footballratings.Ratings do
   end
 
   def player_statistics(player_id) do
-    from(pr in PlayerRatings,
-      join: p in assoc(pr, :player),
-      join: m in assoc(pr, :match),
-      join: mr in assoc(pr, :match_ratings),
-      join: t in Team,
-      on: t.id == mr.team_id,
-      where: pr.player_id == ^player_id,
-      group_by: [m.id, t.id],
-      order_by: [asc: m.timestamp],
-      select: %{
-        average: type(avg(pr.score), :float),
-        timestamp: m.timestamp,
-        team: t.name
-      }
-    )
+    PlayerRatings.Query.player_statistics()
+    |> PlayerRatings.Query.for_player(player_id)
+    |> Repo.all()
+  end
+
+  def player_statistics(player_id, team_name) do
+    PlayerRatings.Query.player_statistics()
+    |> PlayerRatings.Query.for_player(player_id)
+    |> PlayerRatings.Query.for_team(team_name)
     |> Repo.all()
   end
 
