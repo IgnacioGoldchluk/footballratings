@@ -9,11 +9,27 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
     ~H"""
     <div>Total ratings: <%= @number_of_ratings %></div>
     <FootballratingsWeb.MatchComponents.match_result match={@match} />
-    <ul>
-      <%= for player <- @players do %>
-        <li><%= player.name %> - <%= Map.get(@average_ratings, player.id, "Not rated yet") %></li>
-      <% end %>
-    </ul>
+
+    <table class="table table-zebra">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Average score</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for player <- @players do %>
+          <tr>
+            <td>
+              <.link navigate={~p"/players/#{player.id}"} class="hover:text-primary">
+                <%= player.name %>
+              </.link>
+            </td>
+            <td><%= Map.get(@average_ratings, player.id, "No ratings yet") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
     """
   end
 
