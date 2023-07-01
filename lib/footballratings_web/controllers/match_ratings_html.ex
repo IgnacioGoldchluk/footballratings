@@ -13,16 +13,22 @@ defmodule FootballratingsWeb.MatchRatingsHTML do
         <div><%= @inserted_at %></div>
       </div>
       <FootballratingsWeb.MatchComponents.match_result match={@match} />
-      <div class="grid gap-4 grid-cols-3">
-        <%= for player_rating <- @player_ratings do %>
-          <div class="grid grid-cols-2 justify-around bg-secondary border-2 border-primary rounded-lg w-48 px-4 py-1">
-            <FootballratingsWeb.PlayerComponents.player_rating_box
-              player={player_rating.player}
-              score={player_rating.score}
-            />
-          </div>
-        <% end %>
-      </div>
+      <table class="table table-zebra">
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= for player_rating <- @player_ratings do %>
+            <tr>
+              <td><.link href={~p"/players/#{player_rating.player.id}"} class="hover:text-primary"><%= player_rating.player.name %></.link></td>
+              <td><%= player_rating.score %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
     """
   end

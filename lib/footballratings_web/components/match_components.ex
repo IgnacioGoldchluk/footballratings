@@ -3,7 +3,7 @@ defmodule FootballratingsWeb.MatchComponents do
 
   def match_result(assigns) do
     ~H"""
-    <div class="grid bg-secondary w-96">
+    <div class="grid bg-secondary w-full max-w-xs">
       <div class="col-span-3 text-center text-l py-2">
         <%= @match.league.name %> - <%= @match.season %>
       </div>

@@ -18,7 +18,7 @@ defmodule FootballratingsWeb.MatchRatingsController do
       match: match,
       user: user,
       player_ratings: player_ratings,
-      inserted_at: inserted_at
+      inserted_at: inserted_at |> NaiveDateTime.to_date()
     )
   end
 end
