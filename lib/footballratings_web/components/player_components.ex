@@ -1,12 +1,6 @@
 defmodule FootballratingsWeb.PlayerComponents do
-  use FootballratingsWeb, :live_view
+  use FootballratingsWeb, :html
   use Phoenix.Component
-
-  def render(assigns) do
-    ~H"""
-    <__MODULE__.player id={@assigns.id} name={@assigns.name} />
-    """
-  end
 
   attr(:name, :string, required: true)
   attr(:id, :integer, required: true)
