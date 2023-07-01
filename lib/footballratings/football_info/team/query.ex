@@ -12,7 +12,7 @@ defmodule Footballratings.FootballInfo.Team.Query do
     |> where([t], t.id == ^team_id)
   end
 
-  def current_players(query \\ base()) do
+  def current_players(query) do
     query
     |> join(:left, [t], p in assoc(t, :players))
     |> preload([t, p], players: p)

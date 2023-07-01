@@ -58,6 +58,25 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
 
       assert teams_ids == MapSet.new([team1_id, team2_id, team3_id])
     end
+
+    test "team_with_players/1 returns the current players by the team id" do
+      team = create_team(%{name: "Test Team FC"})
+      other_team = create_team()
+
+      player = create_player(%{team_id: team.id})
+      create_player(%{team_id: other_team.id})
+
+      result = FootballInfo.team_with_players(team.id)
+
+      assert result.name == team.name
+      assert result.id == team.id
+
+      result_players = result.players
+
+      assert length(result_players) == 1
+      [result_player] = result_players
+      assert result_player.id == player.id
+    end
   end
 
   describe "players" do
@@ -87,6 +106,15 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       player = Repo.get(Player, player_attrs[:id]) |> Repo.preload(:team)
 
       assert player.team.name == "Manchester City FC"
+    end
+
+    test "get_player/1 returns the player by id" do
+      team = create_team()
+      player = create_player(%{team_id: team.id})
+
+      result = FootballInfo.get_player(player.id)
+
+      assert player == result
     end
   end
 
@@ -278,6 +306,16 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       assert team.id in ids
       assert team2.id in ids
       assert team3.id not in ids
+
+      search_params = base_query
+      result = FootballInfo.teams_for_search_params(search_params)
+
+      assert length(result) == 3
+      ids = for team <- result, do: team.id, into: MapSet.new()
+
+      assert team.id in ids
+      assert team2.id in ids
+      assert team3.id in ids
     end
   end
 
