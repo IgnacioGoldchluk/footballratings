@@ -29,6 +29,7 @@ defmodule FootballApi.ResponseValidation do
        ) do
     case x_api_errors_value(headers) do
       "0" -> {:ok, response}
+      nil -> {:ok, response}
       errors -> {:error, "Received #{errors} in X-Api-Errors in #{request_url}"}
     end
   end
