@@ -257,6 +257,12 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       assert ht_id == match.home_team_id
       assert at_id == match.away_team_id
     end
+
+    test "total_matches/1 returns the number of matches" do
+      assert 0 == FootballInfo.total_matches()
+      create_match()
+      assert 1 == FootballInfo.total_matches()
+    end
   end
 
   describe "players_for_search_params/1" do

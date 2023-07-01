@@ -127,4 +127,10 @@ defmodule Footballratings.Ratings do
       )
     end)
   end
+
+  def total_match_ratings() do
+    MatchRatings
+    |> select(count())
+    |> Repo.one()
+  end
 end

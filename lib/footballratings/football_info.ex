@@ -215,4 +215,10 @@ defmodule Footballratings.FootballInfo do
     |> order_by([p, t], desc: t.id)
     |> Repo.one()
   end
+
+  def total_matches() do
+    Match
+    |> select(count())
+    |> Repo.one()
+  end
 end

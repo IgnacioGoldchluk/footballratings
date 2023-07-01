@@ -166,7 +166,11 @@ defmodule Footballratings.Accounts do
       {:ok, %{to: ..., body: ...}}
 
   """
-  def deliver_users_update_email_instructions(%Users{} = users, current_email, update_email_url_fun)
+  def deliver_users_update_email_instructions(
+        %Users{} = users,
+        current_email,
+        update_email_url_fun
+      )
       when is_function(update_email_url_fun, 1) do
     {encoded_token, users_token} = UsersToken.build_email_token(users, "change:#{current_email}")
 
@@ -304,7 +308,11 @@ defmodule Footballratings.Accounts do
       when is_function(reset_password_url_fun, 1) do
     {encoded_token, users_token} = UsersToken.build_email_token(users, "reset_password")
     Repo.insert!(users_token)
-    UsersNotifier.deliver_reset_password_instructions(users, reset_password_url_fun.(encoded_token))
+
+    UsersNotifier.deliver_reset_password_instructions(
+      users,
+      reset_password_url_fun.(encoded_token)
+    )
   end
 
   @doc """
@@ -349,5 +357,11 @@ defmodule Footballratings.Accounts do
       {:ok, %{users: users}} -> {:ok, users}
       {:error, :users, changeset, _} -> {:error, changeset}
     end
+  end
+
+  def total_users() do
+    Users
+    |> select(count())
+    |> Repo.one()
   end
 end

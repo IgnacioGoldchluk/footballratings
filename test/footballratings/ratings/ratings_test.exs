@@ -94,6 +94,12 @@ defmodule Footballratings.Ratings.RatingsTest do
 
       assert Ratings.number_of_match_ratings(match.id) == 3
     end
+
+    test "total_match_ratings/0 returns the number of match ratings" do
+      assert 0 == Ratings.total_match_ratings()
+      RatingsFixtures.create_match_ratings()
+      assert 1 == Ratings.total_match_ratings()
+    end
   end
 
   describe "players_ratings" do

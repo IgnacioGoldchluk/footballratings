@@ -20,7 +20,8 @@ defmodule Footballratings.Application do
       FootballratingsWeb.Endpoint,
       # Start a worker by calling: Footballratings.Worker.start_link(arg)
       # {Footballratings.Worker, arg}
-      {Oban, Application.fetch_env!(:footballratings, Oban)}
+      {Oban, Application.fetch_env!(:footballratings, Oban)},
+      Footballratings.LiveStats
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

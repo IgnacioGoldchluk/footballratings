@@ -522,4 +522,12 @@ defmodule Footballratings.AccountsTest do
       refute inspect(%Users{password: "123456"}) =~ "password: \"123456\""
     end
   end
+
+  describe "total_users/0" do
+    test "returns the number of users" do
+      assert 0 == Accounts.total_users()
+      users_fixture()
+      assert 1 == Accounts.total_users()
+    end
+  end
 end
