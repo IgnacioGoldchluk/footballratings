@@ -24,8 +24,8 @@ defmodule FootballratingsWeb.MatchLive.Index do
           phx-debounce="blur"
           class="rounded-lg w-full max-w-xs"
         />
-        <.input field={@form[:before]} type="text" label="Before (YYYY-MM-AA)" phx-debounce="blur" />
-        <.input field={@form[:after]} type="text" label="After (YYYY-MM-AA)" phx-debounce="blur" />
+        <.input field={@form[:before]} type="text" label="Before (YYYY-MM-AA)" phx-debounce="blur" class="rounded-lg" />
+        <.input field={@form[:after]} type="text" label="After (YYYY-MM-AA)" phx-debounce="blur" class="rounded-lg" />
         <.input
           field={@form[:available_for_rating]}
           type="checkbox"
@@ -39,6 +39,7 @@ defmodule FootballratingsWeb.MatchLive.Index do
           </.button>
         </:actions>
       </.simple_form>
+      <div class="flex gap-2">
       <div class="py-2">
         <.button class="btn-primary disabled:bg-zinc-200" phx-click="all_available_matches">
           All available matches
@@ -48,6 +49,7 @@ defmodule FootballratingsWeb.MatchLive.Index do
         <.button class="btn-primary disabled:bg-zinc-200" phx-click="clear">
           Clear
         </.button>
+      </div>
       </div>
       <%= for match <- @matches do %>
         <FootballratingsWeb.MatchComponents.match match={match} rate />
