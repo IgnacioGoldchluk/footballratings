@@ -5,12 +5,28 @@ defmodule FootballratingsWeb.TeamLive.Show do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="text-xl"><%= @team_with_players.name %></div>
-    <ul>
-      <%= for player <- @team_with_players.players do %>
-        <li><FootballratingsWeb.PlayerComponents.player_link id={player.id} name={player.name} /></li>
-      <% end %>
-    </ul>
+    <div class="bg-secondary">
+      <FootballratingsWeb.TeamComponents.team_name_and_logo
+        name={@team_with_players.name}
+        id={@team_with_players.id}
+      />
+    </div>
+    <table class="table table-zebra">
+      <thead>
+        <tr>
+          <th>Player</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for player <- @team_with_players.players do %>
+          <tr>
+            <td>
+              <FootballratingsWeb.PlayerComponents.player_link id={player.id} name={player.name} />
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
     """
   end
 
