@@ -50,7 +50,7 @@ defmodule FootballratingsWeb.MatchLive.Index do
         </.button>
       </div>
       <%= for match <- @matches do %>
-        <.match match={match} />
+        <FootballratingsWeb.MatchComponents.match match={match} rate />
       <% end %>
     </div>
     """
@@ -98,50 +98,5 @@ defmodule FootballratingsWeb.MatchLive.Index do
   @impl true
   def handle_event("clear", _, socket) do
     {:noreply, assign(socket, :matches, [])}
-  end
-
-  def match(assigns) do
-    ~H"""
-    <h2 class="font-semibold"><%= @match.league.name %> - <%= @match.round %></h2>
-    <div class="join-vertical">
-      <.team
-        team={@match.home_team}
-        goals={@match.goals_home}
-        penalties={@match.penalties_home}
-        match_id={@match.id}
-      />
-      <.team
-        team={@match.away_team}
-        goals={@match.goals_away}
-        penalties={@match.penalties_away}
-        match_id={@match.id}
-      />
-    </div>
-    """
-  end
-
-  def team(assigns) do
-    ~H"""
-    <div class="grid w-min bg-white border-solid border-2 border-primary join-item rounded-lg">
-      <div class="flex justify-between flex-auto">
-        <img src={"https://media.api-sports.io/football/teams/#{@team.id}.png"} width="50" />
-        <p class="w-48 font-semibold pl-4 py-2"><%= @team.name %></p>
-        <.result goals={@goals} penalties={@penalties} />
-        <.link navigate={"/matches/#{@match_id}/rate/#{@team.id}"} class="py-1 px-1">
-          <button class="btn btn-primary">Rate players</button>
-        </.link>
-      </div>
-    </div>
-    """
-  end
-
-  def result(assigns) do
-    ~H"""
-    <%= if @penalties != nil do %>
-      <p class="font-semibold w-16 py-2"><%= @goals %> (<%= @penalties %>)</p>
-    <% else %>
-      <p class="font-semibold w-16 py-2"><%= @goals %></p>
-    <% end %>
-    """
   end
 end
