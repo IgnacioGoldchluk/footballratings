@@ -21,9 +21,7 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
         <%= for player <- @players do %>
           <tr>
             <td>
-              <.link navigate={~p"/players/#{player.id}"} class="hover:text-primary">
-                <%= player.name %>
-              </.link>
+              <FootballratingsWeb.PlayerComponents.player_link id={player.id} name={player.name} />
             </td>
             <td><%= Map.get(@average_ratings, player.id, "No ratings yet") %></td>
           </tr>

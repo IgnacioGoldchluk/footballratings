@@ -7,6 +7,17 @@ defmodule Footballratings.FootballInfo.Team.Query do
     |> order_by([t], asc: t.name)
   end
 
+  def for_team_id(query \\ base(), team_id) do
+    query
+    |> where([t], t.id == ^team_id)
+  end
+
+  def current_players(query \\ base()) do
+    query
+    |> join(:left, [t], p in assoc(t, :players))
+    |> preload([t, p], players: p)
+  end
+
   def for_name_ilike(query, ""), do: query
 
   def for_name_ilike(query, name) do

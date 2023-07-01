@@ -200,6 +200,12 @@ defmodule Footballratings.FootballInfo do
     Team.Query.for_search_params(search_params) |> Repo.all()
   end
 
+  def team_with_players(team_id) do
+    Team.Query.for_team_id(team_id)
+    |> Team.Query.current_players()
+    |> Repo.one()
+  end
+
   def teams_a_player_has_played_for(player_id) do
     Player
     |> where([p], p.id == ^player_id)

@@ -1,4 +1,5 @@
 defmodule FootballratingsWeb.PlayerComponents do
+  use FootballratingsWeb, :live_view
   use Phoenix.Component
 
   attr(:name, :string, required: true)
@@ -31,6 +32,17 @@ defmodule FootballratingsWeb.PlayerComponents do
     <div class="flex items-center pl-10">
       <FootballratingsWeb.PlayerComponents.score score={@score} />
     </div>
+    """
+  end
+
+  attr(:id, :integer, required: true)
+  attr(:name, :string, required: true)
+
+  def player_link(assigns) do
+    ~H"""
+    <.link navigate={~p"/players/#{@id}"} class="hover:text-primary">
+      <%= @name %>
+    </.link>
     """
   end
 end

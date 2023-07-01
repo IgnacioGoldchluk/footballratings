@@ -65,6 +65,10 @@ defmodule FootballratingsWeb.PlayerLive.Show do
     assign(socket, :teams, teams)
   end
 
+  defp assign_player_statistics_svg(socket, []) do
+    assign(socket, :player_statistics_svg, "")
+  end
+
   defp assign_player_statistics_svg(socket, player_statistics) do
     assign(socket, :player_statistics_svg, PlayerRatingsTimeseries.plot(player_statistics))
   end
