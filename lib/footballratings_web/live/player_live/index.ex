@@ -19,8 +19,23 @@ defmodule FootballratingsWeb.PlayerLive.Index do
         />
       </.simple_form>
 
-      <%= for player <- @players do %>
-        <FootballratingsWeb.PlayerComponents.player name={player.name} id={player.id} />
+      <%= if @players != [] do %>
+        <table class="table table-zebra">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th>Team</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= for player <- @players do %>
+                <tr>
+                <td><%= player.name %></td>
+                <td><.link href={~p"/teams/#{player.team.id}"} class="hover:text-primary"><%= player.team.name %></.link></td>
+                </tr>
+            <% end %>
+            </tbody>
+          </table>
       <% end %>
     </div>
     """

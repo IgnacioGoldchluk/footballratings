@@ -190,7 +190,10 @@ defmodule Footballratings.FootballInfo do
   end
 
   def players_for_search_params(search_params) do
-    Player.Query.for_search_params(search_params) |> Repo.all()
+    Player.Query.for_search_params(search_params)
+    |> join(:left, [p], t in assoc(p, :team))
+    |> preload([p, t], team: t)
+    |> Repo.all()
   end
 
   def teams_for_search_params(search_params) do
