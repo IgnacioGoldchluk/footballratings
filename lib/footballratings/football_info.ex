@@ -122,12 +122,11 @@ defmodule Footballratings.FootballInfo do
     )
   end
 
-  def match_exists?(match_id) do
-    case Repo.get(Match, match_id) do
-      nil -> false
-      %Match{} -> true
-    end
-  end
+  def match_exists?(match_id), do: is_nil?(Repo.get(Match, match_id))
+  def player_exists?(player_id), do: is_nil?(Repo.get(Player, player_id))
+
+  defp is_nil?(nil), do: false
+  defp is_nil?(_), do: true
 
   def set_match_status_to_ready(match_id) do
     Repo.get!(Match, match_id)

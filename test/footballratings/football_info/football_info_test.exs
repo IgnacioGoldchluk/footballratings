@@ -116,6 +116,14 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
 
       assert player == result
     end
+
+    test "player_exists?/1 returns whether the player exists or not" do
+      team = create_team()
+      player = create_player(%{team_id: team.id})
+
+      refute FootballInfo.player_exists?(System.unique_integer([:positive]))
+      assert FootballInfo.player_exists?(player.id)
+    end
   end
 
   describe "matches" do
