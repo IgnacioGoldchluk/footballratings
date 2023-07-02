@@ -13,29 +13,43 @@ defmodule Footballratings.Workers.FixturesFetch do
 
   @impl Oban.Worker
   def perform(%Oban.Job{args: %{"league" => league_id, "season" => season}}) do
-    today = Date.utc_today()
-    yesterday = Date.add(today, -1)
-    {:ok, matches} = FootballApi.matches(league_id, season, yesterday, today)
+    new_finished_matches = fetch_new_finished_matches(league_id, season)
 
-    new_finished_matches =
-      matches
-      |> Enum.filter(fn %{fixture: %{id: match_id}} = match ->
-        FootballApi.Processing.match_finished?(match) and
-          not Footballratings.FootballInfo.match_exists?(match_id)
-      end)
-
-    # Insert leagues if they don't exist
-    leagues = FootballApi.Processing.unique_leagues(new_finished_matches)
-    Footballratings.FootballInfo.maybe_create_leagues(leagues)
-
-    # Insert teams if they don't exist
-    teams = FootballApi.Processing.unique_teams(new_finished_matches)
-    Footballratings.FootballInfo.maybe_create_teams(teams)
+    {:ok, _leagues} = maybe_create_leagues(new_finished_matches)
+    {:ok, _teams} = maybe_create_teams(new_finished_matches)
 
     new_finished_matches_schemas = FootballApi.Processing.unique_matches(new_finished_matches)
     Footballratings.FootballInfo.create_matches(new_finished_matches_schemas)
 
     Footballratings.JobCreator.new_jobs_for_teams_squads(new_finished_matches_schemas)
     :ok
+  end
+
+  defp fetch_new_finished_matches(league_id, season) do
+    today = Date.utc_today()
+    yesterday = Date.add(today, -1)
+    {:ok, matches} = FootballApi.matches(league_id, season, yesterday, today)
+
+    matches
+    |> Enum.filter(fn %{fixture: %{id: match_id}} = match ->
+      FootballApi.Processing.match_finished?(match) and
+        not Footballratings.FootballInfo.match_exists?(match_id)
+    end)
+  end
+
+  defp maybe_create_leagues(new_finished_matches) do
+    # Insert leagues if they don't exist
+    leagues = FootballApi.Processing.unique_leagues(new_finished_matches)
+    Footballratings.FootballInfo.maybe_create_leagues(leagues)
+
+    {:ok, leagues}
+  end
+
+  defp maybe_create_teams(new_finished_matches) do
+    # Insert teams if they don't exist
+    teams = FootballApi.Processing.unique_teams(new_finished_matches)
+    Footballratings.FootballInfo.maybe_create_teams(teams)
+
+    {:ok, teams}
   end
 end
