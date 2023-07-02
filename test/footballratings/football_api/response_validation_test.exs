@@ -75,4 +75,20 @@ defmodule Footballratings.FootballApi.ResponseValidationTest do
       assert String.contains?(string, "response status=500")
     end
   end
+
+  describe "to_many_requests_validation" do
+    test "returns error when too many requests are found" do
+      {:ok, response} = too_many_requests_response()
+
+      assert {:error, string} = FootballApi.ResponseValidation.validate_response(response, %{})
+
+      assert String.contains?(string, "Too many requests")
+    end
+
+    test "returns ok when no errors" do
+      {:ok, response} = players_statistics_response()
+
+      assert {:ok, _response} = FootballApi.ResponseValidation.validate_response(response, %{})
+    end
+  end
 end

@@ -24,6 +24,17 @@ defmodule Footballratings.Application do
       Footballratings.LiveStats
     ]
 
+    events = [[:oban, :job, :start], [:oban, :job, :stop], [:oban, :job, :exception]]
+
+    :telemetry.attach_many(
+      "oban-logger",
+      events,
+      &Footballratings.Workers.WorkersLogger.handle_event/4,
+      []
+    )
+
+    :ok = Oban.Telemetry.attach_default_logger()
+
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Footballratings.Supervisor]

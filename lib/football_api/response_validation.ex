@@ -2,6 +2,7 @@ defmodule FootballApi.ResponseValidation do
   def validate_response(%HTTPoison.Response{} = response, decode_struct) do
     with {:ok, response} <- validate_headers(response),
          {:ok, response} <- validate_status(response),
+         {:ok, response} <- validate_no_errors(response),
          {:ok, response_body} <- Poison.decode(response.body, as: decode_struct) do
       {:ok, response_body}
     else
@@ -32,5 +33,22 @@ defmodule FootballApi.ResponseValidation do
       nil -> {:ok, response}
       errors -> {:error, "Received #{errors} in X-Api-Errors in #{request_url}"}
     end
+  end
+
+  defp validate_no_errors(%HTTPoison.Response{body: body} = response) do
+    {:ok, %{"errors" => errors}} = Poison.decode(body)
+
+    case errors do
+      [] -> {:ok, response}
+      nil -> {:ok, response}
+      error_map when error_map == %{} -> {:ok, response}
+      error_map -> {:error, format_errors(error_map)}
+    end
+  end
+
+  defp format_errors(errors) do
+    errors
+    |> Enum.map(fn {error_type, error_val} -> "#{error_type}: #{error_val}" end)
+    |> Enum.join(", ")
   end
 end

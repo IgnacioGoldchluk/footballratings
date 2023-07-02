@@ -116,4 +116,23 @@ defmodule Footballratings.ApiResponsesFixtures do
        }
      }}
   end
+
+  def too_many_requests_response() do
+    {:ok,
+     %HTTPoison.Response{
+       status_code: 200,
+       body:
+         "{\"get\":\"fixtures\\/lineups\",\"parameters\":{\"fixture\":\"971606\"},\"errors\":{\"rateLimit\":\"Too many requests. Your rate limit is 10 requests per minute.\"},\"results\":0,\"paging\":{\"current\":1,\"total\":1},\"response\":[]}",
+       headers: [],
+       request_url: "https://v3.football.api-sports.io/fixtures/lineups?fixture=971606",
+       request: %HTTPoison.Request{
+         method: :get,
+         url: "https://v3.football.api-sports.io/fixtures/lineups?fixture=971606",
+         headers: ["x-rapidapi-key": "secret_key"],
+         body: "",
+         params: %{"fixture" => 971_606},
+         options: [params: %{"fixture" => 971_606}]
+       }
+     }}
+  end
 end
