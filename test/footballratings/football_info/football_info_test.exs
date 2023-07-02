@@ -84,7 +84,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       team = create_team()
 
       player_attrs = %{
-        name: "M Kovacic",
+        name: "M. Kovačić",
         age: 30,
         id: System.unique_integer([:positive]),
         team_id: team.id
@@ -92,7 +92,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
 
       {:ok, player} = FootballInfo.create_player(player_attrs)
 
-      assert player.name == player_attrs[:name]
+      assert player.name == "M. Kovacic"
       assert player.age == player_attrs[:age]
       assert player.id == player_attrs[:id]
       assert player.team_id == player_attrs.team_id

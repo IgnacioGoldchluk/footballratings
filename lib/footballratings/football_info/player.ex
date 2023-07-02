@@ -9,9 +9,9 @@ defmodule Footballratings.FootballInfo.Player do
   alias Footballratings.FootballInfo.{Team, PlayerMatch}
 
   schema "players" do
-    field :name, :string
-    field :firstname, :string
-    field :lastname, :string
+    field :name, Footballratings.AsciiString
+    field :firstname, Footballratings.AsciiString
+    field :lastname, Footballratings.AsciiString
     field :age, :integer
 
     timestamps()

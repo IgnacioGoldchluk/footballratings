@@ -9,7 +9,7 @@ defmodule Footballratings.FootballInfo.Team do
   alias Footballratings.FootballInfo.Player
 
   schema "teams" do
-    field(:name, :string)
+    field(:name, Footballratings.AsciiString)
     has_many(:players, Player)
 
     timestamps()

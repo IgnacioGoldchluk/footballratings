@@ -7,7 +7,7 @@ defmodule Footballratings.FootballInfo.League do
   import Ecto.Changeset
 
   schema "leagues" do
-    field(:name, :string)
+    field(:name, Footballratings.AsciiString)
     field(:season, :integer)
 
     timestamps()

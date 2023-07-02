@@ -62,6 +62,7 @@ defmodule Footballratings.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:mox, "~> 1.0", only: :test},
       {:contex, "~> 0.5.0"},
+      {:iconv, "~> 1.0.10"},
       {:plug_cowboy, "~> 2.5"}
     ]
   end
