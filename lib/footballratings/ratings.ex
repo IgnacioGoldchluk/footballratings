@@ -116,6 +116,7 @@ defmodule Footballratings.Ratings do
 
   defp players_ratings_maps(players, scores, match_ratings_id) do
     players
+    |> Enum.map(&Map.from_struct/1)
     |> Enum.map(fn player ->
       player
       |> Map.delete(:name)
