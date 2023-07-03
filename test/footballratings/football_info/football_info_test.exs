@@ -126,6 +126,18 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
     end
   end
 
+  describe "leagues" do
+    test "get_all_leagues/1 returns all the leagues" do
+      assert [] = FootballInfo.all_leagues()
+
+      league = create_league()
+
+      assert [result] = FootballInfo.all_leagues()
+      assert result.id == league.id
+      assert result.name == league.name
+    end
+  end
+
   describe "matches" do
     test "create_match/1 with valid attrs creates a match" do
       home_team = create_team()
@@ -348,6 +360,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
           "after" => "",
           "home_team" => "",
           "away_team" => "",
+          "league" => "",
           "available_for_rating" => ""
         }
       ]
@@ -410,6 +423,22 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       assert m.id == match.id
 
       search_params = base_query |> Map.put("before", yesterday)
+      assert [] = FootballInfo.matches_for_search_params(search_params)
+    end
+
+    test "filters by league", %{base_query: base_query} do
+      league_1 = create_league(%{name: "Ligue 1"})
+      league_2 = create_league(%{name: "Ligue 2"})
+
+      match_1 = create_match(%{league_id: league_1.id})
+      _match_2 = create_match(%{league_id: league_2.id})
+
+      search_params = base_query |> Map.put("league", league_1.name)
+
+      assert [result] = FootballInfo.matches_for_search_params(search_params)
+      assert result.id == match_1.id
+
+      search_params = base_query |> Map.put("league", "ASD")
       assert [] = FootballInfo.matches_for_search_params(search_params)
     end
   end

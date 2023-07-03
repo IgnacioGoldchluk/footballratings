@@ -24,6 +24,12 @@ defmodule FootballratingsWeb.MatchLive.Index do
           phx-debounce="blur"
           class="rounded-lg w-full max-w-xs"
         />
+        <.input
+          field={@form[:league]}
+          type="select"
+          label="League"
+          options={@leagues}
+        />
         <div class="flex gap-2">
           <.input
             field={@form[:before]}
@@ -79,7 +85,14 @@ defmodule FootballratingsWeb.MatchLive.Index do
       socket
       |> assign_form(changeset)
       |> assign(:matches, [])
+      |> assign_leagues()
     }
+  end
+
+  defp assign_leagues(socket) do
+    leagues = FootballInfo.all_leagues() |> Enum.map(fn %{name: name} -> name end)
+
+    assign(socket, :leagues, leagues)
   end
 
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do

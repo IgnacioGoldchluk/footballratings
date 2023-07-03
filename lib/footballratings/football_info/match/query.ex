@@ -58,16 +58,25 @@ defmodule Footballratings.FootballInfo.Match.Query do
     |> where([m], m.timestamp >= ^date_timestamp)
   end
 
+  def for_league(query, ""), do: query
+
+  def for_league(query, league) do
+    query
+    |> where([m, ht, at, l], l.name == ^league)
+  end
+
   def for_search_params(%{
         "home_team" => ht,
         "away_team" => at,
         "before" => bd,
         "after" => ad,
-        "available_for_rating" => for_rating
+        "available_for_rating" => for_rating,
+        "league" => l
       }) do
     preload_all_match_data()
     |> for_home_team_ilike(ht)
     |> for_away_team_ilike(at)
+    |> for_league(l)
     |> before_date(bd)
     |> after_date(ad)
     |> order_by([m], desc: m.timestamp)

@@ -1,12 +1,13 @@
 defmodule FootballratingsWeb.MatchLive.Search do
-  defstruct [:home_team, :away_team, :before, :after, :available_for_rating]
+  defstruct [:home_team, :away_team, :before, :after, :available_for_rating, :league]
 
   @types %{
     home_team: :string,
     away_team: :string,
     before: :date,
     after: :date,
-    available_for_rating: :boolean
+    available_for_rating: :boolean,
+    league: :string
   }
 
   import Ecto.Changeset

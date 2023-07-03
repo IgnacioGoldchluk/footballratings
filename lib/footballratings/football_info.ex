@@ -8,6 +8,11 @@ defmodule Footballratings.FootballInfo do
 
   import Ecto.Query
 
+  def all_leagues() do
+    League
+    |> Repo.all()
+  end
+
   def create_team(attrs) do
     %Team{}
     |> Team.changeset(attrs)
