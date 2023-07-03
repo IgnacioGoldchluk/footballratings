@@ -90,7 +90,7 @@ defmodule FootballratingsWeb.MatchLive.Index do
   end
 
   defp assign_leagues(socket) do
-    leagues = FootballInfo.all_leagues() |> Enum.map(fn %{name: name} -> name end)
+    leagues = FootballInfo.get_all_leagues() |> Enum.map(fn %{name: name} -> name end)
 
     assign(socket, :leagues, leagues)
   end
