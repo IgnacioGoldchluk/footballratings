@@ -6,9 +6,8 @@ defmodule FootballratingsWeb.MatchLive.Available do
   @impl true
   def render(assigns) do
     ~H"""
-    <%= for match <- @available_matches do %>
-      <FootballratingsWeb.MatchComponents.match match={match} rate />
-    <% end %>
+    <div class="text-l">Click on a team to rate the players</div>
+    <FootballratingsWeb.MatchComponents.matches_table matches={@available_matches} />
     """
   end
 

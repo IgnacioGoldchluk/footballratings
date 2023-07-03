@@ -65,9 +65,7 @@ defmodule FootballratingsWeb.MatchLive.Index do
           </.button>
         </div>
       </div>
-      <%= for match <- @matches do %>
-        <FootballratingsWeb.MatchComponents.match match={match} rate />
-      <% end %>
+      <FootballratingsWeb.MatchComponents.matches_table matches={@matches} />
     </div>
     """
   end
