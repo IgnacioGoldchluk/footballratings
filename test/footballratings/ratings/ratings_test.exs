@@ -7,7 +7,6 @@ defmodule Footballratings.Ratings.RatingsTest do
   alias Footballratings.AccountsFixtures
 
   alias Footballratings.Ratings
-  alias Footballratings.FootballInfo
 
   describe "ratings" do
     test "create_rating/1 creates a rating" do
@@ -155,7 +154,6 @@ defmodule Footballratings.Ratings.RatingsTest do
         1..15
         |> Enum.map(&%{id: &1, team_id: match.home_team_id})
         |> Enum.map(&InternalDataFixtures.create_player/1)
-        |> Enum.map(fn %FootballInfo.Player{id: id, name: name} -> %{id: id, name: name} end)
 
       scores =
         players
@@ -190,7 +188,7 @@ defmodule Footballratings.Ratings.RatingsTest do
       now = DateTime.utc_now() |> DateTime.to_unix()
       team1 = InternalDataFixtures.create_team(%{name: "One FC"})
       team2 = InternalDataFixtures.create_team(%{name: "Two FC"})
-      player = InternalDataFixtures.create_player(%{team_id: team1.id}) |> Map.from_struct()
+      player = InternalDataFixtures.create_player(%{team_id: team1.id})
       player_id_score = player.id |> Integer.to_string()
 
       match = InternalDataFixtures.create_match(%{home_team_id: team1.id, timestamp: now})
