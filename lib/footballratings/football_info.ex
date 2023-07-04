@@ -163,9 +163,10 @@ defmodule Footballratings.FootballInfo do
     Match.Query.preload_all_match_data()
     |> join(:left, [m], pr in assoc(m, :players_matches))
     |> join(:left, [m, ht, at, l, pr], p in assoc(pr, :player))
+    |> join(:left, [m, ht, at, l, pr], prt in assoc(pr, :team))
     |> where([m], m.id == ^match_id)
     |> order_by([m, ht, at, l, pr, p], desc: pr.team_id)
-    |> preload([m, ht, at, l, pr, p], players_matches: {pr, [player: p]})
+    |> preload([m, ht, at, l, pr, p, prt], players_matches: {pr, [player: p, team: prt]})
     |> Repo.one()
   end
 
