@@ -24,12 +24,7 @@ defmodule FootballratingsWeb.MatchLive.Index do
           phx-debounce="blur"
           class="rounded-lg w-full max-w-xs"
         />
-        <.input
-          field={@form[:league]}
-          type="select"
-          label="League"
-          options={@leagues}
-        />
+        <.input field={@form[:league]} type="select" label="League" options={@leagues} />
         <div class="flex gap-2">
           <.input
             field={@form[:before]}
@@ -71,7 +66,8 @@ defmodule FootballratingsWeb.MatchLive.Index do
           </.button>
         </div>
       </div>
-      <FootballratingsWeb.MatchComponents.matches_table matches={@matches} />
+      <div id="#search-table"></div>
+      <FootballratingsWeb.MatchComponents.matches_table matches={@matches} id="#search-table" />
     </div>
     """
   end
@@ -114,12 +110,22 @@ defmodule FootballratingsWeb.MatchLive.Index do
 
   @impl true
   def handle_event("search", %{"search" => search_params}, socket) do
-    {:noreply, assign(socket, :matches, FootballInfo.matches_for_search_params(search_params))}
+    socket =
+      socket
+      |> assign(:matches, FootballInfo.matches_for_search_params(search_params))
+      |> push_event("scroll", %{value: "#search-table"})
+
+    {:noreply, socket}
   end
 
   @impl true
   def handle_event("all_available_matches", _, socket) do
-    {:noreply, assign(socket, :matches, FootballInfo.matches_available_for_rating())}
+    socket =
+      socket
+      |> assign(:matches, FootballInfo.matches_available_for_rating())
+      |> push_event("scroll", %{value: "#search-table"})
+
+    {:noreply, socket}
   end
 
   @impl true
