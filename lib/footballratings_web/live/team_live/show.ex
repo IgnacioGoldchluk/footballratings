@@ -11,6 +11,7 @@ defmodule FootballratingsWeb.TeamLive.Show do
         id={@team_with_players.id}
       />
     </div>
+    <div class="text-l">Current players in squad</div>
     <table class="table table-zebra">
       <thead>
         <tr>
@@ -27,12 +28,27 @@ defmodule FootballratingsWeb.TeamLive.Show do
         <% end %>
       </tbody>
     </table>
+    <div class="text-l">Matches</div>
+    <FootballratingsWeb.MatchComponents.matches_table matches={@matches_for_team} />
     """
   end
 
   @impl true
   def mount(%{"team_id" => team_id}, _session, socket) do
-    {:ok, socket |> assign_team_with_players(team_id)}
+    socket =
+      socket
+      |> assign_team_with_players(team_id)
+      |> assign_matches_for_team(team_id)
+
+    {:ok, socket}
+  end
+
+  defp assign_matches_for_team(socket, team_id) do
+    assign(
+      socket,
+      :matches_for_team,
+      team_id |> String.to_integer() |> FootballInfo.matches_for_team()
+    )
   end
 
   defp assign_team_with_players(socket, team_id) do

@@ -258,6 +258,20 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       assert [] = FootballInfo.matches_for_player(other_player.id)
     end
 
+    test "matches_for_team/1 returns matches where either home or away team are present" do
+      team = create_team()
+      match1 = create_match(%{home_team_id: team.id})
+      match2 = create_match(%{away_team_id: team.id})
+      match3 = create_match()
+
+      assert [m1, m2] = FootballInfo.matches_for_team(team.id)
+      ids = for m <- [m1, m2], do: m.id, into: MapSet.new()
+
+      assert match1.id in ids
+      assert match2.id in ids
+      refute match3.id in ids
+    end
+
     test "matches_available_for_rating returns the expected_matches" do
       now = DateTime.utc_now() |> DateTime.to_unix()
       yesterday = now - 24 * 60 * 60

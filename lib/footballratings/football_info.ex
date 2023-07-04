@@ -194,6 +194,12 @@ defmodule Footballratings.FootballInfo do
     matches
   end
 
+  def matches_for_team(team_id) do
+    Match.Query.preload_all_match_data()
+    |> where([m, ht, at, l], ht.id == ^team_id or at.id == ^team_id)
+    |> Repo.all()
+  end
+
   def matches_available_for_rating_for_team(team_id) do
     matches_with_teams_and_league()
     |> where([m, ht, at, l], ht.id == ^team_id or at.id == ^team_id)
