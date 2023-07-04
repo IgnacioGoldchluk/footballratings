@@ -22,6 +22,7 @@ defmodule FootballratingsWeb.PlayerLive.Show do
       </.form>
     </div>
     <div id="player-stats-chart"><%= @player_statistics_svg %></div>
+    <FootballratingsWeb.MatchComponents.matches_table matches={@matches_for_player} />
     """
   end
 
@@ -36,6 +37,7 @@ defmodule FootballratingsWeb.PlayerLive.Show do
       |> assign_player_statistics_svg(statistics)
       |> assign_teams(statistics)
       |> assign_current_team()
+      |> assign_matches_for_player(player_id)
     }
   end
 
@@ -50,6 +52,16 @@ defmodule FootballratingsWeb.PlayerLive.Show do
       end
 
     {:noreply, assign_player_statistics_svg(socket, statistics)}
+  end
+
+  defp assign_matches_for_player(socket, player_id) do
+    assign(
+      socket,
+      :matches_for_player,
+      player_id
+      |> String.to_integer()
+      |> FootballInfo.matches_for_player()
+    )
   end
 
   defp assign_player(socket, player_id) do

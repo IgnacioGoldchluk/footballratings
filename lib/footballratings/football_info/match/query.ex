@@ -12,6 +12,7 @@ defmodule Footballratings.FootballInfo.Match.Query do
     |> join(:left, [m], ht in assoc(m, :home_team))
     |> join(:left, [m], at in assoc(m, :away_team))
     |> join(:left, [m], l in assoc(m, :league))
+    |> order_by([m], desc: :timestamp)
     |> preload([m, ht, at, l], home_team: ht, away_team: at, league: l)
   end
 

@@ -128,11 +128,11 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
 
   describe "leagues" do
     test "get_all_leagues/1 returns all the leagues" do
-      assert [] = FootballInfo.all_leagues()
+      assert [] = FootballInfo.get_all_leagues()
 
       league = create_league()
 
-      assert [result] = FootballInfo.all_leagues()
+      assert [result] = FootballInfo.get_all_leagues()
       assert result.id == league.id
       assert result.name == league.name
     end
@@ -240,6 +240,22 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       [match1, match2] |> FootballInfo.create_matches()
       assert Repo.get(Match, match1.id)
       assert Repo.get(Match, match2.id)
+    end
+
+    test "matches_for_player/1 returns the matches where player took part of" do
+      team = create_team()
+      player = create_player(%{team_id: team.id})
+      match = create_match(%{home_team_id: team.id})
+      _other_match = create_match()
+
+      _player_match =
+        create_player_match(%{match_id: match.id, player_id: player.id, team_id: team.id})
+
+      assert [result] = FootballInfo.matches_for_player(player.id)
+      assert result.id == match.id
+
+      other_player = create_player(%{team_id: team.id})
+      assert [] = FootballInfo.matches_for_player(other_player.id)
     end
 
     test "matches_available_for_rating returns the expected_matches" do

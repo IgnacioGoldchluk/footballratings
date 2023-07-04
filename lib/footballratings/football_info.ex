@@ -183,6 +183,17 @@ defmodule Footballratings.FootballInfo do
     |> Repo.all()
   end
 
+  def matches_for_player(player_id) do
+    %{matches: matches} =
+      Player
+      |> where([p], p.id == ^player_id)
+      |> join(:left, [p], m in assoc(p, :matches))
+      |> preload([p, m], matches: ^Match.Query.preload_all_match_data())
+      |> Repo.one()
+
+    matches
+  end
+
   def matches_available_for_rating_for_team(team_id) do
     matches_with_teams_and_league()
     |> where([m, ht, at, l], ht.id == ^team_id or at.id == ^team_id)
