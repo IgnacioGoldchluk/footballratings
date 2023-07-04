@@ -4,6 +4,7 @@ defmodule FootballratingsWeb.MatchComponents do
 
   def matches_table(%{matches: []} = assigns) do
     ~H"""
+
     """
   end
 
@@ -12,11 +13,12 @@ defmodule FootballratingsWeb.MatchComponents do
     <table class="table table-zebra">
       <thead>
         <tr>
-        <th>League</th>
-        <th>Round</th>
-        <th>Home Team</th>
-        <th>Result</th>
-        <th>Away Team</th>
+          <th>League</th>
+          <th>Round</th>
+          <th>Home Team</th>
+          <th>Result</th>
+          <th>Away Team</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -24,7 +26,7 @@ defmodule FootballratingsWeb.MatchComponents do
           <.match_row match={match} />
         <% end %>
       </tbody>
-      </table>
+    </table>
     """
   end
 
@@ -33,9 +35,34 @@ defmodule FootballratingsWeb.MatchComponents do
     <tr>
       <td><%= @match.league.name %></td>
       <td><%= @match.round %></td>
-      <td><.team_row team_name={@match.home_team.name} team_id={@match.home_team.id} match_id={@match.id} rateable={@match.status==:ready} /></td>
-      <td><.result_row goals_home={@match.goals_home} goals_away={@match.goals_away} penalties_home={@match.penalties_home}, penalties_away={@match.penalties_away} /></td>
-      <td><.team_row team_name={@match.away_team.name} team_id={@match.away_team.id} match_id={@match.id} rateable={@match.status==:ready} /></td>
+      <td>
+        <.team_row
+          team_name={@match.home_team.name}
+          team_id={@match.home_team.id}
+          match_id={@match.id}
+          rateable={@match.status == :ready}
+        />
+      </td>
+      <td>
+        <.result_row
+          goals_home={@match.goals_home}
+          goals_away={@match.goals_away}
+          penalties_home={@match.penalties_home}
+          ,
+          penalties_away={@match.penalties_away}
+        />
+      </td>
+      <td>
+        <.team_row
+          team_name={@match.away_team.name}
+          team_id={@match.away_team.id}
+          match_id={@match.id}
+          rateable={@match.status == :ready}
+        />
+      </td>
+      <td>
+        <.link navigate={~p"/ratings/match/#{@match.id}"} class="hover:text-primary">Stats</.link>
+      </td>
     </tr>
     """
   end
@@ -48,16 +75,18 @@ defmodule FootballratingsWeb.MatchComponents do
 
   def team_row(%{rateable: true} = assigns) do
     ~H"""
-    <.link navigate={~p"/matches/#{@match_id}/rate/#{@team_id}"} class="hover:text-primary"><%= @team_name %></.link>
+    <.link navigate={~p"/matches/#{@match_id}/rate/#{@team_id}"} class="hover:text-primary">
+      <%= @team_name %>
+    </.link>
     """
   end
 
   def result_row(%{penalties_home: nil} = assigns) do
     ~H"""
     <div class="flex">
-    <div><%= @goals_home %></div>
-    <div> - </div>
-    <div><%= @goals_away %></div>
+      <div><%= @goals_home %></div>
+      <div>-</div>
+      <div><%= @goals_away %></div>
     </div>
     """
   end
@@ -65,11 +94,11 @@ defmodule FootballratingsWeb.MatchComponents do
   def result_row(assigns) do
     ~H"""
     <div class="flex">
-    <div><%= @goals_home %></div>
-    <div>(<%= @penalties_home %>)</div>
-    <div> - </div>
-    <div>(<%= @penalties_away %>)</div>
-    <div><%= @goals_away %></div>
+      <div><%= @goals_home %></div>
+      <div>(<%= @penalties_home %>)</div>
+      <div>-</div>
+      <div>(<%= @penalties_away %>)</div>
+      <div><%= @goals_away %></div>
     </div>
     """
   end
