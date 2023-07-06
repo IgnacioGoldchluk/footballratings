@@ -7,8 +7,6 @@ defmodule FootballratingsWeb.MatchLive.Index do
   def render(assigns) do
     ~H"""
     <div class="mx-auto max-w-sm">
-      <.header class="text-center">Search matches</.header>
-
       <.simple_form for={@form} id="search_matches" phx-submit="search" phx-change="validate">
         <.input
           field={@form[:home_team]}
@@ -49,19 +47,14 @@ defmodule FootballratingsWeb.MatchLive.Index do
         />
 
         <:actions>
-          <.button class="btn-primary disabled:bg-zinc-200" disabled={@form.errors != []}>
-            Search matches
+          <.button class="btn-primary disabled:bg-zinc-200 w-20" disabled={@form.errors != []}>
+            Search
           </.button>
         </:actions>
       </.simple_form>
       <div class="flex gap-2">
-        <div class="py-2">
-          <.button class="btn-primary disabled:bg-zinc-200" phx-click="all_available_matches">
-            All available matches
-          </.button>
-        </div>
-        <div class="py-2">
-          <.button class="btn-primary disabled:bg-zinc-200" phx-click="clear">
+        <div class="py-1">
+          <.button class="btn-primary disabled:bg-zinc-200 w-20" phx-click="clear">
             Clear
           </.button>
         </div>
@@ -113,16 +106,6 @@ defmodule FootballratingsWeb.MatchLive.Index do
     socket =
       socket
       |> assign(:matches, FootballInfo.matches_for_search_params(search_params))
-      |> push_event("scroll", %{value: "#search-table"})
-
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_event("all_available_matches", _, socket) do
-    socket =
-      socket
-      |> assign(:matches, FootballInfo.matches_available_for_rating())
       |> push_event("scroll", %{value: "#search-table"})
 
     {:noreply, socket}
