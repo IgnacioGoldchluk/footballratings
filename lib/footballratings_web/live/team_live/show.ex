@@ -39,7 +39,6 @@ defmodule FootballratingsWeb.TeamLive.Show do
       </table>
     <% end %>
     <%= if @current_section == "Matches" do %>
-      <div class="text-l">Matches</div>
       <FootballratingsWeb.MatchComponents.matches_table matches={@matches_for_team} />
     <% end %>
     """
@@ -76,5 +75,10 @@ defmodule FootballratingsWeb.TeamLive.Show do
   @impl true
   def handle_event("section_selected", %{"player_or_match" => value}, socket) do
     {:noreply, assign(socket, :current_section, value)}
+  end
+
+  @impl true
+  def handle_event("load-more", _, %{assigns: _assigns} = socket) do
+    {:noreply, socket}
   end
 end

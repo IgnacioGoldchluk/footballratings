@@ -2,7 +2,7 @@ defmodule FootballratingsWeb.MatchComponents do
   use FootballratingsWeb, :html
   use Phoenix.Component
 
-  def matches_table(%{matches: []} = assigns) do
+  def matches_table(%{matches: %{inserts: []}} = assigns) do
     ~H"""
 
     """
@@ -21,49 +21,48 @@ defmodule FootballratingsWeb.MatchComponents do
           <th></th>
         </tr>
       </thead>
-      <tbody>
-        <%= for match <- @matches do %>
+      <tbody id="matches" phx-update="stream">
+        <tr :for={{match_id, match} <- @matches} id={match_id} %>
           <.match_row match={match} />
-        <% end %>
+        </tr>
       </tbody>
     </table>
+    <div id="infinite-scroll-marker" phx-hook="InfiniteScroll"></div>
     """
   end
 
   def match_row(assigns) do
     ~H"""
-    <tr>
-      <td><%= @match.league.name %></td>
-      <td><%= @match.round %></td>
-      <td>
-        <.team_row
-          team_name={@match.home_team.name}
-          team_id={@match.home_team.id}
-          match_id={@match.id}
-          rateable={@match.status == :ready}
-        />
-      </td>
-      <td>
-        <.result_row
-          goals_home={@match.goals_home}
-          goals_away={@match.goals_away}
-          penalties_home={@match.penalties_home}
-          ,
-          penalties_away={@match.penalties_away}
-        />
-      </td>
-      <td>
-        <.team_row
-          team_name={@match.away_team.name}
-          team_id={@match.away_team.id}
-          match_id={@match.id}
-          rateable={@match.status == :ready}
-        />
-      </td>
-      <td>
-        <.link navigate={~p"/ratings/match/#{@match.id}"} class="hover:text-primary">Stats</.link>
-      </td>
-    </tr>
+    <td><%= @match.league.name %></td>
+    <td><%= @match.round %></td>
+    <td>
+      <.team_row
+        team_name={@match.home_team.name}
+        team_id={@match.home_team.id}
+        match_id={@match.id}
+        rateable={@match.status == :ready}
+      />
+    </td>
+    <td>
+      <.result_row
+        goals_home={@match.goals_home}
+        goals_away={@match.goals_away}
+        penalties_home={@match.penalties_home}
+        ,
+        penalties_away={@match.penalties_away}
+      />
+    </td>
+    <td>
+      <.team_row
+        team_name={@match.away_team.name}
+        team_id={@match.away_team.id}
+        match_id={@match.id}
+        rateable={@match.status == :ready}
+      />
+    </td>
+    <td>
+      <.link navigate={~p"/ratings/match/#{@match.id}"} class="hover:text-primary">Stats</.link>
+    </td>
     """
   end
 

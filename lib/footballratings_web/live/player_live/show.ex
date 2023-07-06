@@ -9,20 +9,8 @@ defmodule FootballratingsWeb.PlayerLive.Show do
   def render(assigns) do
     ~H"""
     <FootballratingsWeb.PlayerComponents.player name={@player.name} id={@player.id} />
-    <div>
-      <.form :let={_f} for={%{}} as={:team_filter} phx-change="select_team" id="team-selector">
-        <.input
-          type="select"
-          name="team"
-          id="select-team"
-          options={["All" | @teams]}
-          value={@current_team}
-          phx-value-team={@current_team}
-        />
-      </.form>
-    </div>
     <div id="player-stats-chart"><%= @player_statistics_svg %></div>
-    <FootballratingsWeb.MatchComponents.matches_table matches={@matches_for_player} />
+    <FootballratingsWeb.MatchComponents.matches_table matches={@streams.matches} />
     """
   end
 
@@ -42,26 +30,14 @@ defmodule FootballratingsWeb.PlayerLive.Show do
   end
 
   @impl true
-  def handle_event("select_team", %{"team" => team}, %{assigns: %{player: player}} = socket) do
-    %{id: player_id} = player
-
-    statistics =
-      case team do
-        "All" -> Ratings.player_statistics(player_id)
-        team_name -> Ratings.player_statistics(player_id, team_name)
-      end
-
-    {:noreply, assign_player_statistics_svg(socket, statistics)}
+  def handle_event("load-more", _, socket) do
+    {:noreply, socket}
   end
 
   defp assign_matches_for_player(socket, player_id) do
-    assign(
-      socket,
-      :matches_for_player,
-      player_id
-      |> String.to_integer()
-      |> FootballInfo.matches_for_player()
-    )
+    socket
+    |> stream_configure(:matches, dom_id: &"matches-#{&1.id}")
+    |> stream(:matches, player_id |> String.to_integer() |> FootballInfo.matches_for_player())
   end
 
   defp assign_player(socket, player_id) do

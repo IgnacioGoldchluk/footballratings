@@ -13,32 +13,35 @@ defmodule FootballratingsWeb.MatchLive.Index do
           type="text"
           label="Home Team"
           phx-debounce="blur"
-          class="rounded-lg w-full max-w-xs"
+          class="rounded-lg w-full max-w-max"
         />
         <.input
           field={@form[:away_team]}
           type="text"
           label="Away Team"
           phx-debounce="blur"
-          class="rounded-lg w-full max-w-xs"
+          class="rounded-lg w-full max-w-max"
         />
-        <.input field={@form[:league]} type="select" label="League" options={@leagues} />
-        <div class="flex gap-2">
-          <.input
-            field={@form[:before]}
-            type="text"
-            label="Before (YYYY-MM-AA)"
-            phx-debounce="blur"
-            class="rounded-lg max-w-xs"
-          />
-          <.input
-            field={@form[:after]}
-            type="text"
-            label="After (YYYY-MM-AA)"
-            phx-debounce="blur"
-            class="rounded-lg"
-          />
-        </div>
+        <.input
+          field={@form[:before]}
+          type="text"
+          label="Before (YYYY-MM-AA)"
+          phx-debounce="blur"
+          class="rounded-lg max-w-xs"
+        />
+        <.input
+          field={@form[:after]}
+          type="text"
+          label="After (YYYY-MM-AA)"
+          phx-debounce="blur"
+          class="rounded-lg"
+        />
+        <.input
+          field={@form[:league]}
+          type="select"
+          label="League"
+          options={@leagues}
+        />
         <.input
           field={@form[:available_for_rating]}
           type="checkbox"
@@ -60,7 +63,7 @@ defmodule FootballratingsWeb.MatchLive.Index do
         </div>
       </div>
       <div id="#search-table"></div>
-      <FootballratingsWeb.MatchComponents.matches_table matches={@matches} id="#search-table" />
+      <FootballratingsWeb.MatchComponents.matches_table matches={@streams.matches} id="#search-table" />
     </div>
     """
   end
@@ -73,7 +76,8 @@ defmodule FootballratingsWeb.MatchLive.Index do
       :ok,
       socket
       |> assign_form(changeset)
-      |> assign(:matches, [])
+      |> stream_configure(:matches, dom_id: &"matches-#{&1.id}")
+      |> stream(:matches, [])
       |> assign_leagues()
     }
   end
@@ -105,7 +109,7 @@ defmodule FootballratingsWeb.MatchLive.Index do
   def handle_event("search", %{"search" => search_params}, socket) do
     socket =
       socket
-      |> assign(:matches, FootballInfo.matches_for_search_params(search_params))
+      |> stream(:matches, FootballInfo.matches_for_search_params(search_params))
       |> push_event("scroll", %{value: "#search-table"})
 
     {:noreply, socket}
@@ -113,6 +117,11 @@ defmodule FootballratingsWeb.MatchLive.Index do
 
   @impl true
   def handle_event("clear", _, socket) do
-    {:noreply, assign(socket, :matches, [])}
+    {:noreply, stream(socket, :matches, [], reset: true)}
+  end
+
+  @impl true
+  def handle_event("load-more", _, %{assigns: _assigns} = socket) do
+    {:noreply, socket}
   end
 end
