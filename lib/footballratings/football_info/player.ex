@@ -19,7 +19,9 @@ defmodule Footballratings.FootballInfo.Player do
     belongs_to :team, Team
     has_many :player_matches, PlayerMatch
     has_many :teams, through: [:player_matches, :team]
-    has_many :matches, through: [:player_matches, :match]
+
+    many_to_many :matches, Footballratings.FootballInfo.Match,
+      join_through: Footballratings.FootballInfo.PlayerMatch
   end
 
   def changeset(player, attrs) do

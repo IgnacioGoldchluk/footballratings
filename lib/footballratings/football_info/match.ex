@@ -28,7 +28,9 @@ defmodule Footballratings.FootballInfo.Match do
     belongs_to(:away_team, Footballratings.FootballInfo.Team)
 
     has_many(:players_matches, PlayerMatch)
-    has_many(:players, through: [:players_matches, :player])
+
+    many_to_many :players, Footballratings.FootballInfo.Player,
+      join_through: Footballratings.FootballInfo.PlayerMatch
 
     timestamps()
   end

@@ -185,14 +185,13 @@ defmodule Footballratings.FootballInfo do
   end
 
   def matches_for_player(player_id) do
-    %{matches: matches} =
-      Player
-      |> where([p], p.id == ^player_id)
-      |> join(:left, [p], m in assoc(p, :matches))
-      |> preload([p, m], matches: ^Match.Query.preload_all_match_data())
-      |> Repo.one()
-
-    matches
+    Player
+    |> join(:inner, [p], m in assoc(p, :matches))
+    |> where([p], p.id == ^player_id)
+    |> select([p, m], m)
+    |> Repo.all()
+    # This is inefficient
+    |> Repo.preload([:home_team, :away_team, :league])
   end
 
   def matches_for_team(team_id) do
