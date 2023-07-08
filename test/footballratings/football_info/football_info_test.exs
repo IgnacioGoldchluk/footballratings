@@ -20,6 +20,13 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       assert {:error, %Ecto.Changeset{}} = FootballInfo.create_team(invalid_attrs)
     end
 
+    test "get_team/1 returns the team for the given id" do
+      team = create_team()
+
+      assert team == FootballInfo.get_team(team.id)
+      assert nil == FootballInfo.get_team(System.unique_integer([:positive]))
+    end
+
     test "matches_available_for_rating_for_team/1 returns only where team id matches" do
       match1 = create_match()
       _match2 = create_match()

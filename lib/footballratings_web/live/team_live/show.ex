@@ -11,36 +11,13 @@ defmodule FootballratingsWeb.TeamLive.Show do
         id={@team_with_players.id}
       />
     </div>
-    <form phx-change="section_selected">
-      <.input
-        type="select"
-        name="player_or_match"
-        id="select-players-or-matches"
-        options={["Players", "Matches"]}
-        value="Players"
-      />
-    </form>
-    <%= if @current_section == "Players" do %>
-      <table class="table table-zebra">
-        <thead>
-          <tr>
-            <th>Player</th>
-          </tr>
-        </thead>
-        <tbody>
-          <%= for player <- @team_with_players.players do %>
-            <tr>
-              <td>
-                <FootballratingsWeb.PlayerComponents.player_link id={player.id} name={player.name} />
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    <% end %>
-    <%= if @current_section == "Matches" do %>
-      <FootballratingsWeb.MatchComponents.matches_table matches={@matches_for_team} />
-    <% end %>
+    <.link navigate={~p"/teams/#{@team_with_players.id}/players"}>
+      <.button class="btn btn-primary">Players <span aria-hidden="true">→</span></.button>
+    </.link>
+    <.link navigate={~p"/teams/#{@team_with_players.id}/matches"}>
+      <.button class="btn btn-primary">Matches <span aria-hidden="true">→</span></.button>
+    </.link>
+
     """
   end
 
