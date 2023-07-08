@@ -19,30 +19,14 @@ defmodule FootballratingsWeb.PlayerLive.Index do
         />
       </.simple_form>
 
-      <%= if @players != [] do %>
-        <table class="table table-zebra">
-          <thead>
-            <tr>
-              <th>Player</th>
-              <th>Team</th>
-            </tr>
-          </thead>
-          <tbody>
-            <%= for player <- @players do %>
-              <tr>
-                <td>
-                  <FootballratingsWeb.PlayerComponents.player_link id={player.id} name={player.name} />
-                </td>
-                <td>
-                  <.link navigate={~p"/teams/#{player.team.id}"} class="hover:text-primary">
-                    <%= player.team.name %>
-                  </.link>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      <% end %>
+      <.table
+        id="players"
+        rows={@streams.players}
+        row_click={fn {_id, player_id} -> JS.navigate(~p"/players/#{player_id}") end}
+      >
+        <:col :let={{_id, player}} label="Name"><%= player.name %></:col>
+        <:col :let={{_id, player}} label="Team"><%= player.team.name %></:col>
+      </.table>
     </div>
     """
   end
@@ -51,7 +35,13 @@ defmodule FootballratingsWeb.PlayerLive.Index do
   def mount(_params, _session, socket) do
     changeset = Search.changeset(%Search{}, %{})
 
-    {:ok, socket |> assign_form(changeset) |> assign(:players, [])}
+    socket =
+      socket
+      |> assign_form(changeset)
+      |> stream_configure(:players, dom_id: &"player-#{&1.id}")
+      |> stream(:players, [])
+
+    {:ok, socket}
   end
 
   @impl true
@@ -68,9 +58,9 @@ defmodule FootballratingsWeb.PlayerLive.Index do
 
   defp maybe_assign_players(socket, changeset, search_params) do
     if changeset.valid? do
-      assign(socket, :players, FootballInfo.players_for_search_params(search_params))
+      stream(socket, :players, FootballInfo.players_for_search_params(search_params), reset: true)
     else
-      assign(socket, :players, [])
+      stream(socket, :players, [], reset: true)
     end
   end
 
