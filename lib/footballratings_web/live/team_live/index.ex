@@ -14,26 +14,13 @@ defmodule FootballratingsWeb.TeamLive.Index do
         <.input field={@form[:name]} type="text" label="Team name" class="rounded-lg w-full max-w-xs" />
       </.simple_form>
 
-      <%= if @teams != [] do %>
-        <table class="table table-zebra">
-          <thead>
-            <tr>
-              <th>Team</th>
-            </tr>
-          </thead>
-          <tbody>
-            <%= for team <- @teams do %>
-              <tr>
-                <td>
-                  <.link navigate={~p"/teams/#{team.id}"} class="hover:text-primary">
-                    <%= team.name %>
-                  </.link>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      <% end %>
+      <.table
+        id="teams"
+        rows={@streams.teams}
+        row_click={fn {_id, team_id} -> JS.navigate(~p"/teams/#{team_id}") end}
+      >
+        <:col :let={{_id, team}} label="Team"><%= team.name %></:col>
+      </.table>
     </div>
     """
   end
@@ -42,7 +29,13 @@ defmodule FootballratingsWeb.TeamLive.Index do
   def mount(_params, _session, socket) do
     changeset = Search.changeset(%Search{}, %{})
 
-    {:ok, socket |> assign_form(changeset) |> assign(:teams, [])}
+    socket =
+      socket
+      |> assign_form(changeset)
+      |> stream_configure(:teams, dom_id: &"team-#{&1.id}")
+      |> stream(:teams, [])
+
+    {:ok, socket}
   end
 
   @impl true
@@ -59,9 +52,9 @@ defmodule FootballratingsWeb.TeamLive.Index do
 
   defp maybe_assign_teams(socket, changeset, search_params) do
     if changeset.valid? do
-      assign(socket, :teams, FootballInfo.teams_for_search_params(search_params))
+      stream(socket, :teams, FootballInfo.teams_for_search_params(search_params), reset: true)
     else
-      assign(socket, :teams, [])
+      stream(socket, :teams, [], reset: true)
     end
   end
 
