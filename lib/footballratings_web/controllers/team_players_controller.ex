@@ -2,7 +2,6 @@ defmodule FootballratingsWeb.TeamPlayersController do
   use FootballratingsWeb, :controller
   alias Footballratings.FootballInfo
 
-  @impl true
   def show(conn, %{"team_id" => team_id}) do
     team_with_players =
       team_id
