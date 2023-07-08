@@ -221,6 +221,13 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       assert updated_match.status == :ready
     end
 
+    test "get_match/1 returns match by id" do
+      match = create_match()
+
+      assert match == FootballInfo.get_match(match.id)
+      assert nil == FootballInfo.get_match(System.unique_integer([:positive]))
+    end
+
     test "create_matches inserts multiple matches at once" do
       home_team = create_team()
       away_team = create_team()

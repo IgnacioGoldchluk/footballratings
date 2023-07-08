@@ -23,6 +23,10 @@ defmodule Footballratings.FootballInfo do
     Repo.get(Team, team_id)
   end
 
+  def get_match(match_id) do
+    Repo.get(Match, match_id)
+  end
+
   def maybe_create_team(attrs) do
     %Team{}
     |> Team.changeset(attrs)
