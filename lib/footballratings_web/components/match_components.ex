@@ -15,6 +15,7 @@ defmodule FootballratingsWeb.MatchComponents do
       <:col :let={{_id, match}} label="Away Team"><%= match.away_team.name %></:col>
       <:col :let={{_id, match}} label="Round"><%= match.round %></:col>
     </.table>
+    <div id="infinite-scroll-marker" phx-hook="InfiniteScroll"></div>
     """
   end
 
@@ -48,16 +49,16 @@ defmodule FootballratingsWeb.MatchComponents do
     """
   end
 
-  defp result_row(%{penalties_home: nil, penalties_away: nil} = match) do
+  def result_row(%{penalties_home: nil, penalties_away: nil} = match) do
     "#{match.goals_home} - #{match.goals_away}"
   end
 
   # Match with pens
-  defp result_row(match) do
+  def result_row(match) do
     "#{match.goals_home} (#{match.penalties_home}) - (#{match.penalties_away}) #{match.goals_away}"
   end
 
-  defp acronym(words) do
+  def acronym(words) do
     words
     |> String.split()
     |> Enum.map(&String.first/1)

@@ -13,26 +13,14 @@ defmodule FootballratingsWeb.MatchRatingsHTML do
         <div><%= @inserted_at %></div>
       </div>
       <FootballratingsWeb.MatchComponents.match_result match={@match} />
-      <table class="table table-zebra">
-        <thead>
-          <tr>
-            <th>Player</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          <%= for player_rating <- @player_ratings do %>
-            <tr>
-              <td>
-                <.link href={~p"/players/#{player_rating.player.id}"} class="hover:text-primary">
-                  <%= player_rating.player.name %>
-                </.link>
-              </td>
-              <td><%= player_rating.score %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+      <.table
+        id="player-ratings"
+        rows={@player_ratings}
+        row_click={fn %{player: player} -> JS.navigate(~p"/players/#{player.id}") end}
+      >
+        <:col :let={player_rating} label="Name"><%= player_rating.player.name %></:col>
+        <:col :let={player_rating} label="Score"><%= player_rating.score %></:col>
+      </.table>
     </div>
     """
   end
