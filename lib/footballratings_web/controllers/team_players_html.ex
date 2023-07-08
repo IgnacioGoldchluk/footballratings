@@ -1,7 +1,6 @@
 defmodule FootballratingsWeb.TeamPlayersHTML do
   use FootballratingsWeb, :html
 
-  @impl true
   def show(assigns) do
     ~H"""
       <.link href={~p"/teams/#{@team_with_players.id}"}>
