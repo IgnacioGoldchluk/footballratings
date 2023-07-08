@@ -31,30 +31,16 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
         />
       </.button>
     </div>
-    <table class="table table-zebra" id="the-table" hidden>
-      <thead>
-        <tr>
-          <th>Player</th>
-          <th>Team</th>
-          <th>Average score</th>
-        </tr>
-      </thead>
-      <tbody>
-        <%= for %{player: player, team: team} <- players_matches_for_team(@players_matches, @team_name) do %>
-          <tr>
-            <td>
-              <FootballratingsWeb.PlayerComponents.player_link id={player.id} name={player.name} />
-            </td>
-            <td>
-              <.link navigate={~p"/teams/#{team.id}"} class="hover:text-primary">
-                <%= team.name %>
-              </.link>
-            </td>
-            <td><%= Map.get(@average_ratings, player.id, "No ratings yet") %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <.table
+      id="players-statistics"
+      rows={players_matches_for_team(@players_matches, @team_name)}
+      row_click={fn %{player: player} -> JS.navigate(~p"/players/#{player.id}") end}
+    >
+      <:col :let={player_match} label="Name"><%= player_match.player.name %></:col>
+      <:col :let={player_match} label="Average score">
+        <%= Map.get(@average_ratings, player_match.player.id, "No ratings yet") %>
+      </:col>
+    </.table>
     """
   end
 
