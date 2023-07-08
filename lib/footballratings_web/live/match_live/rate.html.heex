@@ -1,10 +1,13 @@
+<.link navigate={~p"/matches/#{@match_id}"}>
+  <.button class="btn btn-primary">Back to match</.button>
+</.link>
 <.form for={@scores} phx-submit="submit">
-    <div class="grid gap-4 grid-cols-none">
-        <%= for player <- @players do %>
-            <.player_to_rate player={player} score={@scores[player.id]} />
-        <% end %>
-    </div>
-    <div class="flex py-8 justify-end w-80">
-        <.button class="btn btn-primary btn-wide" phx-disable-with="Saving...">Rate players</.button>
-    </div>
+  <div class="grid gap-4 grid-cols-none">
+    <%= for player <- @players do %>
+      <.player_to_rate player={player} score={@scores[player.id]} />
+    <% end %>
+  </div>
+  <div class="flex py-8 justify-end w-80">
+    <.button class="btn btn-primary btn-wide" phx-disable-with="Saving...">Rate players</.button>
+  </div>
 </.form>

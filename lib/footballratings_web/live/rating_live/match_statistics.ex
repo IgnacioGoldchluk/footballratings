@@ -7,6 +7,11 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
   @impl true
   def render(assigns) do
     ~H"""
+    <.link patch={~p"/matches/#{@match.id}"}>
+      <.button class="btn btn-primary">
+        Back to match
+      </.button>
+    </.link>
     <div>Total ratings: <%= @number_of_ratings %></div>
     <FootballratingsWeb.MatchComponents.match_result match={@match} />
 

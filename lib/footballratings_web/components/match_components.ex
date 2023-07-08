@@ -61,7 +61,7 @@ defmodule FootballratingsWeb.MatchComponents do
       />
     </td>
     <td>
-      <.link navigate={~p"/ratings/match/#{@match.id}"} class="hover:text-primary">Stats</.link>
+      <.link navigate={~p"/matches/#{@match.id}/statistics"} class="hover:text-primary">Stats</.link>
     </td>
     """
   end
@@ -130,18 +130,13 @@ defmodule FootballratingsWeb.MatchComponents do
     """
   end
 
-  defp team(assigns) do
+  def team(assigns) do
     ~H"""
     <div class="grid w-min bg-white border-solid border-2 border-primary join-item rounded-lg">
-      <div class="flex justify-between flex-auto">
+      <div class="flex justify-between">
         <img src="/images/team.jpg" width="50" />
         <p class="w-48 font-semibold pl-4 py-2"><%= @team.name %></p>
         <.result goals={@goals} penalties={@penalties} />
-        <%= if @rate do %>
-          <.link navigate={"/matches/#{@match_id}/rate/#{@team.id}"} class="py-1 px-1">
-            <button class="btn btn-primary">Rate players</button>
-          </.link>
-        <% end %>
       </div>
     </div>
     """

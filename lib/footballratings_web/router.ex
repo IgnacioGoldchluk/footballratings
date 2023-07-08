@@ -30,11 +30,12 @@ defmodule FootballratingsWeb.Router do
       live("/teams/:team_id/matches", TeamLive.Matches, :show)
       live("/available-matches", MatchLive.Available, :index)
       live("/matches", MatchLive.Index, :index)
+      live("/matches/:match_id", MatchLive.RateTogether, :index)
+      live("/matches/:match_id/statistics", RatingLive.MatchStatistics, :match_statistics)
       live("/players", PlayerLive.Index, :index)
       live("/players/:player_id", PlayerLive.Show, :show)
       live("/ratings/users/:users_id", RatingLive.Users, :index)
       live("/ratings/player/:player_id", RatingLive.PlayerStatistics, :show)
-      live("/ratings/match/:match_id", RatingLive.MatchStatistics, :match_statistics)
     end
   end
 
