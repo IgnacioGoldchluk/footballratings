@@ -23,31 +23,29 @@ defmodule FootballratingsWeb.MatchComponents do
     ~H"""
     <h2 class="font-semibold"><%= @match.league.name %> - <%= @match.round %></h2>
     <div class="join-vertical">
-      <.team
-        team={@match.home_team}
-        goals={@match.goals_home}
-        penalties={@match.penalties_home}
-        match_id={@match.id}
-      />
-      <.team
-        team={@match.away_team}
-        goals={@match.goals_away}
-        penalties={@match.penalties_away}
-        match_id={@match.id}
-      />
+      <.team team={@match.home_team} goals={@match.goals_home} penalties={@match.penalties_home} />
+      <.team team={@match.away_team} goals={@match.goals_away} penalties={@match.penalties_away} />
     </div>
     """
   end
 
+  attr :team, :any, required: true
+  attr :goals, :integer, required: true
+  attr :penalties, :any, required: true
+  attr :pinned, :boolean, default: false
+
   def team(assigns) do
     ~H"""
-    <div class="flex w-64 bg-white border-solid border-2 border-primary justify-between gap-4 hover:bg-secondary">
+    <div class={"flex w-64 #{team_bg(@pinned)} border-solid border-2 border-primary justify-between gap-4 hover:bg-secondary"}>
       <img src="/images/team.jpg" width="50" />
       <p class="font-semibold pl-4 py-2"><%= @team.name %></p>
       <.result goals={@goals} penalties={@penalties} />
     </div>
     """
   end
+
+  defp team_bg(true), do: "bg-secondary"
+  defp team_bg(false), do: "bg-white"
 
   def result_row(%{penalties_home: nil, penalties_away: nil} = match) do
     "#{match.goals_home} - #{match.goals_away}"

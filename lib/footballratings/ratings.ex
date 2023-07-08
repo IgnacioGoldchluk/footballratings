@@ -40,13 +40,15 @@ defmodule Footballratings.Ratings do
     from(mr in MatchRatings,
       where: mr.id == ^match_ratings_id,
       join: pr in assoc(mr, :player_ratings),
+      join: t in assoc(mr, :team),
       join: m in assoc(mr, :match),
       join: u in assoc(mr, :users),
       left_join: p in assoc(pr, :player),
       preload: [
         match: ^Match.Query.preload_all_match_data(),
         player_ratings: {pr, [player: p]},
-        users: u
+        users: u,
+        team: t
       ]
     )
     |> Repo.one()

@@ -12,7 +12,6 @@ defmodule FootballratingsWeb.MatchLive.Show do
           team={@match.home_team}
           goals={@match.goals_home}
           penalties={@match.penalties_home}
-          rate
         />
       </.link>
       <.link navigate={~p"/matches/#{@match.id}/rate/#{@match.away_team.id}"}>
@@ -20,7 +19,6 @@ defmodule FootballratingsWeb.MatchLive.Show do
           team={@match.away_team}
           goals={@match.goals_away}
           penalties={@match.penalties_away}
-          rate
         />
       </.link>
       <.link navigate={~p"/matches/#{@match.id}/statistics"}>

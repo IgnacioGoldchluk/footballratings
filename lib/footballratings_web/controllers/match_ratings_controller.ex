@@ -8,7 +8,8 @@ defmodule FootballratingsWeb.MatchRatingsController do
       match: match,
       users: user,
       player_ratings: player_ratings,
-      inserted_at: inserted_at
+      inserted_at: inserted_at,
+      team: team
     } =
       match_ratings_id
       |> String.to_integer()
@@ -18,7 +19,8 @@ defmodule FootballratingsWeb.MatchRatingsController do
       match: match,
       user: user,
       player_ratings: player_ratings,
-      inserted_at: inserted_at |> NaiveDateTime.to_date()
+      inserted_at: inserted_at |> NaiveDateTime.to_date(),
+      team: team
     )
   end
 end

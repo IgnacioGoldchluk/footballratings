@@ -12,7 +12,21 @@ defmodule FootballratingsWeb.MatchRatingsHTML do
         <div>on</div>
         <div><%= @inserted_at %></div>
       </div>
-      <FootballratingsWeb.MatchComponents.match_result match={@match} />
+      <h2 class="font-semibold"><%= @match.league.name %> - <%= @match.round %></h2>
+      <div class="flex flex-col">
+        <FootballratingsWeb.MatchComponents.team
+          team={@match.home_team}
+          goals={@match.goals_home}
+          penalties={@match.penalties_home}
+          pinned={@match.home_team.name == @team.name}
+        />
+        <FootballratingsWeb.MatchComponents.team
+          team={@match.away_team}
+          goals={@match.goals_away}
+          penalties={@match.penalties_away}
+          pinned={@match.away_team.name == @team.name}
+        />
+      </div>
       <.table
         id="player-ratings"
         rows={@player_ratings}

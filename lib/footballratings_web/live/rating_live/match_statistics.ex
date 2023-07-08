@@ -19,7 +19,6 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
           team={@match.home_team}
           goals={@match.goals_home}
           penalties={@match.penalties_home}
-          match_id={@match.id}
         />
       </.button>
       <.button phx-click="team_selected" phx-value-team={@match.away_team.name}>
@@ -27,7 +26,6 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
           team={@match.away_team}
           goals={@match.goals_away}
           penalties={@match.penalties_away}
-          match_id={@match.id}
         />
       </.button>
     </div>
