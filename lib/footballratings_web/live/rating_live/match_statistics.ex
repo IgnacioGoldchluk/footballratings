@@ -7,17 +7,28 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
   @impl true
   def render(assigns) do
     ~H"""
-    <.link patch={~p"/matches/#{@match.id}"}>
+    <.link navigate={~p"/matches/#{@match.id}"}>
       <.button class="btn btn-primary">
         Back to match
       </.button>
     </.link>
     <div>Total ratings: <%= @number_of_ratings %></div>
-    <FootballratingsWeb.MatchComponents.match_result match={@match} />
-
-    <form phx-change="team_selected">
-      <.input type="select" name="team" id="select-team" options={@teams} value={Enum.at(@teams, 0)} />
-    </form>
+    <.button phx-click="team_selected" phx-value-team={@match.home_team.name}>
+      <FootballratingsWeb.MatchComponents.team
+        team={@match.home_team}
+        goals={@match.goals_home}
+        penalties={@match.penalties_home}
+        match_id={@match.id}
+      />
+    </.button>
+    <.button phx-click="team_selected" phx-value-team={@match.away_team.name}>
+      <FootballratingsWeb.MatchComponents.team
+        team={@match.away_team}
+        goals={@match.goals_away}
+        penalties={@match.penalties_away}
+        match_id={@match.id}
+      />
+    </.button>
     <table class="table table-zebra" id="the-table" hidden>
       <thead>
         <tr>

@@ -132,12 +132,10 @@ defmodule FootballratingsWeb.MatchComponents do
 
   def team(assigns) do
     ~H"""
-    <div class="grid w-min bg-white border-solid border-2 border-primary join-item rounded-lg">
-      <div class="flex justify-between">
-        <img src="/images/team.jpg" width="50" />
-        <p class="w-48 font-semibold pl-4 py-2"><%= @team.name %></p>
-        <.result goals={@goals} penalties={@penalties} />
-      </div>
+    <div class="flex w-64 bg-white border-solid border-2 border-primary justify-between hover:bg-secondary">
+      <img src="/images/team.jpg" width="50" />
+      <p class="font-semibold pl-4 py-2"><%= @team.name %></p>
+      <.result goals={@goals} penalties={@penalties} />
     </div>
     """
   end
