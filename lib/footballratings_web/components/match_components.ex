@@ -44,7 +44,7 @@ defmodule FootballratingsWeb.MatchComponents do
     """
   end
 
-  defp team_bg(true), do: "bg-secondary"
+  defp team_bg(true), do: "bg-primary"
   defp team_bg(false), do: "bg-white"
 
   def result_row(%{penalties_home: nil, penalties_away: nil} = match) do
