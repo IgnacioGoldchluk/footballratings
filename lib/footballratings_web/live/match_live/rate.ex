@@ -4,6 +4,7 @@ defmodule FootballratingsWeb.MatchLive.Rate do
   @initial_score "5"
 
   alias Footballratings.{Ratings, Accounts}
+  alias Footballratings.FootballInfo
 
   @impl true
   def mount(%{"match_id" => match_id, "team_id" => team_id}, %{"users_token" => token}, socket) do
@@ -18,13 +19,13 @@ defmodule FootballratingsWeb.MatchLive.Rate do
   end
 
   defp assign_information_to_rate(socket, match_id, team_id) do
-    players = Footballratings.FootballInfo.players_for_match(match_id, team_id)
+    players = FootballInfo.players_for_match(match_id, team_id)
 
     socket
     |> assign(:players, players)
     |> assign(:scores, Map.new(players, fn %{id: id} -> {id, @initial_score} end))
     |> assign(:team_id, team_id)
-    |> assign(:match_id, match_id)
+    |> assign(:match, FootballInfo.get_match(match_id))
   end
 
   defp redirect_to_existing_ratings(socket, match_ratings_id) do

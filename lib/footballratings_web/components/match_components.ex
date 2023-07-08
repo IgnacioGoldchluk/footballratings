@@ -29,16 +29,16 @@ defmodule FootballratingsWeb.MatchComponents do
     """
   end
 
-  attr :team, :any, required: true
-  attr :goals, :integer, required: true
-  attr :penalties, :any, required: true
-  attr :pinned, :boolean, default: false
+  attr(:team, :any, required: true)
+  attr(:goals, :integer, required: true)
+  attr(:penalties, :any, required: true)
+  attr(:pinned, :boolean, default: false)
 
   def team(assigns) do
     ~H"""
-    <div class={"flex w-64 #{team_bg(@pinned)} border-solid border-2 border-primary justify-between gap-4 hover:bg-secondary"}>
+    <div class={"flex w-64 #{team_bg(@pinned)} border-solid border-2 border-primary justify-between pr-2 gap-2 hover:bg-secondary"}>
       <img src="/images/team.jpg" width="50" />
-      <p class="font-semibold pl-4 py-2"><%= @team.name %></p>
+      <p class="font-semibold py-2"><%= @team.name %></p>
       <.result goals={@goals} penalties={@penalties} />
     </div>
     """
@@ -66,9 +66,9 @@ defmodule FootballratingsWeb.MatchComponents do
   defp result(assigns) do
     ~H"""
     <%= if @penalties != nil do %>
-      <p class="font-semibold w-16 py-2"><%= @goals %> (<%= @penalties %>)</p>
+      <p class="font-semibold py-2"><%= @goals %> (<%= @penalties %>)</p>
     <% else %>
-      <p class="font-semibold w-16 py-2"><%= @goals %></p>
+      <p class="font-semibold py-2"><%= @goals %></p>
     <% end %>
     """
   end

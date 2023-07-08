@@ -7,20 +7,18 @@ defmodule FootballratingsWeb.MatchLive.Show do
     ~H"""
     <div class="flex flex-col gap-2 items-center">
       <h2 class="font-semibold"><%= @match.league.name %> - <%= @match.round %></h2>
-      <.link navigate={~p"/matches/#{@match.id}/rate/#{@match.home_team.id}"}>
-        <FootballratingsWeb.MatchComponents.team
-          team={@match.home_team}
-          goals={@match.goals_home}
-          penalties={@match.penalties_home}
-        />
-      </.link>
-      <.link navigate={~p"/matches/#{@match.id}/rate/#{@match.away_team.id}"}>
-        <FootballratingsWeb.MatchComponents.team
-          team={@match.away_team}
-          goals={@match.goals_away}
-          penalties={@match.penalties_away}
-        />
-      </.link>
+
+      <%= if @match.status == :ready do %>
+        <.link navigate={~p"/matches/#{@match.id}/rate/#{@match.home_team.id}"}>
+          <.home_team match={@match} />
+        </.link>
+        <.link navigate={~p"/matches/#{@match.id}/rate/#{@match.away_team.id}"}>
+          <.away_team match={@match} />
+        </.link>
+      <% else %>
+        <.home_team match={@match} />
+        <.away_team match={@match} />
+      <% end %>
       <.link navigate={~p"/matches/#{@match.id}/statistics"}>
         <.button class="btn btn-primary">
           Ratings Statistics<span aria-hidden="true">→</span>
@@ -51,5 +49,25 @@ defmodule FootballratingsWeb.MatchLive.Show do
       |> FootballInfo.get_match_with_team_and_league()
 
     assign(socket, :match, match)
+  end
+
+  defp home_team(assigns) do
+    ~H"""
+    <FootballratingsWeb.MatchComponents.team
+      team={@match.home_team}
+      goals={@match.goals_home}
+      penalties={@match.penalties_home}
+    />
+    """
+  end
+
+  defp away_team(assigns) do
+    ~H"""
+    <FootballratingsWeb.MatchComponents.team
+      team={@match.away_team}
+      goals={@match.goals_away}
+      penalties={@match.penalties_away}
+    />
+    """
   end
 end

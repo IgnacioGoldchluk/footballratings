@@ -26,7 +26,7 @@ defmodule FootballratingsWeb.PlayerRatingsTimeseries do
   def plot(data) do
     data
     |> make_line_plot_dataset()
-    |> Plot.new(Contex.PointPlot, 600, 300,
+    |> Plot.new(Contex.LinePlot, 600, 300,
       mapping: %{x_col: :timestamp, y_cols: [:average], fill_col: :team},
       custom_y_scale: y_scale(),
       custom_x_formatter: &format_date/1,
