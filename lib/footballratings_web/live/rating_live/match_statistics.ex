@@ -7,28 +7,30 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
   @impl true
   def render(assigns) do
     ~H"""
-    <.link navigate={~p"/matches/#{@match.id}"}>
-      <.button class="btn btn-primary">
-        Back to match
+    <div class="flex flex-col gap-2 items-center">
+      <.link navigate={~p"/matches/#{@match.id}"}>
+        <.button class="btn btn-primary">
+          Back to match
+        </.button>
+      </.link>
+      <div>Total ratings for this match: <%= @number_of_ratings %></div>
+      <.button phx-click="team_selected" phx-value-team={@match.home_team.name}>
+        <FootballratingsWeb.MatchComponents.team
+          team={@match.home_team}
+          goals={@match.goals_home}
+          penalties={@match.penalties_home}
+          match_id={@match.id}
+        />
       </.button>
-    </.link>
-    <div>Total ratings: <%= @number_of_ratings %></div>
-    <.button phx-click="team_selected" phx-value-team={@match.home_team.name}>
-      <FootballratingsWeb.MatchComponents.team
-        team={@match.home_team}
-        goals={@match.goals_home}
-        penalties={@match.penalties_home}
-        match_id={@match.id}
-      />
-    </.button>
-    <.button phx-click="team_selected" phx-value-team={@match.away_team.name}>
-      <FootballratingsWeb.MatchComponents.team
-        team={@match.away_team}
-        goals={@match.goals_away}
-        penalties={@match.penalties_away}
-        match_id={@match.id}
-      />
-    </.button>
+      <.button phx-click="team_selected" phx-value-team={@match.away_team.name}>
+        <FootballratingsWeb.MatchComponents.team
+          team={@match.away_team}
+          goals={@match.goals_away}
+          penalties={@match.penalties_away}
+          match_id={@match.id}
+        />
+      </.button>
+    </div>
     <table class="table table-zebra" id="the-table" hidden>
       <thead>
         <tr>

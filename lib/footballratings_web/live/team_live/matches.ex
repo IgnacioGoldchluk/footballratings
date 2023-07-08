@@ -5,10 +5,10 @@ defmodule FootballratingsWeb.TeamLive.Matches do
   @impl true
   def render(assigns) do
     ~H"""
-      <.link href={~p"/teams/#{@team.id}"}>
-        <.button class="btn btn-primary">Back to team</.button>
-      </.link>
-      <FootballratingsWeb.MatchComponents.matches_table matches={@streams.matches} />
+    <.link href={~p"/teams/#{@team.id}"}>
+      <.button class="btn btn-primary">Back to team</.button>
+    </.link>
+    <FootballratingsWeb.MatchComponents.matches_table matches={@streams.matches} />
     """
   end
 

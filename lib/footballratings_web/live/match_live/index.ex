@@ -6,61 +6,55 @@ defmodule FootballratingsWeb.MatchLive.Index do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="mx-auto max-w-sm">
-      <.simple_form for={@form} id="search_matches" phx-submit="search" phx-change="validate">
-        <.input
-          field={@form[:home_team]}
-          type="text"
-          label="Home Team"
-          phx-debounce="blur"
-          class="rounded-lg w-full max-w-max"
-        />
-        <.input
-          field={@form[:away_team]}
-          type="text"
-          label="Away Team"
-          phx-debounce="blur"
-          class="rounded-lg w-full max-w-max"
-        />
-        <.input
-          field={@form[:before]}
-          type="text"
-          label="Before (YYYY-MM-AA)"
-          phx-debounce="blur"
-          class="rounded-lg max-w-xs"
-        />
-        <.input
-          field={@form[:after]}
-          type="text"
-          label="After (YYYY-MM-AA)"
-          phx-debounce="blur"
-          class="rounded-lg"
-        />
-        <.input
-          field={@form[:league]}
-          type="select"
-          label="League"
-          options={@leagues}
-        />
-        <.input
-          field={@form[:available_for_rating]}
-          type="checkbox"
-          label="Available for rating only"
-          class="checkbox"
-        />
-
-        <:actions>
-          <.button class="btn-primary disabled:bg-zinc-200 w-20" disabled={@form.errors != []}>
-            Search
-          </.button>
-        </:actions>
-      </.simple_form>
-      <div class="flex gap-2">
-        <div class="py-1">
-          <.button class="btn-primary disabled:bg-zinc-200 w-20" phx-click="clear">
-            Clear
-          </.button>
-        </div>
+    <div class="mx-auto max-w-sm items-center">
+      <div class="flex flex-col gap-2">
+        <.simple_form for={@form} id="search_matches" phx-submit="search" phx-change="validate">
+          <.input
+            field={@form[:home_team]}
+            type="text"
+            label="Home Team"
+            phx-debounce="blur"
+            class="rounded-lg w-full max-w-max"
+          />
+          <.input
+            field={@form[:away_team]}
+            type="text"
+            label="Away Team"
+            phx-debounce="blur"
+            class="rounded-lg w-full max-w-max"
+          />
+          <.input
+            field={@form[:before]}
+            type="text"
+            label="Before (YYYY-MM-AA)"
+            phx-debounce="blur"
+            class="rounded-lg max-w-xs"
+          />
+          <.input
+            field={@form[:after]}
+            type="text"
+            label="After (YYYY-MM-AA)"
+            phx-debounce="blur"
+            class="rounded-lg"
+          />
+          <.input field={@form[:league]} type="select" label="League" options={@leagues} />
+          <.input
+            field={@form[:available_for_rating]}
+            type="checkbox"
+            label="Available for rating only"
+            class="checkbox"
+          />
+          <:actions>
+            <.button class="btn-primary disabled:bg-zinc-200 w-20" disabled={@form.errors != []}>
+              Search
+            </.button>
+          </:actions>
+        </.simple_form>
+      </div>
+      <div class="flex flex-col py-2 gap-2">
+        <.button class="btn-primary disabled:bg-zinc-200 w-20" phx-click="clear">
+          Clear
+        </.button>
       </div>
       <div id="#search-table"></div>
       <FootballratingsWeb.MatchComponents.matches_table matches={@streams.matches} id="#search-table" />

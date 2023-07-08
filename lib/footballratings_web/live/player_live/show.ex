@@ -8,7 +8,9 @@ defmodule FootballratingsWeb.PlayerLive.Show do
   @impl true
   def render(assigns) do
     ~H"""
-    <FootballratingsWeb.PlayerComponents.player name={@player.name} id={@player.id} />
+    <div class="flex flex-col items-center gap-1">
+      <FootballratingsWeb.PlayerComponents.player name={@player.name} id={@player.id} />
+    </div>
     <div id="player-stats-chart"><%= @player_statistics_svg %></div>
     <FootballratingsWeb.MatchComponents.matches_table matches={@streams.matches} />
     """

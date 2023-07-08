@@ -23,7 +23,11 @@ defmodule FootballratingsWeb.MatchRatingsHTML do
         <tbody>
           <%= for player_rating <- @player_ratings do %>
             <tr>
-              <td><.link href={~p"/players/#{player_rating.player.id}"} class="hover:text-primary"><%= player_rating.player.name %></.link></td>
+              <td>
+                <.link href={~p"/players/#{player_rating.player.id}"} class="hover:text-primary">
+                  <%= player_rating.player.name %>
+                </.link>
+              </td>
               <td><%= player_rating.score %></td>
             </tr>
           <% end %>
