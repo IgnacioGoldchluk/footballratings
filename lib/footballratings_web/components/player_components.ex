@@ -7,7 +7,11 @@ defmodule FootballratingsWeb.PlayerComponents do
 
   def player(assigns) do
     ~H"""
-    <img class="mask mask-circle" src="/images/player.jpg" width="75" />
+    <img
+      class="mask mask-circle"
+      src={"https://media.api-sports.io/football/players/#{@id}.png"}
+      width="75"
+    />
     <div class="text-m"><%= @name %></div>
     """
   end

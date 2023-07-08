@@ -50,7 +50,7 @@ defmodule FootballratingsWeb.MatchLive.Rate do
   def handle_event(
         "submit",
         scores,
-        %{assigns: %{players: players, team_id: team_id, match_id: match_id}} = socket
+        %{assigns: %{players: players, team_id: team_id, match: %{id: match_id}}} = socket
       ) do
     users_id = socket.assigns.current_users.id
 
