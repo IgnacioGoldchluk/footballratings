@@ -220,6 +220,12 @@ defmodule Footballratings.FootballInfo do
     |> Repo.all()
   end
 
+  def paginated_matches_for_team(team_id, page_number \\ 0) do
+    Match.Query.preload_all_match_data()
+    |> where([m, ht, at, l], ht.id == ^team_id or at.id == ^team_id)
+    |> Repo.paginate(page: page_number)
+  end
+
   def matches_available_for_rating_for_team(team_id) do
     matches_with_teams_and_league()
     |> where([m, ht, at, l], ht.id == ^team_id or at.id == ^team_id)
