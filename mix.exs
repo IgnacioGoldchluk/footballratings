@@ -63,6 +63,7 @@ defmodule Footballratings.MixProject do
       {:mox, "~> 1.0", only: :test},
       {:contex, "~> 0.5.0"},
       {:iconv, "~> 1.0.10"},
+      {:scrivener_ecto, "~> 2.0"},
       {:plug_cowboy, "~> 2.5"}
     ]
   end

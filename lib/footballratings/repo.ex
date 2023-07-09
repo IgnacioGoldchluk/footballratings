@@ -3,6 +3,8 @@ defmodule Footballratings.Repo do
     otp_app: :footballratings,
     adapter: Ecto.Adapters.Postgres
 
+  use Scrivener, page_size: 4
+
   def insert_timestamp_placeholders(structs) do
     timestamp = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
     placeholders = %{timestamp: timestamp}
