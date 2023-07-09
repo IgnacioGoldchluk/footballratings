@@ -7,7 +7,7 @@ defmodule FootballratingsWeb.PlayerLive.Index do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="mx-aut- max-w-sm">
+    <div class="mx-auto max-w-sm">
       <.header class="text-center">Search player</.header>
 
       <.simple_form for={@form} id="search_player" phx-change="search" phx-throttle="300">

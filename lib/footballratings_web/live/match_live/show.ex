@@ -9,6 +9,7 @@ defmodule FootballratingsWeb.MatchLive.Show do
       <h2 class="font-semibold"><%= @match.league.name %> - <%= @match.round %></h2>
 
       <%= if @match.status == :ready do %>
+        <div class="text-info font-semibold">Click on a team to rate its players</div>
         <.link navigate={~p"/matches/#{@match.id}/rate/#{@match.home_team.id}"}>
           <.home_team match={@match} />
         </.link>
