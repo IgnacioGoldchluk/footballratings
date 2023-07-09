@@ -197,13 +197,21 @@ defmodule Footballratings.FootballInfo do
   end
 
   def matches_for_player(player_id) do
-    Player
-    |> join(:inner, [p], m in assoc(p, :matches))
-    |> where([p], p.id == ^player_id)
-    |> select([p, m], m)
+    Match.Query.preload_all_match_data()
+    |> join(:inner, [m], pm in assoc(m, :players_matches))
+    |> join(:inner, [m, ht, at, l, pm], p in assoc(pm, :player))
+    |> where([m, ht, at, l, pm, p], p.id == ^player_id)
+    |> distinct([m], m.id)
     |> Repo.all()
-    # This is inefficient
-    |> Repo.preload([:home_team, :away_team, :league])
+  end
+
+  def paginated_matches_for_player(player_id, page_number \\ 0) do
+    Match.Query.preload_all_match_data()
+    |> join(:inner, [m], pm in assoc(m, :players_matches))
+    |> join(:inner, [m, ht, at, l, pm], p in assoc(pm, :player))
+    |> where([m, ht, at, l, pm, p], p.id == ^player_id)
+    |> distinct([m], m.id)
+    |> Repo.paginate(page: page_number)
   end
 
   def matches_for_team(team_id) do

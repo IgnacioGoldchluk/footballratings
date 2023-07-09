@@ -12,38 +12,34 @@ defmodule FootballratingsWeb.PlayerLive.Show do
       <FootballratingsWeb.PlayerComponents.player name={@player.name} id={@player.id} />
     </div>
     <div id="player-stats-chart"><%= @player_statistics_svg %></div>
-    <FootballratingsWeb.MatchComponents.matches_table matches={@streams.matches} />
+    <FootballratingsWeb.MatchComponents.matches_table matches={@streams.matches} page={@page} />
     """
   end
 
   @impl true
   def mount(%{"player_id" => player_id}, _session, socket) do
-    statistics = Ratings.player_statistics(player_id |> String.to_integer())
+    player_id_as_int = String.to_integer(player_id)
+    statistics = Ratings.player_statistics(player_id_as_int)
 
     {
       :ok,
       socket
-      |> assign_player(player_id)
+      |> assign_player(player_id_as_int)
       |> assign_player_statistics_svg(statistics)
       |> assign_teams(statistics)
       |> assign_current_team()
-      |> assign_matches_for_player(player_id)
+      |> assign_page()
+      |> assign_matches()
     }
   end
 
   @impl true
   def handle_event("load-more", _, socket) do
-    {:noreply, socket}
-  end
-
-  defp assign_matches_for_player(socket, player_id) do
-    socket
-    |> stream_configure(:matches, dom_id: &"matches-#{&1.id}")
-    |> stream(:matches, player_id |> String.to_integer() |> FootballInfo.matches_for_player())
+    {:noreply, socket |> assign_page() |> assign_matches()}
   end
 
   defp assign_player(socket, player_id) do
-    assign(socket, :player, FootballInfo.get_player(player_id |> String.to_integer()))
+    assign(socket, :player, FootballInfo.get_player(player_id))
   end
 
   defp assign_current_team(socket, current_team \\ "All") do
@@ -61,5 +57,25 @@ defmodule FootballratingsWeb.PlayerLive.Show do
 
   defp assign_player_statistics_svg(socket, player_statistics) do
     assign(socket, :player_statistics_svg, PlayerRatingsTimeseries.plot(player_statistics))
+  end
+
+  defp assign_page(
+         %{assigns: %{page: %{page_number: page_number}, player: %{id: player_id}}} = socket
+       ) do
+    page = player_id |> FootballInfo.paginated_matches_for_player(page_number + 1)
+
+    assign(socket, :page, page)
+  end
+
+  defp assign_page(%{assigns: %{player: %{id: player_id}}} = socket) do
+    assign(
+      socket,
+      :page,
+      FootballInfo.paginated_matches_for_player(player_id)
+    )
+  end
+
+  defp assign_matches(%{assigns: %{page: %{entries: entries}}} = socket) do
+    stream(socket, :matches, entries)
   end
 end
