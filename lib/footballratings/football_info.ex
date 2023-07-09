@@ -153,8 +153,12 @@ defmodule Footballratings.FootballInfo do
 
   def matches_available_for_rating() do
     Match.Query.available_for_rating()
-    |> order_by([m], desc: m.timestamp)
     |> Repo.all()
+  end
+
+  def paginated_matches_available_for_rating(page_number \\ 0) do
+    Match.Query.available_for_rating()
+    |> Repo.paginate(page: page_number)
   end
 
   def get_match_with_team_and_league(match_id) do

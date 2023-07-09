@@ -15,7 +15,9 @@ defmodule FootballratingsWeb.MatchComponents do
       <:col :let={{_id, match}} label="Away Team"><%= match.away_team.name %></:col>
       <:col :let={{_id, match}} label="Round"><%= match.round %></:col>
     </.table>
-    <div id="infinite-scroll-marker" phx-hook="InfiniteScroll"></div>
+    <%= if @page.total_pages > @page.page_number do %>
+      <.button class="btn btn-primary" phx-click="load-more">Load More</.button>
+    <% end %>
     """
   end
 
