@@ -69,18 +69,13 @@ defmodule Footballratings.Ratings do
   end
 
   def get_ratings_by_user(users_id) do
-    from(mr in MatchRatings,
-      join: u in assoc(mr, :users),
-      join: t in assoc(mr, :team),
-      join: m in assoc(mr, :match),
-      where: u.id == ^users_id,
-      preload: [
-        users: u,
-        match: ^Match.Query.preload_all_match_data(),
-        team: t
-      ]
-    )
+    MatchRatings.Query.by_user(users_id)
     |> Repo.all()
+  end
+
+  def paginated_ratings_by_user(users_id, page_number \\ 0) do
+    MatchRatings.Query.by_user(users_id)
+    |> Repo.paginate(page: page_number, page_size: 3)
   end
 
   def number_of_match_ratings(match_id) do
