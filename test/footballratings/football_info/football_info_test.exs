@@ -327,6 +327,19 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
       create_match()
       assert 1 == FootballInfo.total_matches()
     end
+
+    test "count_matches_for_team/1 returns the total unique matches by the team id" do
+      match = create_match()
+      team_id = match.home_team_id
+
+      assert 1 == FootballInfo.count_matches_for_team(team_id)
+      assert 0 == FootballInfo.count_matches_for_team(System.unique_integer([:positive]))
+      assert 1 == FootballInfo.count_matches_for_team(match.away_team_id)
+
+      create_match(%{home_team_id: team_id})
+
+      assert 2 == FootballInfo.count_matches_for_team(team_id)
+    end
   end
 
   describe "players_for_search_params/1" do

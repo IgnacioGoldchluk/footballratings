@@ -99,6 +99,16 @@ defmodule Footballratings.Ratings.RatingsTest do
       RatingsFixtures.create_match_ratings()
       assert 1 == Ratings.total_match_ratings()
     end
+
+    test "count_match_ratings_for_team/1 returns the number of match ratings for a given team" do
+      match_ratings = RatingsFixtures.create_match_ratings()
+
+      assert 0 == Ratings.count_match_ratings_for_team(System.unique_integer([:positive]))
+      assert 1 == Ratings.count_match_ratings_for_team(match_ratings.team_id)
+
+      RatingsFixtures.create_match_ratings(%{team_id: match_ratings.team_id})
+      assert 2 == Ratings.count_match_ratings_for_team(match_ratings.team_id)
+    end
   end
 
   describe "players_ratings" do

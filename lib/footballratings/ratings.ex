@@ -86,6 +86,13 @@ defmodule Footballratings.Ratings do
     |> Repo.one()
   end
 
+  def count_match_ratings_for_team(team_id) do
+    MatchRatings
+    |> where([mr], mr.team_id == ^team_id)
+    |> select(count())
+    |> Repo.one()
+  end
+
   def average_player_ratings(match_id) do
     from(pr in PlayerRatings,
       join: mr in assoc(pr, :match_ratings),

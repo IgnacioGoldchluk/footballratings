@@ -220,6 +220,13 @@ defmodule Footballratings.FootballInfo do
     |> Repo.all()
   end
 
+  def count_matches_for_team(team_id) do
+    Match
+    |> where([m], m.home_team_id == ^team_id or m.away_team_id == ^team_id)
+    |> select(count())
+    |> Repo.one()
+  end
+
   def paginated_matches_for_team(team_id, page_number \\ 0) do
     Match.Query.preload_all_match_data()
     |> where([m, ht, at, l], ht.id == ^team_id or at.id == ^team_id)
