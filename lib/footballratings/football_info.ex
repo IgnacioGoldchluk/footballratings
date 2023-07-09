@@ -222,6 +222,12 @@ defmodule Footballratings.FootballInfo do
     Match.Query.for_search_params(search_params) |> Repo.all()
   end
 
+  def paginated_matches_for_search_params(search_params, page_number \\ 0) do
+    search_params
+    |> Match.Query.for_search_params()
+    |> Repo.paginate(page: page_number)
+  end
+
   def players_for_search_params(search_params) do
     Player.Query.for_search_params(search_params)
     |> join(:left, [p], t in assoc(p, :team))

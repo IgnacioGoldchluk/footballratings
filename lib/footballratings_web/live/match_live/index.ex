@@ -57,8 +57,10 @@ defmodule FootballratingsWeb.MatchLive.Index do
         </.button>
       </div>
       <div id="#search-table"></div>
-      <FootballratingsWeb.MatchComponents.matches_table matches={@streams.matches} id="#search-table" />
     </div>
+    <%= if @page do %>
+      <FootballratingsWeb.MatchComponents.matches_table matches={@streams.matches} page={@page} />
+    <% end %>
     """
   end
 
@@ -71,6 +73,8 @@ defmodule FootballratingsWeb.MatchLive.Index do
       socket
       |> assign_form(changeset)
       |> stream_configure(:matches, dom_id: &"matches-#{&1.id}")
+      # Temporary assign page to nil since the search is not real time
+      |> assign(:page, nil)
       |> stream(:matches, [])
       |> assign_leagues()
     }
@@ -103,19 +107,47 @@ defmodule FootballratingsWeb.MatchLive.Index do
   def handle_event("search", %{"search" => search_params}, socket) do
     socket =
       socket
-      |> stream(:matches, FootballInfo.matches_for_search_params(search_params))
+      |> reset_page(search_params)
+      |> reset_matches()
       |> push_event("scroll", %{value: "#search-table"})
+
+    IO.inspect(socket.assigns)
 
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("clear", _, socket) do
-    {:noreply, stream(socket, :matches, [], reset: true)}
+    {:noreply, stream(socket, :matches, [], reset: true) |> assign(:page, nil)}
   end
 
   @impl true
-  def handle_event("load-more", _, %{assigns: _assigns} = socket) do
-    {:noreply, socket}
+  def handle_event("load-more", _, socket) do
+    {:noreply, socket |> assign_page() |> assign_matches()}
+  end
+
+  defp reset_page(socket, search_params) do
+    socket
+    # Saving it to re-query
+    |> assign(:search_params, search_params)
+    |> assign(:page, FootballInfo.paginated_matches_for_search_params(search_params))
+  end
+
+  defp reset_matches(%{assigns: %{page: %{entries: entries}}} = socket) do
+    stream(socket, :matches, entries, reset: true)
+  end
+
+  defp assign_page(
+         %{assigns: %{page: %{page_number: page_number}, search_params: search_params}} = socket
+       ) do
+    assign(
+      socket,
+      :page,
+      FootballInfo.paginated_matches_for_search_params(search_params, page_number + 1)
+    )
+  end
+
+  defp assign_matches(%{assigns: %{page: %{entries: entries}}} = socket) do
+    stream(socket, :matches, entries)
   end
 end
