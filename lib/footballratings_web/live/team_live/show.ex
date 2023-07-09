@@ -5,19 +5,20 @@ defmodule FootballratingsWeb.TeamLive.Show do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="bg-secondary">
-      <FootballratingsWeb.TeamComponents.team_name_and_logo
-        name={@team_with_players.name}
-        id={@team_with_players.id}
-      />
+    <div class="flex flex-col items-center gap-2">
+      <div class="flex flex-col gap-2 items-center max-sm">
+        <FootballratingsWeb.TeamComponents.team_name_and_logo
+          name={@team_with_players.name}
+          id={@team_with_players.id}
+        />
+      </div>
+      <.link navigate={~p"/teams/#{@team_with_players.id}/players"}>
+        <.button class="btn btn-primary">Players <span aria-hidden="true">→</span></.button>
+      </.link>
+      <.link navigate={~p"/teams/#{@team_with_players.id}/matches"}>
+        <.button class="btn btn-primary">Matches <span aria-hidden="true">→</span></.button>
+      </.link>
     </div>
-    <.link navigate={~p"/teams/#{@team_with_players.id}/players"}>
-      <.button class="btn btn-primary">Players <span aria-hidden="true">→</span></.button>
-    </.link>
-    <.link navigate={~p"/teams/#{@team_with_players.id}/matches"}>
-      <.button class="btn btn-primary">Matches <span aria-hidden="true">→</span></.button>
-    </.link>
-
     """
   end
 
