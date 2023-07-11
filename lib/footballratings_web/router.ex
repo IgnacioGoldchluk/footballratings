@@ -22,12 +22,12 @@ defmodule FootballratingsWeb.Router do
 
     get("/", PageController, :home)
     get("/ratings/show/:match_ratings_id", MatchRatingsController, :show)
-    get("/teams/:team_id/players", TeamPlayersController, :show)
 
     live_session :main do
       live("/teams", TeamLive.Index, :index)
       live("/teams/:team_id", TeamLive.Show, :show)
       live("/teams/:team_id/matches", TeamLive.Matches, :show)
+      live("/teams/:team_id/players", TeamLive.Players, :players)
       live("/available-matches", MatchLive.Available, :index)
       live("/matches", MatchLive.Index, :index)
       live("/matches/:match_id", MatchLive.Show, :index)
