@@ -40,10 +40,7 @@ defmodule FootballratingsWeb.MatchLive.Show do
       |> String.to_integer()
       |> FootballInfo.get_match_with_team_and_league()
 
-    case match do
-      nil -> socket |> put_flash(:error, "Match not found") |> redirect(to: "/")
-      ^match -> assign(socket, :match, match)
-    end
+    assign(socket, :match, match)
   end
 
   defp home_team(assigns) do
