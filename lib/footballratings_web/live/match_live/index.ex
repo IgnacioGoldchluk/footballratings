@@ -111,8 +111,6 @@ defmodule FootballratingsWeb.MatchLive.Index do
       |> reset_matches()
       |> push_event("scroll", %{value: "#search-table"})
 
-    IO.inspect(socket.assigns)
-
     {:noreply, socket}
   end
 

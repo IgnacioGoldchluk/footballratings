@@ -2,6 +2,7 @@ defmodule FootballratingsWeb.TeamLive.Show do
   use FootballratingsWeb, :live_view
   alias Footballratings.FootballInfo
   alias Footballratings.Ratings
+  alias Phoenix.PubSub
 
   @impl true
   def render(assigns) do
@@ -34,6 +35,15 @@ defmodule FootballratingsWeb.TeamLive.Show do
         </div>
       </div>
     </div>
+    <div id="new-matches" phx-update="stream" class="toast">
+      <div :for={{dom_id, match_id} <- @streams.matches} id={dom_id}>
+        <.link navigate={~p"/matches/#{match_id}"}>
+          <div class="alert hover:alert-info">
+            <span>New match available!</span>
+          </div>
+        </.link>
+      </div>
+    </div>
     """
   end
 
@@ -43,10 +53,22 @@ defmodule FootballratingsWeb.TeamLive.Show do
       socket
       |> assign_team_with_players(team_id)
       |> assign_matches_for_team(team_id)
-      |> assign(:current_section, "Players")
       |> assign_stats()
+      |> assign_new_matches()
+
+    subscribe_to_team(team_id)
 
     {:ok, socket}
+  end
+
+  defp subscribe_to_team(team_id) do
+    PubSub.subscribe(Footballratings.PubSub, "team:#{team_id}")
+  end
+
+  defp assign_new_matches(socket) do
+    socket
+    |> stream_configure(:matches, dom_id: &"match-#{&1}")
+    |> stream(:matches, [])
   end
 
   defp assign_matches_for_team(socket, team_id) do
@@ -75,12 +97,15 @@ defmodule FootballratingsWeb.TeamLive.Show do
   end
 
   @impl true
-  def handle_event("section_selected", %{"player_or_match" => value}, socket) do
-    {:noreply, assign(socket, :current_section, value)}
-  end
+  def handle_info(
+        %{"type" => "new_match", "match_id" => mid},
+        %{assigns: %{stats: %{} = stats}} = socket
+      ) do
+    socket =
+      socket
+      |> stream(:matches, [mid])
+      |> assign(:stats, Map.update!(stats, :total_matches, fn tm -> tm + 1 end))
 
-  @impl true
-  def handle_event("load-more", _, %{assigns: _assigns} = socket) do
     {:noreply, socket}
   end
 end
