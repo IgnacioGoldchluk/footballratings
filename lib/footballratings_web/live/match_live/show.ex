@@ -31,16 +31,7 @@ defmodule FootballratingsWeb.MatchLive.Show do
 
   @impl true
   def mount(%{"match_id" => match_id}, _session, socket) do
-    {:ok, socket |> assign_players(match_id) |> assign_match(match_id)}
-  end
-
-  defp assign_players(socket, match_id) do
-    players =
-      match_id
-      |> String.to_integer()
-      |> Footballratings.FootballInfo.players_for_match()
-
-    assign(socket, :players, players)
+    {:ok, socket |> assign_match(match_id)}
   end
 
   defp assign_match(socket, match_id) do
@@ -49,7 +40,10 @@ defmodule FootballratingsWeb.MatchLive.Show do
       |> String.to_integer()
       |> FootballInfo.get_match_with_team_and_league()
 
-    assign(socket, :match, match)
+    case match do
+      nil -> socket |> put_flash(:error, "Match not found") |> redirect(to: "/")
+      ^match -> assign(socket, :match, match)
+    end
   end
 
   defp home_team(assigns) do

@@ -4,6 +4,9 @@ defmodule FootballratingsWeb.MatchRatingsHTML do
   def show(assigns) do
     ~H"""
     <div class="grid justify-items-center gap-2 place-content-center">
+      <.link href={~p"/matches/#{@match.id}"}>
+        <.button class="btn btn-primary">Back to match</.button>
+      </.link>
       <div class="flex space-x-1">
         <div>By</div>
         <.link href={~p"/ratings/users/#{@user.id}"}>
