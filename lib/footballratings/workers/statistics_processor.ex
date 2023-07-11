@@ -7,7 +7,6 @@ defmodule Footballratings.Workers.StatisticsProcessor do
 
   alias Footballratings.FootballInfo
   alias Footballratings.FootballInfo.Match
-  alias Phoenix.PubSub
 
   @impl Oban.Worker
   def perform(%Oban.Job{args: %{"match_id" => match_id}}) do
@@ -15,16 +14,8 @@ defmodule Footballratings.Workers.StatisticsProcessor do
     :ok = create_coaches_matches(match_id)
 
     {:ok, %Match{} = match} = Footballratings.FootballInfo.set_match_status_to_ready(match_id)
-    broadcast_new_match(match)
+    Footballratings.Notifiers.Match.broadcast_new_match(match)
     :ok
-  end
-
-  defp broadcast_new_match(%Match{id: match_id, home_team_id: ht_id, away_team_id: at_id}) do
-    payload = %{"type" => "new_match", "match_id" => match_id}
-
-    PubSub.broadcast(Footballratings.PubSub, "new_match", match_id)
-    PubSub.broadcast(Footballratings.PubSub, "team:#{ht_id}", payload)
-    PubSub.broadcast(Footballratings.PubSub, "team:#{at_id}", payload)
   end
 
   defp create_players_matches(match_id) do
