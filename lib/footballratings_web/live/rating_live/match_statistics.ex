@@ -3,6 +3,7 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
 
   alias Footballratings.Ratings
   alias Footballratings.FootballInfo
+  alias Phoenix.PubSub
 
   @impl true
   def render(assigns) do
@@ -48,6 +49,8 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
   def mount(%{"match_id" => match_id}, _session, socket) do
     match_id_int = String.to_integer(match_id)
 
+    PubSub.subscribe(Footballratings.PubSub, "match:#{match_id_int}")
+
     {:ok,
      socket
      |> assign_match_with_players(match_id_int)
@@ -59,6 +62,14 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
   @impl true
   def handle_event("team_selected", %{"team" => team_name}, socket) do
     {:noreply, assign(socket, :team_name, team_name)}
+  end
+
+  @impl true
+  def handle_info(%{"type" => "new_rating"}, socket) do
+    {:noreply,
+     socket
+     |> assign_number_of_ratings()
+     |> assign_average_ratings()}
   end
 
   defp players_matches_for_team(players_matches, selected_team_name) do

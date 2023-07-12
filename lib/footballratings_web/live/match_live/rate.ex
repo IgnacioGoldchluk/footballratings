@@ -54,10 +54,12 @@ defmodule FootballratingsWeb.MatchLive.Rate do
       ) do
     users_id = socket.assigns.current_users.id
 
-    {:ok, match_ratings_id} =
+    {:ok, match_ratings} =
       Ratings.create_match_and_players_ratings(players, scores, team_id, match_id, users_id)
 
-    {:noreply, push_navigate(socket, to: ~p"/ratings/show/#{match_ratings_id}")}
+    Footballratings.Notifiers.Rating.broadcast_new_rating(match_ratings)
+
+    {:noreply, push_navigate(socket, to: ~p"/ratings/show/#{match_ratings.id}")}
   end
 
   def player_to_rate(assigns) do

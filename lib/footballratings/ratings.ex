@@ -64,7 +64,7 @@ defmodule Footballratings.Ratings do
       |> players_ratings_maps(scores, match_ratings.id)
       |> Enum.map(&create_player_ratings!/1)
 
-      match_ratings.id
+      match_ratings
     end)
   end
 

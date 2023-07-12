@@ -99,12 +99,21 @@ defmodule FootballratingsWeb.TeamLive.Show do
   @impl true
   def handle_info(
         %{"type" => "new_match", "match_id" => mid},
-        %{assigns: %{stats: %{} = stats}} = socket
+        %{assigns: %{stats: stats}} = socket
       ) do
     socket =
       socket
       |> stream(:matches, [mid])
       |> assign(:stats, Map.update!(stats, :total_matches, fn tm -> tm + 1 end))
+
+    {:noreply, socket}
+  end
+
+  def handle_info(
+        %{"type" => "new_rating", "match_id" => _mid},
+        %{assigns: %{stats: stats}} = socket
+      ) do
+    socket = socket |> assign(:stats, Map.update!(stats, :total_ratings, fn tr -> tr + 1 end))
 
     {:noreply, socket}
   end

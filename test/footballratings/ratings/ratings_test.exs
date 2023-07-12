@@ -172,7 +172,7 @@ defmodule Footballratings.Ratings.RatingsTest do
         end)
         |> Map.new()
 
-      assert {:ok, match_ratings_id} =
+      assert {:ok, %{id: match_ratings_id}} =
                Ratings.create_match_and_players_ratings(
                  players,
                  scores,
@@ -210,7 +210,7 @@ defmodule Footballratings.Ratings.RatingsTest do
       |> Enum.each(fn score ->
         user = AccountsFixtures.users_fixture()
 
-        assert {:ok, _match_ratings_id} =
+        assert {:ok, _match_ratings} =
                  Ratings.create_match_and_players_ratings(
                    [player],
                    score,
@@ -229,7 +229,7 @@ defmodule Footballratings.Ratings.RatingsTest do
       |> Enum.each(fn score ->
         user = AccountsFixtures.users_fixture()
 
-        assert {:ok, _match_ratings_id} =
+        assert {:ok, _match_ratings} =
                  Ratings.create_match_and_players_ratings(
                    [player],
                    score,
