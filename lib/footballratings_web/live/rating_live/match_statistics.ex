@@ -8,32 +8,32 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
   def render(assigns) do
     ~H"""
     <div class="flex flex-col gap-2 items-center">
-      <.link navigate={~p"/matches/#{@match.id}"}>
+      <.link navigate={~p"/matches/#{@match_with_players.id}"}>
         <.button class="btn btn-primary">
           Back to match
         </.button>
       </.link>
       <div>Total ratings for this match: <%= @number_of_ratings %></div>
-      <.button phx-click="team_selected" phx-value-team={@match.home_team.name}>
+      <.button phx-click="team_selected" phx-value-team={@match_with_players.home_team.name}>
         <FootballratingsWeb.MatchComponents.team
-          team={@match.home_team}
-          goals={@match.goals_home}
-          penalties={@match.penalties_home}
-          pinned={@match.home_team.name == @team_name}
+          team={@match_with_players.home_team}
+          goals={@match_with_players.goals_home}
+          penalties={@match_with_players.penalties_home}
+          pinned={@match_with_players.home_team.name == @team_name}
         />
       </.button>
-      <.button phx-click="team_selected" phx-value-team={@match.away_team.name}>
+      <.button phx-click="team_selected" phx-value-team={@match_with_players.away_team.name}>
         <FootballratingsWeb.MatchComponents.team
-          team={@match.away_team}
-          goals={@match.goals_away}
-          penalties={@match.penalties_away}
-          pinned={@match.away_team.name == @team_name}
+          team={@match_with_players.away_team}
+          goals={@match_with_players.goals_away}
+          penalties={@match_with_players.penalties_away}
+          pinned={@match_with_players.away_team.name == @team_name}
         />
       </.button>
     </div>
     <.table
       id="players-statistics"
-      rows={players_matches_for_team(@players_matches, @team_name)}
+      rows={players_matches_for_team(@match_with_players.players_matches, @team_name)}
       row_click={fn %{player: player} -> JS.navigate(~p"/players/#{player.id}") end}
     >
       <:col :let={player_match} label="Name"><%= player_match.player.name %></:col>
@@ -47,22 +47,13 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
   @impl true
   def mount(%{"match_id" => match_id}, _session, socket) do
     match_id_int = String.to_integer(match_id)
-    %{players_matches: players_matches} = match = FootballInfo.players_for_match(match_id_int)
-    number_of_ratings = Ratings.number_of_match_ratings(match_id_int)
-    average_ratings = Ratings.average_player_ratings(match_id)
-
-    teams_names =
-      for %{team: %{name: team_name}} <- players_matches, do: team_name, into: MapSet.new()
 
     {:ok,
      socket
-     |> assign(:match, match)
-     |> assign(:number_of_ratings, number_of_ratings)
-     |> assign(:players_matches, players_matches)
-     |> assign(:teams, teams_names)
-     # Randomly pick the first team
-     |> assign(:team_name, Enum.at(teams_names, 0))
-     |> assign(:average_ratings, average_ratings)}
+     |> assign_match_with_players(match_id_int)
+     |> assign_number_of_ratings()
+     |> assign_average_ratings()
+     |> assign_teams()}
   end
 
   @impl true
@@ -73,5 +64,25 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
   defp players_matches_for_team(players_matches, selected_team_name) do
     players_matches
     |> Enum.filter(fn %{team: %{name: team_name}} -> team_name == selected_team_name end)
+  end
+
+  defp assign_average_ratings(%{assigns: %{match_with_players: %{id: mid}}} = socket) do
+    assign(socket, :average_ratings, Ratings.average_player_ratings(mid))
+  end
+
+  defp assign_teams(%{assigns: %{match_with_players: %{players_matches: pm}}} = socket) do
+    teams = for %{team: %{name: n}} <- pm, do: n, into: MapSet.new()
+
+    socket
+    |> assign(:teams, teams)
+    |> assign(:team_name, Enum.at(teams, 0))
+  end
+
+  defp assign_number_of_ratings(%{assigns: %{match_with_players: %{id: mid}}} = socket) do
+    assign(socket, :number_of_ratings, Ratings.number_of_match_ratings(mid))
+  end
+
+  defp assign_match_with_players(socket, match_id) do
+    assign(socket, :match_with_players, FootballInfo.players_for_match(match_id))
   end
 end
