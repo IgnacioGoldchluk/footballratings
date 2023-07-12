@@ -4,6 +4,8 @@ defmodule FootballratingsWeb.TeamLive.Show do
   alias Footballratings.Ratings
   alias Phoenix.PubSub
 
+  @reload_milliseconds 5_000
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -55,6 +57,7 @@ defmodule FootballratingsWeb.TeamLive.Show do
       |> assign_matches_for_team(team_id)
       |> assign_stats()
       |> assign_new_matches()
+      |> clear_reload()
 
     subscribe_to_team(team_id)
 
@@ -63,6 +66,17 @@ defmodule FootballratingsWeb.TeamLive.Show do
 
   defp subscribe_to_team(team_id) do
     PubSub.subscribe(Footballratings.PubSub, "team:#{team_id}")
+  end
+
+  defp clear_reload(socket) do
+    assign(socket, :reload, false)
+  end
+
+  defp set_reload(%{assigns: %{reload: true}} = socket), do: socket
+
+  defp set_reload(socket) do
+    Process.send_after(self(), :reload, @reload_milliseconds)
+    assign(socket, :reload, true)
   end
 
   defp assign_new_matches(socket) do
@@ -109,12 +123,14 @@ defmodule FootballratingsWeb.TeamLive.Show do
     {:noreply, socket}
   end
 
-  def handle_info(
-        %{"type" => "new_rating", "match_id" => _mid},
-        %{assigns: %{stats: stats}} = socket
-      ) do
-    socket = socket |> assign(:stats, Map.update!(stats, :total_ratings, fn tr -> tr + 1 end))
+  def handle_info(%{"type" => "new_rating", "match_id" => _mid}, socket) do
+    {:noreply, socket |> set_reload()}
+  end
 
-    {:noreply, socket}
+  def handle_info(:reload, socket) do
+    {:noreply,
+     socket
+     |> assign_stats()
+     |> clear_reload()}
   end
 end
