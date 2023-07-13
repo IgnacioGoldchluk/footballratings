@@ -9,7 +9,7 @@ defmodule FootballratingsWeb.MatchRatingsControllerTest do
   describe "match ratings" do
     test "renders ratings for every player", %{conn: conn} do
       users = %{id: users_id} = users_fixture()
-      match = %{id: match_id, home_team_id: team_id} = InternalDataFixtures.create_match()
+      _match = %{id: match_id, home_team_id: team_id} = InternalDataFixtures.create_match()
       players = for _ <- 1..15, do: InternalDataFixtures.create_player(%{team_id: team_id})
 
       Enum.each(players, fn player ->
