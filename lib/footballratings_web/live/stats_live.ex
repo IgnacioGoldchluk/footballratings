@@ -7,19 +7,19 @@ defmodule FootballratingsWeb.StatsLive do
     <div class="stats stats-vertical lg:stats-horizontal shadow">
       <div class="stat">
         <div class="stat-title">Users</div>
-        <div class="stat-value"><%= @users %></div>
+        <div class="stat-value" id="total-registered-users"><%= @users %></div>
         <div class="stat-desc">Total registered users</div>
       </div>
 
       <div class="stat">
         <div class="stat-title">Matches</div>
-        <div class="stat-value"><%= @matches %></div>
+        <div class="stat-value" id="total-available-matches"><%= @matches %></div>
         <div class="stat-desc">Matches availables</div>
       </div>
 
       <div class="stat">
         <div class="stat-title">Ratings</div>
-        <div class="stat-value"><%= @ratings %></div>
+        <div class="stat-value" id="total-unique-ratings"><%= @ratings %></div>
         <div class="stat-desc">Unique ratings</div>
       </div>
     </div>
