@@ -4,19 +4,21 @@ defmodule FootballratingsWeb.MatchRatingsHTML do
   def show(assigns) do
     ~H"""
     <div class="grid justify-items-center gap-2 place-content-center">
-      <.link href={~p"/matches/#{@match.id}"}>
-        <.button class="btn btn-primary">Back to match</.button>
+      <.link href={~p"/matches/#{@match.id}"} id="back-to-match-link">
+        <.button class="btn btn-primary" id="back-to-match-button">Back to match</.button>
       </.link>
       <div class="flex space-x-1">
         <div>By</div>
-        <.link href={~p"/ratings/users/#{@user.id}"}>
-          <div class="hover:text-primary"><%= @user.username %></div>
+        <.link href={~p"/ratings/users/#{@user.id}"} id="user-link">
+          <div class="hover:text-primary" id="user-button"><%= @user.username %></div>
         </.link>
         <div>on</div>
-        <div><%= @inserted_at %></div>
+        <div id="inserted-at"><%= @inserted_at %></div>
       </div>
-      <h2 class="font-semibold"><%= @match.league.name %> - <%= @match.round %></h2>
-      <div class="flex flex-col">
+      <h2 class="font-semibold" id="match-league-and-round">
+        <%= @match.league.name %> - <%= @match.round %>
+      </h2>
+      <div class="flex flex-col" id="teams">
         <FootballratingsWeb.MatchComponents.team
           team={@match.home_team}
           goals={@match.goals_home}

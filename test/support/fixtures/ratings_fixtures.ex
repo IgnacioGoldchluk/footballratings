@@ -19,4 +19,12 @@ defmodule Footballratings.RatingsFixtures do
 
     match_ratings
   end
+
+  def random_scores(players) do
+    players
+    |> Enum.map(fn %{id: player_id} ->
+      {Integer.to_string(player_id), Integer.to_string(Enum.random(1..10))}
+    end)
+    |> Map.new()
+  end
 end
