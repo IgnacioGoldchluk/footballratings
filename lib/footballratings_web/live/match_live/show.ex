@@ -10,17 +10,17 @@ defmodule FootballratingsWeb.MatchLive.Show do
 
       <%= if @match.status == :ready do %>
         <div class="text-info font-semibold">Click on a team to rate its players</div>
-        <.link navigate={~p"/matches/#{@match.id}/rate/#{@match.home_team.id}"}>
+        <.link navigate={~p"/matches/#{@match.id}/rate/#{@match.home_team.id}"} id="rate-home-team">
           <.home_team match={@match} />
         </.link>
-        <.link navigate={~p"/matches/#{@match.id}/rate/#{@match.away_team.id}"}>
+        <.link navigate={~p"/matches/#{@match.id}/rate/#{@match.away_team.id}"} id="rate-away-team">
           <.away_team match={@match} />
         </.link>
       <% else %>
         <.home_team match={@match} />
         <.away_team match={@match} />
       <% end %>
-      <.link navigate={~p"/matches/#{@match.id}/statistics"}>
+      <.link patch={~p"/matches/#{@match.id}/statistics"} id="ratings-statistics-link">
         <.button class="btn btn-primary">
           Ratings Statistics<span aria-hidden="true">→</span>
         </.button>
