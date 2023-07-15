@@ -8,7 +8,7 @@ defmodule FootballratingsWeb.TeamLive.Players do
   def render(assigns) do
     ~H"""
     <div class="flex flex-col gap-2">
-    <.link navigate={~p"/teams/#{@team_with_players.id}"}>
+    <.link patch={~p"/teams/#{@team_with_players.id}"}>
       <.button class="btn btn-primary">Back to team</.button>
     </.link>
     <.simple_form for={@form} id="search_player" phx-change="search_player" phx-throttle="300">

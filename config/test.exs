@@ -39,3 +39,6 @@ config :footballratings, Oban, testing: :inline
 
 # Do not reach for real images on test
 config :footballratings, images_provider: :local
+
+# Replace all delays with 1ms in test
+config :footballratings, delays: false

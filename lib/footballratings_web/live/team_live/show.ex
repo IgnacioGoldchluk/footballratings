@@ -16,23 +16,23 @@ defmodule FootballratingsWeb.TeamLive.Show do
           id={@team_with_players.id}
         />
       </div>
-      <.link navigate={~p"/teams/#{@team_with_players.id}/players"}>
+      <.link patch={~p"/teams/#{@team_with_players.id}/players"} id="players-link">
         <.button class="btn btn-primary">Players <span aria-hidden="true">→</span></.button>
       </.link>
-      <.link navigate={~p"/teams/#{@team_with_players.id}/matches"}>
+      <.link patch={~p"/teams/#{@team_with_players.id}/matches"} id="matches-link">
         <.button class="btn btn-primary">Matches <span aria-hidden="true">→</span></.button>
       </.link>
 
       <div class="stats stats-vertical lg:stats-horizontal shadow">
         <div class="stat">
           <div class="stat-title">Matches registered</div>
-          <div class="stat-value"><%= @stats.total_matches %></div>
+          <div class="stat-value" id="total-matches"><%= @stats.total_matches %></div>
           <div class="stat-desc">For this team</div>
         </div>
 
         <div class="stat">
           <div class="stat-title">Ratings registered</div>
-          <div class="stat-value"><%= @stats.total_ratings %></div>
+          <div class="stat-value" id="total-ratings"><%= @stats.total_ratings %></div>
           <div class="stat-desc">Unique ratings for this team</div>
         </div>
       </div>
@@ -75,7 +75,7 @@ defmodule FootballratingsWeb.TeamLive.Show do
   defp set_reload(%{assigns: %{reload: true}} = socket), do: socket
 
   defp set_reload(socket) do
-    Process.send_after(self(), :reload, @reload_milliseconds)
+    Process.send_after(self(), :reload, @reload_milliseconds |> Footballratings.Delays.scale())
     assign(socket, :reload, true)
   end
 
