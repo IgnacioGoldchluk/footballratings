@@ -36,3 +36,6 @@ config :logger, level: :warning
 config :phoenix, :plug_init_mode, :runtime
 
 config :footballratings, Oban, testing: :inline
+
+# Do not reach for real images on test
+config :footballratings, images_provider: :local

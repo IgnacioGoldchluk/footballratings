@@ -39,7 +39,7 @@ defmodule FootballratingsWeb.MatchComponents do
   def team(assigns) do
     ~H"""
     <div class={"flex w-64 #{team_bg(@pinned)} border-solid border-2 border-primary justify-between pr-2 gap-2 hover:bg-secondary"}>
-      <img src={"https://media.api-sports.io/football/teams/#{@team.id}.png"} width="50" />
+      <img src={FootballApi.FootballApiImages.team_image(@team.id)} width="50" />
       <p class="font-semibold py-2"><%= @team.name %></p>
       <.result goals={@goals} penalties={@penalties} />
     </div>
