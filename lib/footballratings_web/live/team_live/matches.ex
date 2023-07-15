@@ -5,9 +5,12 @@ defmodule FootballratingsWeb.TeamLive.Matches do
   @impl true
   def render(assigns) do
     ~H"""
-    <.link patch={~p"/teams/#{@team.id}"}>
+    <.link patch={~p"/teams/#{@team.id}"} id="back-to-team-link">
       <.button class="btn btn-primary">Back to team</.button>
     </.link>
+    <div class="flex flex-col gap-2 items-center max-sm">
+      <FootballratingsWeb.TeamComponents.team_name_and_logo name={@team.name} id={@team.id} />
+    </div>
     <FootballratingsWeb.MatchComponents.matches_table matches={@streams.matches} page={@page} />
     """
   end

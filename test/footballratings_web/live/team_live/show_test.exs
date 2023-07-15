@@ -7,7 +7,7 @@ defmodule FootballratingsWeb.TeamLive.ShowTest do
   import Phoenix.LiveViewTest
 
   setup do
-    %{team: InternalDataFixtures.create_team(%{team_name: "The Team FC"})}
+    %{team: InternalDataFixtures.create_team(%{name: "The Team FC"})}
   end
 
   describe "Main team page" do
