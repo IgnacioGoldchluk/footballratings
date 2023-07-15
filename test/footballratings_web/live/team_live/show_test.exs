@@ -4,8 +4,6 @@ defmodule FootballratingsWeb.TeamLive.ShowTest do
   alias Footballratings.InternalDataFixtures
   use FootballratingsWeb.ConnCase
 
-  alias Footballratings.Ratings
-
   import Phoenix.LiveViewTest
 
   setup do
@@ -79,13 +77,9 @@ defmodule FootballratingsWeb.TeamLive.ShowTest do
         team_id: team_id
       })
 
-      assert 1 == Ratings.count_match_ratings_for_team(team_id)
-
       send(view.pid, %{"type" => "new_rating", "match_id" => "123"})
       :timer.sleep(10)
 
-      # FIXME: Debug this, the view should auto update.
-      {:ok, view, _html} = live(conn, ~p"/teams/#{team_id}")
       assert view |> element("#total-ratings") |> render() =~ "1"
       assert view |> element("#total-matches") |> render() =~ "1"
     end
