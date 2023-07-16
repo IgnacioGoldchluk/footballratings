@@ -9,13 +9,13 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
   def render(assigns) do
     ~H"""
     <div class="flex flex-col gap-2 items-center">
-      <.link navigate={~p"/matches/#{@match_with_players.id}"}>
+      <.link patch={~p"/matches/#{@match_with_players.id}"} id="back-to-match-button">
         <.button class="btn btn-primary">
           Back to match
         </.button>
       </.link>
       <div>Total ratings for this match: <%= @number_of_ratings %></div>
-      <.button phx-click="team_selected" phx-value-team={@match_with_players.home_team.name}>
+      <.button phx-click="team_selected" phx-value-team={@match_with_players.home_team.name} id="home-team-stats">
         <FootballratingsWeb.MatchComponents.team
           team={@match_with_players.home_team}
           goals={@match_with_players.goals_home}
@@ -23,7 +23,7 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
           pinned={@match_with_players.home_team.name == @team_name}
         />
       </.button>
-      <.button phx-click="team_selected" phx-value-team={@match_with_players.away_team.name}>
+      <.button phx-click="team_selected" phx-value-team={@match_with_players.away_team.name} id="away-team-stats">
         <FootballratingsWeb.MatchComponents.team
           team={@match_with_players.away_team}
           goals={@match_with_players.goals_away}
