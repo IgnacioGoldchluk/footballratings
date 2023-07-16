@@ -2,12 +2,14 @@ defmodule FootballratingsWeb.RatingLive.Users do
   use FootballratingsWeb, :live_view
 
   alias Footballratings.Ratings
+  alias Footballratings.Accounts
 
   @impl true
   def render(assigns) do
     ~H"""
+    <div class="text-l">Ratings by <%= @users.username %></div>
     <.table
-      id="match_ratings"
+      id="match-ratings"
       rows={@streams.match_ratings}
       row_click={fn {_id, match_rating_id} -> JS.navigate(~p"/ratings/show/#{match_rating_id}") end}
     >
@@ -32,7 +34,9 @@ defmodule FootballratingsWeb.RatingLive.Users do
       </:col>
     </.table>
     <%= if @page.total_pages > @page.page_number do %>
-      <.button class="btn btn-primary" phx-click="load-more">Load More</.button>
+      <.button class="btn btn-primary" phx-click="load-more" id="load-more-matches-ratings-button">
+        Load More
+      </.button>
     <% end %>
     """
   end
@@ -41,8 +45,7 @@ defmodule FootballratingsWeb.RatingLive.Users do
   def mount(%{"users_id" => users_id}, _session, socket) do
     {:ok,
      socket
-     |> assign_users_id(users_id)
-     |> stream_configure(:match_ratings, dom_id: &"match-rating-#{&1.id}")
+     |> assign_users(users_id)
      |> assign_page()
      |> assign_match_ratings()}
   end
@@ -55,16 +58,18 @@ defmodule FootballratingsWeb.RatingLive.Users do
   defp infer_text(team_name, team_name), do: "text-primary"
   defp infer_text(_, _), do: "text"
 
-  defp assign_users_id(socket, users_id) do
-    assign(socket, :users_id, String.to_integer(users_id))
+  defp assign_users(socket, users_id) do
+    assign(socket, :users, users_id |> String.to_integer() |> Accounts.get_users!())
   end
 
-  defp assign_page(%{assigns: %{page: %{page_number: page_number}, users_id: users_id}} = socket) do
+  defp assign_page(
+         %{assigns: %{page: %{page_number: page_number}, users: %{id: users_id}}} = socket
+       ) do
     page = Ratings.paginated_ratings_by_user(users_id, page_number + 1)
     assign(socket, :page, page)
   end
 
-  defp assign_page(%{assigns: %{users_id: users_id}} = socket) do
+  defp assign_page(%{assigns: %{users: %{id: users_id}}} = socket) do
     assign(socket, :page, Ratings.paginated_ratings_by_user(users_id))
   end
 
