@@ -20,7 +20,7 @@ defmodule FootballratingsWeb.PlayerLive.Index do
       </.simple_form>
 
       <.table
-        id="players"
+        id="players-table"
         rows={@streams.players}
         row_click={fn {_id, player_id} -> JS.navigate(~p"/players/#{player_id}") end}
       >
@@ -38,7 +38,6 @@ defmodule FootballratingsWeb.PlayerLive.Index do
     socket =
       socket
       |> assign_form(changeset)
-      |> stream_configure(:players, dom_id: &"player-#{&1.id}")
       |> stream(:players, [])
 
     {:ok, socket}

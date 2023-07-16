@@ -32,7 +32,6 @@ defmodule FootballratingsWeb.TeamLive.Index do
     socket =
       socket
       |> assign_form(changeset)
-      |> stream_configure(:teams, dom_id: &"team-#{&1.id}")
       |> stream(:teams, [])
 
     {:ok, socket}
