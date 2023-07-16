@@ -5,7 +5,7 @@ defmodule FootballratingsWeb.MatchComponents do
   def matches_table(assigns) do
     ~H"""
     <.table
-      id="matches"
+      id="matches-table"
       rows={@matches}
       row_click={fn {_id, match_id} -> JS.navigate(~p"/matches/#{match_id}") end}
     >
@@ -16,7 +16,7 @@ defmodule FootballratingsWeb.MatchComponents do
       <:col :let={{_id, match}} label="Round"><%= match.round %></:col>
     </.table>
     <%= if @page.total_pages > @page.page_number do %>
-      <.button class="btn btn-primary" phx-click="load-more">Load More</.button>
+      <.button class="btn btn-primary" phx-click="load-more" id="load-more-matches-button">Load More</.button>
     <% end %>
     """
   end

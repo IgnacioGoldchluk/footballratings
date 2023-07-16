@@ -15,7 +15,6 @@ defmodule FootballratingsWeb.MatchLive.Available do
     {:ok,
      socket
      |> assign_page()
-     |> stream_configure(:matches, dom_id: &"matches-(#{&1.id})")
      |> assign_available_matches()}
   end
 
