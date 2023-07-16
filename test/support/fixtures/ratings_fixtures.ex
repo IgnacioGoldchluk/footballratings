@@ -27,4 +27,9 @@ defmodule Footballratings.RatingsFixtures do
     end)
     |> Map.new()
   end
+
+  def create_player_rating(attrs \\ %{}) do
+    {:ok, rating} = Ratings.create_player_ratings(attrs)
+    rating
+  end
 end
