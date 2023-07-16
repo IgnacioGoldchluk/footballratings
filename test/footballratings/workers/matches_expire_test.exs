@@ -13,7 +13,7 @@ defmodule Footballratings.Workers.MatchesExpireTest do
       three_days_ago = now - three_days_in_seconds
       match = create_match(%{status: :ready, timestamp: three_days_ago})
 
-      :ok = perform_job(Footballratings.Workers.MatchesExpire, %{})
+      :ok = perform_job(Footballratings.Workers.MatchesExpire, %{"days" => 7})
 
       queried_match = Repo.get(Match, match.id)
       assert queried_match.status == :ready
@@ -25,7 +25,7 @@ defmodule Footballratings.Workers.MatchesExpireTest do
       ten_days_ago = now - ten_days_in_seconds
       match = create_match(%{status: :ready, timestamp: ten_days_ago})
 
-      :ok = perform_job(Footballratings.Workers.MatchesExpire, %{})
+      :ok = perform_job(Footballratings.Workers.MatchesExpire, %{"days" => 7})
       queried_match = Repo.get(Match, match.id)
       assert queried_match.status == :expired
     end

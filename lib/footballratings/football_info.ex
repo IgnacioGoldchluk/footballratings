@@ -147,6 +147,12 @@ defmodule Footballratings.FootballInfo do
     |> Repo.update()
   end
 
+  def expire_matches(timestamp) do
+    Match
+    |> where([m], m.timestamp < ^timestamp)
+    |> Repo.update_all(set: [status: :expired])
+  end
+
   defp matches_with_teams_and_league() do
     Match.Query.preload_all_match_data() |> order_by([m], desc: m.timestamp)
   end
