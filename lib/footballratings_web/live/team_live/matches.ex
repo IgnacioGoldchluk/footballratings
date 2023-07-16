@@ -22,7 +22,6 @@ defmodule FootballratingsWeb.TeamLive.Matches do
     {:ok,
      socket
      |> assign_team(team_id_as_int)
-     |> stream_configure(:matches, dom_id: &"matches-(#{&1.id})")
      |> assign_page()
      |> assign_matches()}
   end
