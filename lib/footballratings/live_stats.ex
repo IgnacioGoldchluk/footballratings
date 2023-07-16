@@ -3,6 +3,7 @@ defmodule Footballratings.LiveStats do
   @update_interval_milliseconds 60_000
 
   alias Footballratings.{FootballInfo, Accounts, Ratings}
+  alias Phoenix.PubSub
 
   def start_link(args) do
     GenServer.start_link(__MODULE__, args, name: __MODULE__)
@@ -25,7 +26,7 @@ defmodule Footballratings.LiveStats do
   def handle_info(:update, _state) do
     new_state = get_stats()
 
-    FootballratingsWeb.LiveStatsPubSub.broadcast(new_state)
+    PubSub.broadcast(Footballratings.PubSub, "live_stats", new_state)
     Process.send_after(self(), :update, @update_interval_milliseconds)
 
     {:noreply, new_state}

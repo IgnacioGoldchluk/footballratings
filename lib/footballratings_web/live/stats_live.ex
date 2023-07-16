@@ -1,5 +1,6 @@
 defmodule FootballratingsWeb.StatsLive do
   use FootballratingsWeb, :live_view
+  alias Phoenix.PubSub
 
   @impl true
   def render(assigns) do
@@ -37,7 +38,7 @@ defmodule FootballratingsWeb.StatsLive do
       |> assign_ratings(ratings)
       |> assign_matches(matches)
 
-    FootballratingsWeb.LiveStatsPubSub.subscribe()
+    PubSub.subscribe(Footballratings.PubSub, "live_stats")
 
     {:ok, socket}
   end
