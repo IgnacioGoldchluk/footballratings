@@ -45,14 +45,19 @@ defmodule FootballratingsWeb.MatchLive.Index do
             class="checkbox"
           />
           <:actions>
-            <.button class="btn-primary disabled:bg-zinc-200 w-20" disabled={@form.errors != []}>
+            <.button
+              class="btn-primary disabled:bg-zinc-200 w-20"
+              disabled={@form.errors != []}
+              id="search-button"
+              name="search-button"
+            >
               Search
             </.button>
           </:actions>
         </.simple_form>
       </div>
       <div class="flex flex-col py-2 gap-2">
-        <.button class="btn-primary disabled:bg-zinc-200 w-20" phx-click="clear">
+        <.button class="btn-primary disabled:bg-zinc-200 w-20" phx-click="clear" id="clear-button">
           Clear
         </.button>
       </div>
@@ -72,7 +77,6 @@ defmodule FootballratingsWeb.MatchLive.Index do
       :ok,
       socket
       |> assign_form(changeset)
-      |> stream_configure(:matches, dom_id: &"matches-#{&1.id}")
       # Temporary assign page to nil since the search is not real time
       |> assign(:page, nil)
       |> stream(:matches, [])
