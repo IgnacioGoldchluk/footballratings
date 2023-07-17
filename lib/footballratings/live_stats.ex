@@ -23,13 +23,9 @@ defmodule Footballratings.LiveStats do
   end
 
   @impl true
-  def handle_info(:update, _state) do
-    new_state = get_stats()
-
-    PubSub.broadcast(Footballratings.PubSub, "live_stats", new_state)
+  def handle_info(:update, state) do
     Process.send_after(self(), :update, @update_interval_milliseconds)
-
-    {:noreply, new_state}
+    update_state_and_broadcast(state)
   end
 
   @impl true
@@ -37,11 +33,24 @@ defmodule Footballratings.LiveStats do
     {:reply, state, state}
   end
 
+  @impl true
+  def handle_cast(:update_stats, state), do: update_state_and_broadcast(state)
+
   defp get_stats() do
     %{
       "users" => Accounts.total_users(),
       "matches" => FootballInfo.total_matches(),
       "ratings" => Ratings.total_match_ratings()
     }
+  end
+
+  defp update_state_and_broadcast(state) do
+    new_state = get_stats()
+
+    if new_state != state do
+      PubSub.broadcast(Footballratings.PubSub, "live_stats", new_state)
+    end
+
+    {:noreply, new_state}
   end
 end
