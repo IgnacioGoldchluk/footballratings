@@ -90,7 +90,7 @@ jobs:
 
     # Step: Execute the tests.
     - name: Run tests
-      run: mix test
+      run: mix test --cover
       env:
         DB_PASSWORD: postgres
         DB_HOST: postgres
