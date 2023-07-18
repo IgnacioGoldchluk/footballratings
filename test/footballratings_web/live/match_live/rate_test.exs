@@ -89,5 +89,28 @@ defmodule FootballratingsWeb.MatchLive.RateTest do
       assert {:error, {:redirect, %{to: ^path}}} =
                live(conn, ~p"/matches/#{match.id}/rate/#{team.id}")
     end
+
+    test "expired match does not allow to rate players", %{
+      conn: conn,
+      match: match,
+      team: team,
+      players: players,
+      users: users
+    } do
+      {:ok, match} =
+        match
+        |> Ecto.Changeset.change(status: :expired)
+        |> Footballratings.Repo.update()
+
+      conn = log_in_users(conn, users)
+      {:ok, view, html} = live(conn, ~p"/matches/#{match.id}/rate/#{team.id}")
+
+      assert view |> has_element?("#back-to-match-button")
+      assert html =~ "This match is no longer available for rating"
+
+      refute view |> has_element?("#rate-players-button")
+      refute view |> has_element?("#scores")
+      refute Enum.any?(players, fn %{name: p_name} -> html =~ p_name end)
+    end
   end
 end
