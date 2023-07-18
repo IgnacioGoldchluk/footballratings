@@ -7,6 +7,38 @@ defmodule FootballratingsWeb.MatchLive.Rate do
   alias Footballratings.FootballInfo
 
   @impl true
+  def render(assigns) do
+    ~H"""
+        <%= if @match.status != :ready do %>
+      <div class="flex flex-col items-center gap-2">
+        <div class="text-xl text-error">This match is no longer available for rating</div>
+        <.link patch={~p"/matches/#{@match.id}"}>
+          <.button class="btn btn-primary" id="back-to-match-button">Back to match</.button>
+        </.link>
+      </div>
+    <% else %>
+      <div class="flex flex-col gap-2 items-center">
+        <.link patch={~p"/matches/#{@match.id}"}>
+          <.button class="btn btn-primary" id="back-to-match-button">Back to match</.button>
+        </.link>
+        <.form for={@scores} id="scores" phx-submit="submit">
+          <div class="grid gap-4 grid-cols-none">
+            <%= for player <- @players do %>
+              <.player_to_rate player={player} score={@scores[player.id]} />
+            <% end %>
+          </div>
+          <div class="flex py-2 justify-center">
+            <.button class="btn btn-primary btn-wide" phx-disable-with="Saving..." id="rate-players-button">
+              Rate players
+            </.button>
+          </div>
+        </.form>
+      </div>
+    <% end %>
+    """
+  end
+
+  @impl true
   def mount(%{"match_id" => match_id, "team_id" => team_id}, %{"users_token" => token}, socket) do
     [match_id, team_id] = [match_id, team_id] |> Enum.map(&String.to_integer/1)
 
