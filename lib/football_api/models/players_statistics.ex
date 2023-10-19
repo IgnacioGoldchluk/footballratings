@@ -43,7 +43,7 @@ defmodule FootballApi.Models.PlayersStatistics do
                             ],
                             "properties": {
                               "id": {
-                                "type": "number"
+                                "type": ["number", "null"]
                               }
                             }
                           },

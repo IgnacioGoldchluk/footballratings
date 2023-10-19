@@ -7,7 +7,7 @@ defmodule FootballApi.Models.Lineups do
             ],
             "properties": {
               "response": {
-                "type": "object",
+                "type": "array",
                 "minItems": 2,
                 "maxItems": 2,
                 "items": {
@@ -27,7 +27,7 @@ defmodule FootballApi.Models.Lineups do
                       ],
                       "properties": {
                         "id": {
-                          "type": "number"
+                          "type": ["number", "null"]
                         },
                         "name": {
                           "type": "string"
@@ -41,7 +41,7 @@ defmodule FootballApi.Models.Lineups do
                       ],
                       "properties": {
                         "id": {
-                          "type": "number"
+                          "type": ["number"]
                         }
                       }
                     },
