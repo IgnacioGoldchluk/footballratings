@@ -1,80 +1,88 @@
 defmodule FootballApi.Models.PlayersStatistics do
-  @moduledoc """
-  Players statistics structs.
-  """
-  defmodule Response do
-    @moduledoc """
-    Response
-    """
-    defstruct [:response]
-  end
-
-  defmodule Team do
-    @moduledoc """
-    Team
-    """
-    defstruct [:id]
-  end
-
-  defmodule Players do
-    @moduledoc """
-    Players
-    """
-    defstruct [:players, :team]
-  end
-
-  defmodule Player do
-    @moduledoc """
-    Player
-    """
-    defstruct [:player, :statistics]
-  end
-
-  defmodule PlayerInfo do
-    @moduledoc """
-    PlayerInfo
-    """
-    defstruct [:id]
-  end
-
-  defmodule Games do
-    @moduledoc """
-    Games
-    """
-    defstruct [:games]
-  end
-
-  defmodule GameStatistics do
-    @moduledoc """
-    GameStatistics
-    """
-    defstruct [:minutes]
-  end
-end
-
-defmodule FootballApi.Models.PlayersStatistics.Struct do
-  @moduledoc """
-  Player Statistics definition.
-  """
-  alias FootballApi.Models.PlayersStatistics, as: Stats
-
-  def players_statistics() do
-    %Stats.Response{
-      response: [
-        %Stats.Players{
-          team: %Stats.Team{},
-          players: [
-            %Stats.Player{
-              player: %Stats.PlayerInfo{},
-              statistics: [
-                %Stats.Games{
-                  games: %Stats.GameStatistics{}
+  @schema """
+          {
+            "type": "object",
+            "required": [
+              "response"
+            ],
+            "properties": {
+              "response": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "requied": [
+                    "team",
+                    "players"
+                  ],
+                  "properties": {
+                    "team": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "players": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "player",
+                          "statistics"
+                        ],
+                        "properties": {
+                          "player": {
+                            "type": "object",
+                            "required": [
+                              "id"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              }
+                            }
+                          },
+                          "satistics": {
+                            "type": "array",
+                            "minItems": 1,
+                            "maxItems": 1,
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "games"
+                              ],
+                              "properties": {
+                                "games": {
+                                  "type": "object",
+                                  "required": [
+                                    "minutes"
+                                  ],
+                                  "properties": {
+                                    "minutes": {
+                                      "type": "number",
+                                      "minimum": 0
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
-              ]
+              }
             }
-          ]
-        }
-      ]
-    }
-  end
+          }
+          """
+          |> Jason.decode!()
+          |> JsonXema.new()
+
+  def json_schema(), do: @schema
 end

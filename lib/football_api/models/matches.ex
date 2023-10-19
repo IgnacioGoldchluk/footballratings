@@ -1,92 +1,216 @@
 defmodule FootballApi.Models.Matches do
-  @moduledoc """
-  Match struct
-  """
-  defmodule Response do
-    @moduledoc """
-    Response
-    """
-    defstruct [:response]
-  end
+  @schema """
+          {
+            "type": "object",
+            "required": [
+              "response"
+            ],
+            "properties": {
+              "response": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "fixture",
+                    "league",
+                    "teams",
+                    "goals",
+                    "score"
+                  ],
+                  "properties": {
+                    "fixture": {
+                      "type": "object",
+                      "required": [
+                        "fixture",
+                        "score",
+                        "teams",
+                        "league"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "number"
+                        },
+                        "status": {
+                          "type": "object",
+                          "required": [
+                            "short"
+                          ],
+                          "properties": {
+                            "short": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "timestamp": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "score": {
+                      "type": "object",
+                      "required": [
+                        "extratime",
+                        "fulltime",
+                        "halftime",
+                        "penalty"
+                      ],
+                      "properties": {
+                        "extratime": {
+                          "type": "object",
+                          "required": [
+                            "home",
+                            "away"
+                          ],
+                          "properties": {
+                            "home": {
+                              "type": [
+                                "number",
+                                "null"
+                              ]
+                            },
+                            "away": {
+                              "type": [
+                                "number",
+                                "null"
+                              ]
+                            }
+                          }
+                        },
+                        "halftime": {
+                          "type": "object",
+                          "required": [
+                            "home",
+                            "away"
+                          ],
+                          "properties": {
+                            "home": {
+                              "type": [
+                                "number",
+                                "null"
+                              ]
+                            },
+                            "away": {
+                              "type": [
+                                "number",
+                                "null"
+                              ]
+                            }
+                          }
+                        },
+                        "fulltime": {
+                          "type": "object",
+                          "required": [
+                            "home",
+                            "away"
+                          ],
+                          "properties": {
+                            "home": {
+                              "type": [
+                                "number",
+                                "null"
+                              ]
+                            },
+                            "away": {
+                              "type": [
+                                "number",
+                                "null"
+                              ]
+                            }
+                          }
+                        },
+                        "penalty": {
+                          "type": "object",
+                          "required": [
+                            "home",
+                            "away"
+                          ],
+                          "properties": {
+                            "home": {
+                              "type": [
+                                "number",
+                                "null"
+                              ]
+                            },
+                            "away": {
+                              "type": [
+                                "number",
+                                "null"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "league": {
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "season",
+                        "round",
+                        "name"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "number"
+                        },
+                        "season": {
+                          "type": "number"
+                        },
+                        "round": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "teams": {
+                      "type": "object",
+                      "required": [
+                        "home",
+                        "away"
+                      ],
+                      "properties": {
+                        "home": {
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "name"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": "number"
+                            },
+                            "name": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "away": {
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "name"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": "number"
+                            },
+                            "name": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          """
+          |> Jason.decode!()
+          |> JsonXema.new()
 
-  defmodule Match do
-    @moduledoc """
-    Match
-    """
-    defstruct [:fixture, :score, :teams, :league]
-  end
-
-  defmodule Fixture do
-    @moduledoc """
-    Fixture
-    """
-    defstruct [:id, :status, :timestamp]
-  end
-
-  defmodule Score do
-    @moduledoc """
-    Score
-    """
-    defstruct [:extratime, :fulltime, :halftime, :penalty]
-  end
-
-  defmodule TemporalScore do
-    @moduledoc """
-    TemporalScore
-    """
-    defstruct [:away, :home]
-  end
-
-  defmodule Teams do
-    @moduledoc """
-    Teams
-    """
-    defstruct [:away, :home]
-  end
-
-  defmodule Team do
-    @moduledoc """
-    Team
-    """
-    defstruct [:id, :name]
-  end
-
-  defmodule Status do
-    @moduledoc """
-    Status
-    """
-    defstruct [:short]
-  end
-
-  defmodule League do
-    @moduledoc """
-    League
-    """
-    defstruct [:id, :season, :round, :name]
-  end
-end
-
-defmodule FootballApi.Models.Matches.Struct do
-  @moduledoc """
-  Match definition.
-  """
-  alias FootballApi.Models.Matches
-
-  def match() do
-    %Matches.Response{
-      response: [
-        %Matches.Match{
-          fixture: %Matches.Fixture{status: %Matches.Status{}},
-          score: %Matches.Score{
-            extratime: %Matches.TemporalScore{},
-            fulltime: %Matches.TemporalScore{},
-            halftime: %Matches.TemporalScore{},
-            penalty: %Matches.TemporalScore{}
-          },
-          teams: %Matches.Teams{away: %Matches.Team{}, home: %Matches.Team{}},
-          league: %Matches.League{}
-        }
-      ]
-    }
-  end
+  def json_schema(), do: @schema
 end

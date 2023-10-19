@@ -12,7 +12,7 @@ defmodule Footballratings.FootballApi.ResponseValidationTest do
       assert {:ok, _response_body} =
                FootballApi.ResponseValidation.validate_response(
                  match,
-                 Models.Matches.Struct.match()
+                 Models.Matches.json_schema()
                )
     end
 
@@ -22,7 +22,7 @@ defmodule Footballratings.FootballApi.ResponseValidationTest do
       assert {:ok, _response_body} =
                FootballApi.ResponseValidation.validate_response(
                  lineups,
-                 Models.Lineups.Struct.lineups()
+                 Models.Lineups.json_schema()
                )
     end
 
@@ -33,13 +33,13 @@ defmodule Footballratings.FootballApi.ResponseValidationTest do
       assert {:ok, _} =
                FootballApi.ResponseValidation.validate_response(
                  lanus_squad,
-                 Models.Squads.Struct.squad()
+                 Models.Squads.json_schema()
                )
 
       assert {:ok, _} =
                FootballApi.ResponseValidation.validate_response(
                  boca_squad,
-                 Models.Squads.Struct.squad()
+                 Models.Squads.json_schema()
                )
     end
 
@@ -49,7 +49,7 @@ defmodule Footballratings.FootballApi.ResponseValidationTest do
       assert {:ok, _} =
                FootballApi.ResponseValidation.validate_response(
                  players_statistics,
-                 Models.PlayersStatistics.Struct.players_statistics()
+                 Models.PlayersStatistics.json_schema()
                )
     end
   end

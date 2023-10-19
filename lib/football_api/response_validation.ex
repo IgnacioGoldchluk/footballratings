@@ -1,9 +1,10 @@
 defmodule FootballApi.ResponseValidation do
-  def validate_response(%HTTPoison.Response{} = response, decode_struct) do
+  def validate_response(%HTTPoison.Response{} = response, json_schema) do
     with {:ok, response} <- validate_headers(response),
          {:ok, response} <- validate_status(response),
-         {:ok, response} <- validate_no_errors(response),
-         {:ok, response_body} <- Poison.decode(response.body, as: decode_struct) do
+         {:ok, %HTTPoison.Response{body: response_body}} <- validate_no_errors(response),
+         {:ok, response_body} <- Jason.decode(response_body),
+         {:ok, response_body} <- validate_schema(response_body, json_schema) do
       {:ok, response_body}
     else
       {:error, reason} -> {:error, reason}
@@ -16,6 +17,13 @@ defmodule FootballApi.ResponseValidation do
 
   defp validate_status(%HTTPoison.Response{status_code: status, request_url: request_url}) do
     {:error, "#{request_url}: response status=#{status}, expected 200"}
+  end
+
+  defp validate_schema(body, json_schema) do
+    case JsonXema.validate(json_schema, body) do
+      :ok -> {:ok, body}
+      {:error, %JsonXema.ValidationError{}} = error -> error
+    end
   end
 
   defp x_api_errors_value(headers) do

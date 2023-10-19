@@ -11,11 +11,11 @@ defmodule FootballApi do
     Application.get_env(:footballratings, :api_client, FootballApi.FootballApiClient)
   end
 
-  defp get_and_parse(url, url_query_params, decode_struct) do
+  defp get_and_parse(url, url_query_params, json_schema) do
     Logger.debug("Querying #{url} with #{query_args_to_string(url_query_params)}")
 
     with {:ok, response} <- client_impl().get(url, url_query_params),
-         {:ok, result} <- ResponseValidation.validate_response(response, decode_struct) do
+         {:ok, result} <- ResponseValidation.validate_response(response, json_schema) do
       {:ok, result.response}
     else
       {:error, reason} -> {:error, reason}
@@ -27,7 +27,7 @@ defmodule FootballApi do
   """
   def matches(league, season, from, to) do
     url_query_params = %{"league" => league, "season" => season, "from" => from, "to" => to}
-    get_and_parse("/fixtures", url_query_params, Models.Matches.Struct.match())
+    get_and_parse("/fixtures", url_query_params, Models.Matches.json_schema())
   end
 
   @doc """
@@ -35,7 +35,7 @@ defmodule FootballApi do
   """
   def lineups(fixture_id) do
     url_query_params = %{"fixture" => fixture_id}
-    get_and_parse("/fixtures/lineups", url_query_params, Models.Lineups.Struct.lineups())
+    get_and_parse("/fixtures/lineups", url_query_params, Models.Lineups.json_schema())
   end
 
   @doc """
@@ -47,7 +47,7 @@ defmodule FootballApi do
     get_and_parse(
       "/fixtures/players",
       url_query_params,
-      Models.PlayersStatistics.Struct.players_statistics()
+      Models.PlayersStatistics.json_schema()
     )
   end
 
@@ -56,7 +56,7 @@ defmodule FootballApi do
   """
   def team_squad(team_id) do
     url_query_params = %{"team" => team_id}
-    get_and_parse("/players/squads", url_query_params, Models.Squads.Struct.squad())
+    get_and_parse("/players/squads", url_query_params, Models.Squads.json_schema())
   end
 
   defp query_args_to_string(query_args) do

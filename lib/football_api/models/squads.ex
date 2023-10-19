@@ -1,39 +1,52 @@
 defmodule FootballApi.Models.Squads do
-  @moduledoc """
-  Squads structs.
-  """
+  @schema """
+          {
+            "type": "object",
+            "properties": {
+                "response": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 1,
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "players"
+                        ],
+                        "properties": {
+                            "players": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": [
+                                                "number",
+                                                "null"
+                                            ]
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "age": {
+                                            "type": "number",
+                                            "minimum": 1
+                                        }
+                                    },
+                                    "required": [
+                                        "id",
+                                        "name",
+                                        "age"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+          }
+          """
+          |> Jason.decode!()
+          |> JsonXema.new()
 
-  defmodule Response do
-    @moduledoc """
-    Response
-    """
-    defstruct [:response]
-  end
-
-  defmodule Players do
-    @moduledoc """
-    Players
-    """
-    defstruct [:players]
-  end
-
-  defmodule Player do
-    @moduledoc """
-    Player
-    """
-    defstruct [:id, :name, :age]
-  end
-end
-
-defmodule FootballApi.Models.Squads.Struct do
-  @moduledoc """
-  Squad struct.
-  """
-  alias FootballApi.Models.Squads
-
-  def squad() do
-    %Squads.Response{
-      response: [%Squads.Players{players: [%Squads.Player{}]}]
-    }
-  end
+  def json_schema(), do: @schema
 end

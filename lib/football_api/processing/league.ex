@@ -4,10 +4,5 @@ defmodule FootballApi.Processing.League do
   before inserting into internal repo.
   """
 
-  alias FootballApi.Models.Matches.{League}
-
-  def to_internal_schema(%League{} = league) do
-    Map.from_struct(league)
-    |> Map.drop([:round])
-  end
+  def to_internal_schema(league), do: Map.delete(league, "round")
 end

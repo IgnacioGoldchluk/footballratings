@@ -1,7 +1,5 @@
 defmodule FootballApi.Processing.PlayersStatistics do
-  alias FootballApi.Models.PlayersStatistics, as: Stats
-
-  def extract_players_that_played(%Stats.Players{players: players, team: %{id: team_id}}) do
+  def extract_players_that_played(%{"players" => players, "team" => %{"id" => team_id}}) do
     players
     |> Enum.map(&to_internal_schema/1)
     |> Enum.map(&insert_team_id(&1, team_id))
@@ -19,20 +17,14 @@ defmodule FootballApi.Processing.PlayersStatistics do
     }
   end
 
-  defp player_id(%Stats.Player{player: %Stats.PlayerInfo{id: player_id}}) do
-    player_id
-  end
+  defp player_id(%{"player" => %{"id" => player_id}}), do: player_id
 
-  defp minutes_played(%Stats.Player{
-         statistics: [%Stats.Games{games: %Stats.GameStatistics{minutes: minutes}}]
-       }) do
-    minutes
-  end
+  defp minutes_played(%{"statistics" => [%{"games" => %{"minutes" => minutes}}]}), do: minutes
 
-  defp played?(%{minutes_played: minutes_played}), do: minutes_played != nil
+  defp played?(%{"minutes_played" => minutes_played}), do: minutes_played != nil
 
   def insert_match_id(players, match_id) do
     players
-    |> Map.put(:match_id, match_id)
+    |> Map.put("match_id", match_id)
   end
 end
