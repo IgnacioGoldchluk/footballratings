@@ -83,6 +83,10 @@ jobs:
     - name: Install dependencies
       run: mix deps.get
 
+    # Step: Ensure code is properly formatted
+    - name: Check code format
+      run: mix format --check-formatted
+
     # Step: Compile the project treating any warnings as errors.
     # Customize this step if a different behavior is desired.
     - name: Compiles without warnings

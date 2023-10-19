@@ -214,7 +214,9 @@ defmodule FootballratingsWeb.UsersAuthTest do
 
   describe "redirect_if_users_is_authenticated/2" do
     test "redirects if users is authenticated", %{conn: conn, users: users} do
-      conn = conn |> assign(:current_users, users) |> UsersAuth.redirect_if_users_is_authenticated([])
+      conn =
+        conn |> assign(:current_users, users) |> UsersAuth.redirect_if_users_is_authenticated([])
+
       assert conn.halted
       assert redirected_to(conn) == ~p"/"
     end

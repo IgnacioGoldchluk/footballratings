@@ -15,7 +15,11 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
         </.button>
       </.link>
       <div>Total ratings for this match: <%= @number_of_ratings %></div>
-      <.button phx-click="team_selected" phx-value-team={@match_with_players.home_team.name} id="home-team-stats">
+      <.button
+        phx-click="team_selected"
+        phx-value-team={@match_with_players.home_team.name}
+        id="home-team-stats"
+      >
         <FootballratingsWeb.MatchComponents.team
           team={@match_with_players.home_team}
           goals={@match_with_players.goals_home}
@@ -23,7 +27,11 @@ defmodule FootballratingsWeb.RatingLive.MatchStatistics do
           pinned={@match_with_players.home_team.name == @team_name}
         />
       </.button>
-      <.button phx-click="team_selected" phx-value-team={@match_with_players.away_team.name} id="away-team-stats">
+      <.button
+        phx-click="team_selected"
+        phx-value-team={@match_with_players.away_team.name}
+        id="away-team-stats"
+      >
         <FootballratingsWeb.MatchComponents.team
           team={@match_with_players.away_team}
           goals={@match_with_players.goals_away}

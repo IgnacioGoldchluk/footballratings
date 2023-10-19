@@ -360,7 +360,7 @@ defmodule FootballratingsWeb.CoreComponents do
 
   def score_input(assigns) do
     ~H"""
-      <.input
+    <.input
       type="range"
       min="1"
       max="10"
@@ -370,7 +370,7 @@ defmodule FootballratingsWeb.CoreComponents do
       name={@name}
       field={@field}
       phx-change="player_changed"
-      />
+    />
     """
   end
 

@@ -61,7 +61,14 @@ config :phoenix, :json_library, Jason
 
 config :footballratings, Oban,
   repo: Footballratings.Repo,
-  plugins: [Oban.Plugins.Pruner],
+  plugins: [
+    Oban.Plugins.Pruner
+    # {Oban.Plugins.Cron,
+    #  crontab: [
+    #    {"0 * * * *", Footballratings.Workers.FixturesFetch,
+    #     args: %{"league" => 1032, "season" => 2023}}
+    #  ]}
+  ],
   queues: [default: 10]
 
 # Import environment specific config. This must remain at the bottom

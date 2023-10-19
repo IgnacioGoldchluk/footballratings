@@ -9,7 +9,7 @@ defmodule FootballratingsWeb.MatchLive.Rate do
   @impl true
   def render(assigns) do
     ~H"""
-        <%= if @match.status != :ready do %>
+    <%= if @match.status != :ready do %>
       <div class="flex flex-col items-center gap-2">
         <div class="text-xl text-error">This match is no longer available for rating</div>
         <.link patch={~p"/matches/#{@match.id}"}>
@@ -28,7 +28,11 @@ defmodule FootballratingsWeb.MatchLive.Rate do
             <% end %>
           </div>
           <div class="flex py-2 justify-center">
-            <.button class="btn btn-primary btn-wide" phx-disable-with="Saving..." id="rate-players-button">
+            <.button
+              class="btn btn-primary btn-wide"
+              phx-disable-with="Saving..."
+              id="rate-players-button"
+            >
               Rate players
             </.button>
           </div>

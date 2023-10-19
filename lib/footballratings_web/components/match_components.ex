@@ -16,7 +16,9 @@ defmodule FootballratingsWeb.MatchComponents do
       <:col :let={{_id, match}} label="Round"><%= match.round %></:col>
     </.table>
     <%= if @page.total_pages > @page.page_number do %>
-      <.button class="btn btn-primary" phx-click="load-more" id="load-more-matches-button">Load More</.button>
+      <.button class="btn btn-primary" phx-click="load-more" id="load-more-matches-button">
+        Load More
+      </.button>
     <% end %>
     """
   end
