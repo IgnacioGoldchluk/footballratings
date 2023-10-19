@@ -21,10 +21,9 @@ defmodule FootballApi.Models.Matches do
                     "fixture": {
                       "type": "object",
                       "required": [
-                        "fixture",
-                        "score",
-                        "teams",
-                        "league"
+                        "id",
+                        "status",
+                        "timestamp"
                       ],
                       "properties": {
                         "id": {

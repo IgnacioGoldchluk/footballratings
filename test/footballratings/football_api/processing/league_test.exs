@@ -24,7 +24,7 @@ defmodule Footballratings.FootballApi.Processing.LeagueTest do
       |> Enum.map(&FootballApi.Processing.League.to_internal_schema/1)
       |> Footballratings.FootballInfo.maybe_create_leagues()
 
-      league = Repo.get(Footballratings.FootballInfo.League, @duplicated_league.id)
+      league = Repo.get(Footballratings.FootballInfo.League, @duplicated_league["id"])
 
       assert league.season == @duplicated_league["season"]
       assert league.name == @duplicated_league["name"]

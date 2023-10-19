@@ -33,15 +33,7 @@ defmodule Footballratings.FootballInfo do
     |> Repo.insert(on_conflict: :replace_all, conflict_target: :id)
   end
 
-  def maybe_create_teams(teams) do
-    {teams, placeholders} = Repo.insert_timestamp_placeholders(teams)
-
-    Repo.insert_all(Team, teams,
-      placeholders: placeholders,
-      on_conflict: :replace_all,
-      conflict_target: :id
-    )
-  end
+  def maybe_create_teams(teams), do: Enum.map(teams, &maybe_create_team/1)
 
   def maybe_create_league(attrs) do
     %League{}
@@ -49,15 +41,7 @@ defmodule Footballratings.FootballInfo do
     |> Repo.insert(on_conflict: :replace_all, conflict_target: :id)
   end
 
-  def maybe_create_leagues(leagues) do
-    {leagues, placeholders} = Repo.insert_timestamp_placeholders(leagues)
-
-    Repo.insert_all(League, leagues,
-      placeholders: placeholders,
-      on_conflict: :replace_all,
-      conflict_target: :id
-    )
-  end
+  def maybe_create_leagues(leagues), do: Enum.map(leagues, &maybe_create_league/1)
 
   def create_player(attrs) do
     %Player{}

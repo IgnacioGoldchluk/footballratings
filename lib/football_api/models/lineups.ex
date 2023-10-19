@@ -60,7 +60,7 @@ defmodule FootballApi.Models.Lineups do
                             ],
                             "properties": {
                               "id": {
-                                "type": "number"
+                                "type": ["number", "null"]
                               }
                             }
                           }
@@ -82,7 +82,7 @@ defmodule FootballApi.Models.Lineups do
                             ],
                             "properties": {
                               "id": {
-                                "type": "number"
+                                "type": ["number", "null"]
                               }
                             }
                           }

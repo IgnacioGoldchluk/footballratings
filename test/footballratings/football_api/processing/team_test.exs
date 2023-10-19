@@ -26,19 +26,19 @@ defmodule Footballratings.FootballApi.Processing.TeamTest do
       |> Enum.map(&FootballApi.Processing.Team.to_internal_schema/1)
       |> Footballratings.FootballInfo.maybe_create_teams()
 
-      new_team = Repo.get(Footballratings.FootballInfo.Team, team.id)
+      new_team = Repo.get(Footballratings.FootballInfo.Team, team["id"])
 
-      assert new_team.name == duplicated_team.name
+      assert new_team.name == duplicated_team["name"]
 
-      yet_another_team = %{"id" => team.id, "name" => "Yet Another Team FC"}
+      yet_another_team = %{"id" => team["id"], "name" => "Yet Another Team FC"}
 
       yet_another_team
       |> FootballApi.Processing.Team.to_internal_schema()
       |> Footballratings.FootballInfo.maybe_create_team()
 
-      new_team = Repo.get(Footballratings.FootballInfo.Team, team.id)
+      new_team = Repo.get(Footballratings.FootballInfo.Team, team["id"])
 
-      assert new_team.name == yet_another_team.name
+      assert new_team.name == yet_another_team["name"]
     end
   end
 end

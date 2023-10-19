@@ -106,8 +106,8 @@ defmodule Footballratings.FootballApi.Processing.ProcessingTest do
 
       retrieved_coach = FootballApi.Processing.coach_from_lineup(lineup)
 
-      assert retrieved_coach.name == coach.name
-      assert retrieved_coach.id == coach.id
+      assert retrieved_coach["name"] == coach["name"]
+      assert retrieved_coach["id"] == coach["id"]
     end
   end
 end

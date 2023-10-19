@@ -63,7 +63,12 @@ defmodule Footballratings.FootballApi.ResponseValidationTest do
         | headers: [{"a header", "123"}, {"X-Api-Errors", "2"}]
       }
 
-      assert {:error, string} = FootballApi.ResponseValidation.validate_response(response, %{})
+      assert {:error, string} =
+               FootballApi.ResponseValidation.validate_response(
+                 response,
+                 Models.PlayersStatistics.json_schema()
+               )
+
       assert String.contains?(string, "X-Api-Errors")
     end
 
@@ -71,7 +76,12 @@ defmodule Footballratings.FootballApi.ResponseValidationTest do
       {:ok, response} = players_statistics_response()
       response = %HTTPoison.Response{response | status_code: 500}
 
-      assert {:error, string} = FootballApi.ResponseValidation.validate_response(response, %{})
+      assert {:error, string} =
+               FootballApi.ResponseValidation.validate_response(
+                 response,
+                 Models.PlayersStatistics.json_schema()
+               )
+
       assert String.contains?(string, "response status=500")
     end
   end
@@ -80,7 +90,11 @@ defmodule Footballratings.FootballApi.ResponseValidationTest do
     test "returns error when too many requests are found" do
       {:ok, response} = too_many_requests_response()
 
-      assert {:error, string} = FootballApi.ResponseValidation.validate_response(response, %{})
+      assert {:error, string} =
+               FootballApi.ResponseValidation.validate_response(
+                 response,
+                 Models.PlayersStatistics.json_schema()
+               )
 
       assert String.contains?(string, "Too many requests")
     end
@@ -88,7 +102,11 @@ defmodule Footballratings.FootballApi.ResponseValidationTest do
     test "returns ok when no errors" do
       {:ok, response} = players_statistics_response()
 
-      assert {:ok, _response} = FootballApi.ResponseValidation.validate_response(response, %{})
+      assert {:ok, _response} =
+               FootballApi.ResponseValidation.validate_response(
+                 response,
+                 Models.PlayersStatistics.json_schema()
+               )
     end
   end
 end
