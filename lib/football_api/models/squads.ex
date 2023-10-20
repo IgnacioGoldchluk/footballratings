@@ -28,8 +28,7 @@ defmodule FootballApi.Models.Squads do
                                             "type": "string"
                                         },
                                         "age": {
-                                            "type": "number",
-                                            "minimum": 1
+                                            "type": ["number", "null"]
                                         }
                                     },
                                     "required": [
