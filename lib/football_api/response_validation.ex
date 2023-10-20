@@ -4,7 +4,8 @@ defmodule FootballApi.ResponseValidation do
          {:ok, response} <- validate_status(response),
          {:ok, %HTTPoison.Response{body: response_body}} <- validate_no_errors(response),
          {:ok, response_body} <- Jason.decode(response_body),
-         {:ok, response_body} <- validate_schema(response_body, json_schema) do
+         {:ok, response_body} <- validate_schema(response_body, json_schema),
+         {:ok, response_body} <- extract_response(response_body) do
       {:ok, response_body}
     else
       {:error, reason} -> {:error, reason}
@@ -59,4 +60,7 @@ defmodule FootballApi.ResponseValidation do
     |> Enum.map(fn {error_type, error_val} -> "#{error_type}: #{error_val}" end)
     |> Enum.join(", ")
   end
+
+  defp extract_response(%{"response" => response}), do: {:ok, response}
+  defp extract_response(_body), do: {:error, "Response not found"}
 end

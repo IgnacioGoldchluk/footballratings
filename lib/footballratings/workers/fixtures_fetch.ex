@@ -31,7 +31,7 @@ defmodule Footballratings.Workers.FixturesFetch do
     {:ok, matches} = FootballApi.matches(league_id, season, yesterday, today)
 
     matches
-    |> Enum.filter(fn %{fixture: %{id: match_id}} = match ->
+    |> Enum.filter(fn %{"fixture" => %{"id" => match_id}} = match ->
       FootballApi.Processing.match_finished?(match) and
         not Footballratings.FootballInfo.match_exists?(match_id)
     end)

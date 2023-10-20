@@ -14,7 +14,7 @@ defmodule Footballratings.Workers.TeamProcessor do
       }) do
     [home_team_id, away_team_id]
     |> Enum.each(fn team_id ->
-      {:ok, [%{players: players}]} = FootballApi.team_squad(team_id)
+      {:ok, [%{"players" => players}]} = FootballApi.team_squad(team_id)
 
       players
       |> Enum.map(&FootballApi.Processing.player_with_team(&1, team_id))

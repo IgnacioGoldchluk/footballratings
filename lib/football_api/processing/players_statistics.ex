@@ -7,13 +7,13 @@ defmodule FootballApi.Processing.PlayersStatistics do
   end
 
   defp insert_team_id(player, team_id) do
-    Map.put(player, :team_id, team_id)
+    Map.put(player, "team_id", team_id)
   end
 
   defp to_internal_schema(player) do
     %{
-      player_id: player_id(player),
-      minutes_played: minutes_played(player)
+      "player_id" => player_id(player),
+      "minutes_played" => minutes_played(player)
     }
   end
 

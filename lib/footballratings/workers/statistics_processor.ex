@@ -25,7 +25,7 @@ defmodule Footballratings.Workers.StatisticsProcessor do
     |> Enum.flat_map(&FootballApi.Processing.player_match_schemas(&1, match_id))
     # Temporal
     |> FootballApi.Processing.exclude_new_players_from_stats()
-    |> Enum.filter(fn %{player_id: player_id} -> FootballInfo.player_exists?(player_id) end)
+    |> Enum.filter(fn %{"player_id" => player_id} -> FootballInfo.player_exists?(player_id) end)
     |> Footballratings.FootballInfo.create_players_matches()
 
     :ok

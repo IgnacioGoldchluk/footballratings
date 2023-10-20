@@ -20,4 +20,9 @@ defmodule Footballratings.Repo do
 
     {new_structs, placeholders}
   end
+
+  def upsert(changeset) do
+    changeset
+    |> insert(on_conflict: :replace_all, conflict_target: :id)
+  end
 end

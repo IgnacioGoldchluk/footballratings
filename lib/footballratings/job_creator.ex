@@ -9,8 +9,8 @@ defmodule Footballratings.JobCreator do
     |> Oban.insert_all()
   end
 
-  defp teams_squads_args(%{home_team_id: home_team, away_team_id: away_team, id: match_id}) do
-    %{home_team_id: home_team, away_team_id: away_team, match_id: match_id}
+  defp teams_squads_args(%{"home_team_id" => ht, "away_team_id" => at, "id" => match_id}) do
+    %{home_team_id: ht, away_team_id: at, match_id: match_id}
   end
 
   def new_job_for_match_statistics(%{"match_id" => match_id}) do

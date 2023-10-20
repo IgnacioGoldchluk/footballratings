@@ -30,7 +30,7 @@ defmodule Footballratings.FootballInfo do
   def maybe_create_team(attrs) do
     %Team{}
     |> Team.changeset(attrs)
-    |> Repo.insert(on_conflict: :replace_all, conflict_target: :id)
+    |> Repo.upsert()
   end
 
   def maybe_create_teams(teams), do: Enum.map(teams, &maybe_create_team/1)
@@ -38,7 +38,7 @@ defmodule Footballratings.FootballInfo do
   def maybe_create_league(attrs) do
     %League{}
     |> League.changeset(attrs)
-    |> Repo.insert(on_conflict: :replace_all, conflict_target: :id)
+    |> Repo.upsert()
   end
 
   def maybe_create_leagues(leagues), do: Enum.map(leagues, &maybe_create_league/1)
@@ -49,43 +49,36 @@ defmodule Footballratings.FootballInfo do
     |> Repo.insert()
   end
 
+  def maybe_create_player(attrs) do
+    %Player{}
+    |> Player.changeset(attrs)
+    |> Repo.upsert()
+  end
+
   def create_coach(attrs) do
     %Coach{}
     |> Coach.changeset(attrs)
     |> Repo.insert()
   end
 
-  def maybe_create_coaches(coaches) do
-    {coaches, placeholders} = Repo.insert_timestamp_placeholders(coaches)
-
-    Repo.insert_all(Coach, coaches,
-      placeholders: placeholders,
-      on_conflict: :replace_all,
-      conflict_target: :id
-    )
+  def maybe_create_coach(attrs) do
+    %Coach{}
+    |> Coach.changeset(attrs)
+    |> Repo.upsert()
   end
+
+  def maybe_create_coaches(coaches), do: Enum.map(coaches, &maybe_create_coach/1)
 
   def create_coach_match(attrs) do
     %CoachMatch{}
     |> CoachMatch.changeset(attrs)
-    |> Repo.insert()
+    |> Repo.upsert()
   end
 
-  def create_coaches_matches(coaches_matches) do
-    {coaches_matches, placeholders} = Repo.insert_timestamp_placeholders(coaches_matches)
+  def create_coaches_matches(coaches_matches),
+    do: Enum.map(coaches_matches, &create_coach_match/1)
 
-    Repo.insert_all(CoachMatch, coaches_matches, placeholders: placeholders)
-  end
-
-  def maybe_create_players(players) do
-    {players, placeholders} = Repo.insert_timestamp_placeholders(players)
-
-    Repo.insert_all(Player, players,
-      placeholders: placeholders,
-      on_conflict: :replace_all,
-      conflict_target: :id
-    )
-  end
+  def maybe_create_players(players), do: Enum.map(players, &maybe_create_player/1)
 
   def create_match(attrs) do
     %Match{}
@@ -93,15 +86,7 @@ defmodule Footballratings.FootballInfo do
     |> Repo.insert()
   end
 
-  def create_matches(matches) do
-    {matches, placeholders} = Repo.insert_timestamp_placeholders(matches)
-
-    Repo.insert_all(Match, matches,
-      placeholders: placeholders,
-      on_conflict: :replace_all,
-      conflict_target: :id
-    )
-  end
+  def create_matches(matches), do: Enum.map(matches, &create_match/1)
 
   def create_player_match(attrs) do
     %PlayerMatch{}
@@ -109,15 +94,14 @@ defmodule Footballratings.FootballInfo do
     |> Repo.insert()
   end
 
-  def create_players_matches(players_matches) do
-    {players_matches, placeholders} = Repo.insert_timestamp_placeholders(players_matches)
-
-    Repo.insert_all(PlayerMatch, players_matches,
-      placeholders: placeholders,
-      on_conflict: :replace_all,
-      conflict_target: :id
-    )
+  def maybe_create_player_match(attrs) do
+    %PlayerMatch{}
+    |> PlayerMatch.changeset(attrs)
+    |> Repo.upsert()
   end
+
+  def create_players_matches(players_matches),
+    do: Enum.map(players_matches, &maybe_create_player_match/1)
 
   def match_exists?(match_id), do: is_nil?(Repo.get(Match, match_id))
   def player_exists?(player_id), do: is_nil?(Repo.get(Player, player_id))

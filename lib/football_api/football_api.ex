@@ -16,7 +16,7 @@ defmodule FootballApi do
 
     with {:ok, response} <- client_impl().get(url, url_query_params),
          {:ok, result} <- ResponseValidation.validate_response(response, json_schema) do
-      {:ok, result.response}
+      {:ok, result}
     else
       {:error, reason} -> {:error, reason}
     end
