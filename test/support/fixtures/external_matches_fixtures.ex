@@ -83,9 +83,9 @@ defmodule Footballratings.ExternalMatchesFixtures do
 
   def insert_league(match, league), do: Map.put(match, "league", league)
 
-  def insert_home_team(match, home_team), do: put_in(match, ["teams", "home_team"], home_team)
+  def insert_home_team(match, home_team), do: put_in(match, ["teams", "home"], home_team)
 
-  def insert_away_team(match, away_team), do: put_in(match, ["teams", "away_team"], away_team)
+  def insert_away_team(match, away_team), do: put_in(match, ["teams", "away"], away_team)
 
   def insert_match_status(match, new_status), do: put_in(match, ["fixture", "status"], new_status)
 
