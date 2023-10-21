@@ -45,7 +45,7 @@ defmodule FootballApi.ResponseValidation do
   end
 
   defp validate_no_errors(%HTTPoison.Response{body: body} = response) do
-    {:ok, %{"errors" => errors}} = Poison.decode(body)
+    {:ok, %{"errors" => errors}} = Jason.decode(body)
 
     case errors do
       [] -> {:ok, response}

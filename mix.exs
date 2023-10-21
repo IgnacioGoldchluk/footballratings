@@ -57,7 +57,6 @@ defmodule Footballratings.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:httpoison, "~> 2.0"},
-      {:poison, "~> 5.0"},
       {:oban, "~> 2.14"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:mox, "~> 1.0", only: :test},
