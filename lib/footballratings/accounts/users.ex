@@ -39,7 +39,7 @@ defmodule Footballratings.Accounts.Users do
     users
     |> cast(attrs, [:email, :username, :password])
     |> validate_email(opts)
-    |> validate_username(opts)
+    # |> validate_username(opts)
     |> validate_password(opts)
   end
 
