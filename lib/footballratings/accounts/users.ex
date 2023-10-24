@@ -39,7 +39,6 @@ defmodule Footballratings.Accounts.Users do
     users
     |> cast(attrs, [:email, :username, :password])
     |> validate_email(opts)
-    # |> validate_username(opts)
     |> validate_password(opts)
   end
 
@@ -57,7 +56,7 @@ defmodule Footballratings.Accounts.Users do
     |> validate_format(:username, ~r/^\w+$/,
       message: "username can only contain letters, numbers and underscore"
     )
-    |> validate_length(:username, max: 32)
+    |> validate_length(:username, min: 6, max: 32)
     |> maybe_validate_unique_username(opts)
   end
 
@@ -123,6 +122,12 @@ defmodule Footballratings.Accounts.Users do
       %{changes: %{email: _}} = changeset -> changeset
       %{} = changeset -> add_error(changeset, :email, "did not change")
     end
+  end
+
+  def username_changeset(users, attrs, opts \\ []) do
+    users
+    |> cast(attrs, [:username])
+    |> validate_username(opts)
   end
 
   @doc """

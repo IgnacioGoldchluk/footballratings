@@ -26,6 +26,10 @@ defmodule Footballratings.Accounts do
     Repo.get_by(Users, email: email)
   end
 
+  def get_users_by_username(username) when is_binary(username) do
+    Repo.get_by(Users, username: username)
+  end
+
   @doc """
   Gets a users by email and password.
 
@@ -108,6 +112,10 @@ defmodule Footballratings.Accounts do
     Users.email_changeset(users, attrs, validate_email: false)
   end
 
+  def change_users_username(users, attrs \\ %{}) do
+    Users.username_changeset(users, attrs, validate_username: false)
+  end
+
   @doc """
   Emulates that the email will change without actually changing
   it in the database.
@@ -144,6 +152,17 @@ defmodule Footballratings.Accounts do
     else
       _ -> :error
     end
+  end
+
+  def update_users_username(users, username) do
+    Repo.transaction(users_username_multi(users, username))
+  end
+
+  defp users_username_multi(users, username) do
+    changeset = users |> Users.username_changeset(%{username: username})
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:users, changeset)
   end
 
   defp users_email_multi(users, email, context) do

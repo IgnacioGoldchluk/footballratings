@@ -17,6 +17,18 @@ defmodule Footballratings.AccountsTest do
     end
   end
 
+  describe "get_users_by_username/1" do
+    test "returns user if the username exists" do
+      refute Accounts.get_users_by_username("UnknownUser")
+    end
+
+    test "returns the user if the username exists" do
+      %{username: username, id: id} = users_fixture()
+      refute username == nil
+      assert %Users{id: ^id} = Accounts.get_users_by_username(username)
+    end
+  end
+
   describe "get_users_by_email_and_password/2" do
     test "does not return the users if the email does not exist" do
       refute Accounts.get_users_by_email_and_password("unknown@example.com", "hello world!")
@@ -120,6 +132,13 @@ defmodule Footballratings.AccountsTest do
     end
   end
 
+  describe "change_users_username/2" do
+    test "returns a users changeset" do
+      assert %Ecto.Changeset{} = changeset = Accounts.change_users_username(%Users{})
+      assert changeset.required == [:username]
+    end
+  end
+
   describe "change_users_email/2" do
     test "returns a users changeset" do
       assert %Ecto.Changeset{} = changeset = Accounts.change_users_email(%Users{})
@@ -193,6 +212,37 @@ defmodule Footballratings.AccountsTest do
       assert users_token.users_id == users.id
       assert users_token.sent_to == users.email
       assert users_token.context == "change:current@example.com"
+    end
+  end
+
+  describe "update_users_username/2" do
+    setup do
+      %{users: users_fixture()}
+    end
+
+    test "updates the username with a valid username", %{users: users} do
+      name = "Test123"
+      assert {:ok, _} = Accounts.update_users_username(users, name)
+
+      assert %Users{username: ^name} = Accounts.get_users!(users.id)
+    end
+
+    test "does not update if the username is invalid", %{users: users} do
+      name = "Inv@L!D"
+      assert {:error, _, _, _} = Accounts.update_users_username(users, name)
+
+      refute Accounts.get_users!(users.id).username == name
+    end
+
+    test "does not update if the username is duplicated", %{users: users} do
+      name = "User123"
+      assert {:ok, _} = Accounts.update_users_username(users, name)
+
+      users2 = users_fixture()
+      assert {:error, _, _, _} = Accounts.update_users_username(users2, name)
+
+      assert Accounts.get_users!(users.id).username == name
+      refute Accounts.get_users!(users2.id).username == name
     end
   end
 
