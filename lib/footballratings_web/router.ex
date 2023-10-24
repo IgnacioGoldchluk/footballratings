@@ -89,6 +89,7 @@ defmodule FootballratingsWeb.Router do
 
     live_session :require_authenticated_users,
       on_mount: [{FootballratingsWeb.UsersAuth, :ensure_authenticated}] do
+      live("/user/settings", UsersSetUsernameLive, :set_username)
       live("/users/settings", UsersSettingsLive, :edit)
       live("/users/settings/confirm_email/:token", UsersSettingsLive, :confirm_email)
       live("/matches/:match_id/rate/:team_id", MatchLive.Rate, :rate)
