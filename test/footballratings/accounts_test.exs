@@ -579,4 +579,21 @@ defmodule Footballratings.AccountsTest do
       assert 1 == Accounts.total_users()
     end
   end
+
+  describe "fetch_or_create_user/1" do
+    setup do
+      %{users: users_fixture()}
+    end
+
+    test "returns existing user if e-mail exists", %{users: users} do
+      {:ok, user} = Accounts.fetch_or_create_user(%{email: users.email})
+      assert user.id == users.id
+      assert 1 == Accounts.total_users()
+    end
+
+    test "creates new user if e-mail does not exist" do
+      {:ok, %Users{}} =
+        Accounts.fetch_or_create_user(%{email: "new@email.com", password: "Pass_word123"})
+    end
+  end
 end
