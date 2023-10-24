@@ -44,11 +44,7 @@ defmodule FootballratingsWeb.UsersSetUsernameLive do
               </:actions>
             </.simple_form>
 
-            <%= if @username_valid? do %>
-              <div>
-                Username is available!
-              </div>
-            <% else %>
+            <%= if not @username_valid? do %>
               <.button
                 disabled={not @can_validate?}
                 phx-disabled-with="Checking..."
@@ -59,6 +55,9 @@ defmodule FootballratingsWeb.UsersSetUsernameLive do
                 Check for availability
               </.button>
             <% end %>
+            <div>
+              <%= @valid_message %>
+            </div>
           </div>
         </div>
       </div>
@@ -76,6 +75,7 @@ defmodule FootballratingsWeb.UsersSetUsernameLive do
       |> assign_form(username_changeset)
       |> assign_can_validate(false)
       |> assign_username_valid?(false)
+      |> assign_valid_message("")
 
     {:ok, socket}
   end
@@ -86,6 +86,10 @@ defmodule FootballratingsWeb.UsersSetUsernameLive do
 
   defp assign_username_valid?(socket, username_valid?) do
     assign(socket, :username_valid?, username_valid?)
+  end
+
+  defp assign_valid_message(socket, message) do
+    assign(socket, :valid_message, message)
   end
 
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do
@@ -110,6 +114,7 @@ defmodule FootballratingsWeb.UsersSetUsernameLive do
       socket
       |> assign_form(Map.put(changeset, :action, :validate))
       |> assign_username_valid?(false)
+      |> assign_valid_message("")
 
     {:noreply, socket}
   end
@@ -118,12 +123,23 @@ defmodule FootballratingsWeb.UsersSetUsernameLive do
   def handle_event("check-username-available", _params, socket) do
     %{"username" => proposed_username} = socket.assigns.username_form.params
 
-    socket =
-      socket
-      |> assign_can_validate(false)
-      |> assign_username_valid?(Accounts.get_users_by_username(proposed_username) == nil)
+    user = Accounts.get_users_by_username(proposed_username)
 
-    {:noreply, socket}
+    case user do
+      nil ->
+        {:noreply,
+         socket
+         |> assign_can_validate(false)
+         |> assign_username_valid?(true)
+         |> assign_valid_message("Username is available!")}
+
+      _ ->
+        {:noreply,
+         socket
+         |> assign_can_validate(false)
+         |> assign_username_valid?(false)
+         |> assign_valid_message("Username already taken :(")}
+    end
   end
 
   @impl true

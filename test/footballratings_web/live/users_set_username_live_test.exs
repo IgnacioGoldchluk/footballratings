@@ -15,7 +15,7 @@ defmodule FootballratingsWeb.UsersSetUsernameLiveTest do
       assert html =~ "Set a unique username to continue"
     end
 
-    test "Entire life-cycle", %{conn: conn, users: users} do
+    test "Happy path", %{conn: conn, users: users} do
       {:ok, view, html} = conn |> log_in_users(users) |> live(~p"/user/settings")
 
       # Initial render, shouldn't show availability
@@ -43,6 +43,22 @@ defmodule FootballratingsWeb.UsersSetUsernameLiveTest do
 
       assert "You already set your username"
       refute html =~ "Set username"
+    end
+
+    test "duplicated username", %{conn: conn, users: users} do
+      duplicated = "TakenUser"
+      users_fixture(%{username: duplicated})
+
+      {:ok, view, _html} = conn |> log_in_users(users) |> live(~p"/user/settings")
+
+      view
+      |> form("#username-form", %{"set-username" => %{username: duplicated}})
+      |> render_change()
+
+      html = view |> element("#validate-username-available") |> render_click()
+
+      refute html =~ "Username is available!"
+      assert html =~ "Username already taken :("
     end
   end
 end
