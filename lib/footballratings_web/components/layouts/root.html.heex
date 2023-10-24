@@ -23,26 +23,11 @@
           (<%= @current_users.email %>)
         </li>
         <li>
-          <.link href={~p"/users/settings"} class="hover:text-primary">
-            Settings
-          </.link>
-        </li>
-        <li>
           <.link href={~p"/users/log_out"} method="delete" class="hover:text-primary">
             <.button class="btn-primary">Log out</.button>
           </.link>
         </li>
       <% else %>
-        <li>
-          <.link href={~p"/users/register"} class="hover:text-primary">
-            Register
-          </.link>
-        </li>
-        <li>
-          <.link href={~p"/users/log_in"} class="hover:text-primary">
-            Log in
-          </.link>
-        </li>
         <li>
           <.link href={~p"/auth/google"} class="hover:text-primary">
             <.button class="btn-primary">Sign up/Sign in</.button>

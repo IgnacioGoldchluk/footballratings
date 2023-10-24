@@ -18,10 +18,10 @@ defmodule FootballratingsWeb.Router do
   end
 
   scope "/", FootballratingsWeb do
-    pipe_through [:browser, :redirect_if_users_is_authenticated]
+    pipe_through([:browser, :redirect_if_users_is_authenticated])
 
-    get "/auth/:provider", UserOauthController, :request
-    get "/auth/:provider/callback", UserOauthController, :callback
+    get("/auth/:provider", UserOauthController, :request)
+    get("/auth/:provider/callback", UserOauthController, :callback)
   end
 
   scope "/", FootballratingsWeb do
@@ -69,29 +69,12 @@ defmodule FootballratingsWeb.Router do
   end
 
   ## Authentication routes
-
-  scope "/", FootballratingsWeb do
-    pipe_through([:browser, :redirect_if_users_is_authenticated])
-
-    live_session :redirect_if_users_is_authenticated,
-      on_mount: [{FootballratingsWeb.UsersAuth, :redirect_if_users_is_authenticated}] do
-      live("/users/register", UsersRegistrationLive, :new)
-      live("/users/log_in", UsersLoginLive, :new)
-      live("/users/reset_password", UsersForgotPasswordLive, :new)
-      live("/users/reset_password/:token", UsersResetPasswordLive, :edit)
-    end
-
-    post("/users/log_in", UsersSessionController, :create)
-  end
-
   scope "/", FootballratingsWeb do
     pipe_through([:browser, :require_authenticated_users])
 
     live_session :require_authenticated_users,
       on_mount: [{FootballratingsWeb.UsersAuth, :ensure_authenticated}] do
       live("/user/settings", UsersSetUsernameLive, :set_username)
-      live("/users/settings", UsersSettingsLive, :edit)
-      live("/users/settings/confirm_email/:token", UsersSettingsLive, :confirm_email)
       live("/matches/:match_id/rate/:team_id", MatchLive.Rate, :rate)
     end
   end
@@ -100,11 +83,5 @@ defmodule FootballratingsWeb.Router do
     pipe_through([:browser])
 
     delete("/users/log_out", UsersSessionController, :delete)
-
-    live_session :current_users,
-      on_mount: [{FootballratingsWeb.UsersAuth, :mount_current_users}] do
-      live("/users/confirm/:token", UsersConfirmationLive, :edit)
-      live("/users/confirm", UsersConfirmationInstructionsLive, :new)
-    end
   end
 end

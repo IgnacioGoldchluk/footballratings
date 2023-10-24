@@ -233,7 +233,7 @@ defmodule FootballratingsWeb.UsersAuthTest do
       conn = conn |> fetch_flash() |> UsersAuth.require_authenticated_users([])
       assert conn.halted
 
-      assert redirected_to(conn) == ~p"/users/log_in"
+      assert redirected_to(conn) == ~p"/"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :error) ==
                "You must log in to access this page."

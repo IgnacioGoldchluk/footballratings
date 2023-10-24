@@ -26,8 +26,7 @@ defmodule FootballratingsWeb.MatchLive.RateTest do
 
   describe "rate page" do
     test "redirects to log in if user is not logged", %{conn: conn, match: match, team: team} do
-      {:error, {:redirect, %{to: "/users/log_in"}}} =
-        live(conn, ~p"/matches/#{match.id}/rate/#{team.id}")
+      {:error, {:redirect, %{to: "/"}}} = live(conn, ~p"/matches/#{match.id}/rate/#{team.id}")
     end
 
     test "displays players and back to match", %{
