@@ -5,6 +5,7 @@ defmodule FootballratingsWeb.UsersAuth do
   import Phoenix.Controller
 
   alias Footballratings.Accounts
+  alias Footballratings.Accounts.Users
 
   # Make the remember me cookie valid for 60 days.
   # If you want bump or reduce this value, also change
@@ -162,6 +163,16 @@ defmodule FootballratingsWeb.UsersAuth do
     end
   end
 
+  def on_mount(:ensure_username_set, _params, session, socket) do
+    socket = mount_current_users(session, socket)
+
+    case socket.assigns.current_users do
+      %Users{username: nil} -> redirect_to_set_username(socket)
+      nil -> redirect_to_set_username(socket)
+      %Users{username: name} when not is_nil(name) -> {:cont, socket}
+    end
+  end
+
   def on_mount(:redirect_if_users_is_authenticated, _params, session, socket) do
     socket = mount_current_users(session, socket)
 
@@ -170,6 +181,15 @@ defmodule FootballratingsWeb.UsersAuth do
     else
       {:cont, socket}
     end
+  end
+
+  defp redirect_to_set_username(socket) do
+    socket =
+      socket
+      |> Phoenix.LiveView.put_flash(:error, "You must set your username first.")
+      |> Phoenix.LiveView.redirect(to: ~p"/user/settings")
+
+    {:halt, socket}
   end
 
   defp mount_current_users(session, socket) do
