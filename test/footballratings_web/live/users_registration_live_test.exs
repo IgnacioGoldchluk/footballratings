@@ -34,7 +34,6 @@ defmodule FootballratingsWeb.UsersRegistrationLiveTest do
 
       assert result =~ "Register"
       assert result =~ "must have the @ sign and no spaces"
-      assert result =~ "username can only contain letters, numbers and underscore"
       assert result =~ "should be at least 8 character"
       assert result =~ "at least one digit or punctuation character"
       assert result =~ "at least one upper case character"

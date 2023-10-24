@@ -54,8 +54,7 @@ defmodule Footballratings.AccountsTest do
 
       assert %{
                password: ["can't be blank"],
-               email: ["can't be blank"],
-               username: ["can't be blank"]
+               email: ["can't be blank"]
              } = errors_on(changeset)
     end
 
@@ -101,7 +100,7 @@ defmodule Footballratings.AccountsTest do
   describe "change_users_registration/2" do
     test "returns a changeset" do
       assert %Ecto.Changeset{} = changeset = Accounts.change_users_registration(%Users{})
-      assert changeset.required == [:password, :username, :email]
+      assert changeset.required == [:password, :email]
     end
 
     test "allows fields to be set" do
