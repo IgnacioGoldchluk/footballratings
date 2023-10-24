@@ -64,6 +64,7 @@ defmodule Footballratings.MixProject do
       {:iconv, "~> 1.0.10"},
       {:scrivener_ecto, "~> 2.0"},
       {:json_xema, "~> 0.6.2"},
+      {:ueberauth_google, "~> 0.12"},
       {:plug_cowboy, "~> 2.5"}
     ]
   end

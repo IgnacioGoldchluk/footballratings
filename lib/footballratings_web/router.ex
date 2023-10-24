@@ -18,6 +18,13 @@ defmodule FootballratingsWeb.Router do
   end
 
   scope "/", FootballratingsWeb do
+    pipe_through [:browser, :redirect_if_users_is_authenticated]
+
+    get "/auth/:provider", UserOauthController, :request
+    get "/auth/:provider/callback", UserOauthController, :callback
+  end
+
+  scope "/", FootballratingsWeb do
     pipe_through(:browser)
 
     get("/", PageController, :home)

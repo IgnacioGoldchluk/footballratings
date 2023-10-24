@@ -364,4 +364,11 @@ defmodule Footballratings.Accounts do
     |> select(count())
     |> Repo.one()
   end
+
+  def fetch_or_create_user(attrs) do
+    case get_users_by_email(attrs.email) do
+      %Users{} = user -> {:ok, user}
+      _ -> %Users{} |> Users.registration_changeset(attrs) |> Repo.insert()
+    end
+  end
 end
