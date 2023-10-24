@@ -36,7 +36,6 @@ defmodule FootballratingsWeb.UsersSessionController do
 
   def delete(conn, _params) do
     conn
-    |> put_flash(:info, "Logged out successfully.")
     |> UsersAuth.log_out_users()
   end
 end

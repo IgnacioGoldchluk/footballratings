@@ -29,7 +29,7 @@
         </li>
         <li>
           <.link href={~p"/users/log_out"} method="delete" class="hover:text-primary">
-            Log out
+            <.button class="btn-primary">Log out</.button>
           </.link>
         </li>
       <% else %>
@@ -45,7 +45,7 @@
         </li>
         <li>
           <.link href={~p"/auth/google"} class="hover:text-primary">
-            Log in with Google
+            <.button class="btn-primary">Sign up/Sign in</.button>
           </.link>
         </li>
       <% end %>
