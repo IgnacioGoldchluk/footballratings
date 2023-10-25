@@ -11,11 +11,4 @@ defmodule FootballratingsWeb.TeamComponents do
     <div class="text-s"><%= @name %></div>
     """
   end
-
-  def team_name_and_logo(%{reverse: true} = assigns) do
-    ~H"""
-    <div class="text-s"><%= @name %></div>
-    <img class="mask mask-circle" src={FootballApi.FootballApiImages.team_image(@id)} width="50" />
-    """
-  end
 end

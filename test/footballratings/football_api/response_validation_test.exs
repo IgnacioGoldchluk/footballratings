@@ -55,9 +55,13 @@ defmodule Footballratings.FootballApi.ResponseValidationTest do
   end
 
   describe "extra validation" do
-    test "API Errors different from 0 throws an error" do
+    setup do
       {:ok, response} = players_statistics_response()
+      schema = Models.PlayersStatistics.json_schema()
+      %{response: response, schema: schema}
+    end
 
+    test "API Errors different from 0 throws an error", %{response: response, schema: schema} do
       response = %HTTPoison.Response{
         response
         | headers: [{"a header", "123"}, {"X-Api-Errors", "2"}]
@@ -66,20 +70,19 @@ defmodule Footballratings.FootballApi.ResponseValidationTest do
       assert {:error, string} =
                FootballApi.ResponseValidation.validate_response(
                  response,
-                 Models.PlayersStatistics.json_schema()
+                 schema
                )
 
       assert String.contains?(string, "X-Api-Errors")
     end
 
-    test "status code different from 200 throws an error" do
-      {:ok, response} = players_statistics_response()
+    test "status code different from 200 throws an error", %{response: response, schema: schema} do
       response = %HTTPoison.Response{response | status_code: 500}
 
       assert {:error, string} =
                FootballApi.ResponseValidation.validate_response(
                  response,
-                 Models.PlayersStatistics.json_schema()
+                 schema
                )
 
       assert String.contains?(string, "response status=500")

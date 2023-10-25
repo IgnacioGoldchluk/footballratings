@@ -23,16 +23,6 @@ defmodule FootballratingsWeb.MatchComponents do
     """
   end
 
-  def match_result(assigns) do
-    ~H"""
-    <h2 class="font-semibold"><%= @match.league.name %> - <%= @match.round %></h2>
-    <div class="join-vertical">
-      <.team team={@match.home_team} goals={@match.goals_home} penalties={@match.penalties_home} />
-      <.team team={@match.away_team} goals={@match.goals_away} penalties={@match.penalties_away} />
-    </div>
-    """
-  end
-
   attr(:team, :any, required: true)
   attr(:goals, :integer, required: true)
   attr(:penalties, :any, required: true)

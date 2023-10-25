@@ -34,15 +34,4 @@ defmodule FootballratingsWeb.PlayerComponents do
     </div>
     """
   end
-
-  attr(:id, :integer, required: true)
-  attr(:name, :string, required: true)
-
-  def player_link(assigns) do
-    ~H"""
-    <.link navigate={~p"/players/#{@id}"} class="hover:text-primary">
-      <%= @name %>
-    </.link>
-    """
-  end
 end
