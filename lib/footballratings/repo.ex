@@ -5,22 +5,6 @@ defmodule Footballratings.Repo do
 
   use Scrivener, page_size: 4
 
-  def insert_timestamp_placeholders(structs) do
-    timestamp = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
-    placeholders = %{timestamp: timestamp}
-
-    new_structs =
-      Enum.map(
-        structs,
-        &Map.merge(&1, %{
-          inserted_at: {:placeholder, :timestamp},
-          updated_at: {:placeholder, :timestamp}
-        })
-      )
-
-    {new_structs, placeholders}
-  end
-
   def upsert(changeset) do
     changeset
     |> insert(on_conflict: :replace_all, conflict_target: :id)
