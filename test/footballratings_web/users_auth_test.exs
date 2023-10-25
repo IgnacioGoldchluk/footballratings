@@ -148,6 +148,46 @@ defmodule FootballratingsWeb.UsersAuthTest do
     end
   end
 
+  describe "on_mount: ensure_username_set" do
+    test "authenticates based on token", %{conn: conn, users: users} do
+      token = Accounts.generate_users_session_token(users)
+      session = conn |> put_session(:users_token, token) |> get_session()
+
+      {:cont, updated_socket} =
+        UsersAuth.on_mount(:ensure_username_set, %{}, session, %LiveView.Socket{})
+
+      assert updated_socket.assigns.current_users.id == users.id
+      assert updated_socket.assigns.current_users.username != nil
+    end
+
+    test "redirects to main page if there is no user token", %{conn: conn} do
+      token = "invalid_token"
+      session = conn |> put_session(:users_toke, token) |> get_session()
+
+      socket = %LiveView.Socket{
+        endpoint: FootballratingsWeb.Endpoint,
+        assigns: %{__changed__: %{}, flash: %{}}
+      }
+
+      {:halt, updated_socket} = UsersAuth.on_mount(:ensure_username_set, %{}, session, socket)
+
+      assert updated_socket.assigns.current_users == nil
+    end
+
+    test "redirects to main page if user has no username", %{conn: conn} do
+      token = users_fixture(%{username: nil}) |> Accounts.generate_users_session_token()
+      session = conn |> put_session(:users_token, token) |> get_session()
+
+      socket = %LiveView.Socket{
+        endpoint: FootballratingsWeb.Endpoint,
+        assigns: %{__changed__: %{}, flash: %{}}
+      }
+
+      {:halt, updated_socket} = UsersAuth.on_mount(:ensure_username_set, %{}, session, socket)
+      assert updated_socket.assigns.current_users.username == nil
+    end
+  end
+
   describe "on_mount: ensure_authenticated" do
     test "authenticates current_users based on a valid users_token ", %{conn: conn, users: users} do
       users_token = Accounts.generate_users_session_token(users)
