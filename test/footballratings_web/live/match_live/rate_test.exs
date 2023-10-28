@@ -26,7 +26,15 @@ defmodule FootballratingsWeb.MatchLive.RateTest do
 
   describe "rate page" do
     test "redirects to log in if user is not logged", %{conn: conn, match: match, team: team} do
-      {:error, {:redirect, %{to: "/"}}} = live(conn, ~p"/matches/#{match.id}/rate/#{team.id}")
+      assert {:error, {:redirect, %{to: "/"}}} =
+               live(conn, ~p"/matches/#{match.id}/rate/#{team.id}")
+    end
+
+    test "redirects to set username if not set", %{conn: conn, match: match, team: team} do
+      user = AccountsFixtures.users_fixture(%{username: nil})
+
+      {:error, {:redirect, %{to: "/user/settings"}}} =
+        conn |> log_in_users(user) |> live(~p"/matches/#{match.id}/rate/#{team.id}")
     end
 
     test "displays players and back to match", %{
