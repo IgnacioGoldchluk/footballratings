@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:15-bullseye
+    restart: always
+    volumes:
+      - "dbdata:/var/lib/postgresql/data"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+
+volumes:
+  dbdata:
