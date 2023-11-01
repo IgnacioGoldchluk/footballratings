@@ -49,6 +49,11 @@ defmodule Footballratings.BillingTest do
       attrs_1 = Map.put(attrs, :status, "Not A Valid Status")
       assert {:error, _} = Billing.create_subscription(attrs_1)
     end
+
+    test "fails if external_id is duplicated", %{valid_attrs: attrs} do
+      {:ok, %Subscription{}} = Billing.create_subscription(attrs)
+      assert {:error, _} = Billing.create_subscription(attrs)
+    end
   end
 
   describe "create_plan/1" do
@@ -87,6 +92,11 @@ defmodule Footballratings.BillingTest do
 
       attrs_3 = Map.put(attrs, :status, "Invalid")
       assert {:error, _} = Billing.create_plan(attrs_3)
+    end
+
+    test "fails if external_id is duplicated", %{valid_attrs: attrs} do
+      {:ok, %Plan{}} = Billing.create_plan(attrs)
+      assert {:error, _} = Billing.create_plan(attrs)
     end
   end
 end
