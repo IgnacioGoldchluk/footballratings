@@ -21,4 +21,13 @@ defmodule Footballratings.Billing do
     |> Subscription.changeset(attrs)
     |> Repo.insert()
   end
+
+  def update_subscription_status(external_id, status) when is_binary(status),
+    do: update_subscription_status(external_id, String.to_existing_atom(status))
+
+  def update_subscription_status(external_id, status) do
+    get_subscription_by_external_id(external_id)
+    |> Ecto.Changeset.change(status: status)
+    |> Repo.update()
+  end
 end

@@ -105,4 +105,24 @@ defmodule Footballratings.BillingTest do
       assert plan.amount == attrs[:amount] + 100
     end
   end
+
+  describe "update_subscription_status/2" do
+    setup do
+      %{subscription: subscription_fixture()}
+    end
+
+    test "updates if subscription is valid", %{subscription: subscription} do
+      id = subscription.external_id
+      new_status = "cancelled"
+
+      assert {:ok, updated_sub} = Billing.update_subscription_status(id, new_status)
+
+      assert updated_sub.status == :cancelled
+      assert updated_sub.external_id == id
+
+      assert {:ok, updated_sub} = Billing.update_subscription_status(id, :active)
+      assert updated_sub.status == :active
+      assert updated_sub.external_id == id
+    end
+  end
 end
