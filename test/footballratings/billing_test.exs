@@ -94,9 +94,15 @@ defmodule Footballratings.BillingTest do
       assert {:error, _} = Billing.create_plan(attrs_3)
     end
 
-    test "fails if external_id is duplicated", %{valid_attrs: attrs} do
-      {:ok, %Plan{}} = Billing.create_plan(attrs)
-      assert {:error, _} = Billing.create_plan(attrs)
+    test "replaces existing values", %{valid_attrs: attrs} do
+      {:ok, _} = Billing.create_plan(attrs)
+
+      # Increase price by 100
+      new_attrs = Map.update!(attrs, :amount, fn amount -> amount + 100 end)
+
+      {:ok, plan} = Billing.create_plan(new_attrs)
+
+      assert plan.amount == attrs[:amount] + 100
     end
   end
 end

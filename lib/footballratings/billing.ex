@@ -13,7 +13,7 @@ defmodule Footballratings.Billing do
   def create_plan(attrs) do
     %Plan{}
     |> Plan.changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert(on_conflict: :replace_all, conflict_target: :external_id)
   end
 
   def create_subscription(attrs) do
