@@ -18,5 +18,6 @@ defmodule Footballratings.Billing.Plan do
     |> validate_required([:external_id, :frequency, :frequency_type, :amount, :currency, :status])
     |> validate_number(:amount, greater_than: -1)
     |> validate_number(:frequency, greater_than: 0)
+    |> unique_constraint(:external_id)
   end
 end

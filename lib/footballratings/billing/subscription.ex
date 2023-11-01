@@ -16,5 +16,6 @@ defmodule Footballratings.Billing.Subscription do
     |> cast(attrs, [:external_id, :status, :plan_id, :users_id])
     |> foreign_key_constraint(:users_id)
     |> foreign_key_constraint(:plan_id)
+    |> unique_constraint(:external_id)
   end
 end
