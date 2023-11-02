@@ -4,7 +4,7 @@ defmodule Footballratings.Billing.Subscription do
 
   schema "subscriptions" do
     field :external_id, :string
-    field :status, Ecto.Enum, values: [:pending, :active, :cancelled]
+    field :status, Ecto.Enum, values: [:pending, :active, :cancelled, :paused]
     belongs_to :users, Footballratings.Accounts.Users
     belongs_to :plan, Footballratings.Billing.Plan
 
