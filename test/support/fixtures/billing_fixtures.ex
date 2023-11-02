@@ -17,7 +17,7 @@ defmodule Footballratings.BillingFixtures do
       external_id: unique_external_id(),
       status: :active,
       users_id: Footballratings.AccountsFixtures.users_fixture().id,
-      plan_id: plan_fixture().id
+      plan_id: plan_fixture().external_id
     })
   end
 
