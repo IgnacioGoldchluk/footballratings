@@ -13,7 +13,9 @@ defmodule Footballratings.MixProject do
       test_coverage: [
         ignore_modules: [
           FootballApi.FootballApiClient,
-          FootballApi.FootballApiClient.FootballApiClientBase
+          FootballApi.FootballApiClient.FootballApiClientBase,
+          Footballratings.MercadoPago.Client,
+          FootballratingsWeb.CoreComponents
         ]
       ]
     ]
