@@ -3,7 +3,7 @@ defmodule Footballratings.MercadoPago.WebhookHandlerTest do
   use Oban.Testing, repo: Footballratings.Repo
 
   alias Footballratings.MercadoPago.WebhookHandler
-  alias Footballratings.MercadoPago.Workers
+  alias Footballratings.Billing.Plan
   import Mox
   alias Footballratings.MercadoPagoResponses
 
@@ -15,7 +15,10 @@ defmodule Footballratings.MercadoPago.WebhookHandlerTest do
 
       req = %{"type" => "subscription_preapproval_plan", "data" => %{"id" => "123456"}}
       assert :ok = WebhookHandler.handle(req)
-      assert nil != Footballratings.Billing.get_plan_by_external_id("123456")
+
+      :timer.sleep(10)
+      plan = Footballratings.Billing.get_plan_by_external_id("123456")
+      assert plan.external_id == "123456"
     end
   end
 end
