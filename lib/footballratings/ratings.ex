@@ -73,6 +73,14 @@ defmodule Footballratings.Ratings do
     |> Repo.all()
   end
 
+  def count_ratings_by_user(users_id, after_time) do
+    MatchRatings
+    |> where([mr], mr.users_id == ^users_id)
+    |> where([mr], mr.inserted_at >= ^after_time)
+    |> select(count())
+    |> Repo.one()
+  end
+
   def paginated_ratings_by_user(users_id, page_number \\ 0) do
     MatchRatings.Query.by_user(users_id)
     |> Repo.paginate(page: page_number, page_size: 3)

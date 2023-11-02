@@ -256,4 +256,21 @@ defmodule Footballratings.Ratings.RatingsTest do
       assert first[:team] == team1.name
     end
   end
+
+  describe "count_ratings_by_user/2" do
+    test "returns the number of ratings for the given user" do
+      match = InternalDataFixtures.create_match()
+      user1 = AccountsFixtures.users_fixture()
+      user2 = AccountsFixtures.users_fixture()
+
+      attrs = %{match_id: match.id, users_id: user1.id, team_id: match.home_team_id}
+      assert {:ok, _} = Ratings.create_match_ratings(attrs)
+
+      a_week_ago = DateTime.utc_now() |> DateTime.add(-7, :day)
+      tomorrow = DateTime.utc_now() |> DateTime.add(1, :day)
+      assert 0 == Ratings.count_ratings_by_user(user2.id, a_week_ago)
+      assert 0 == Ratings.count_ratings_by_user(user1.id, tomorrow)
+      assert 1 == Ratings.count_ratings_by_user(user1.id, a_week_ago)
+    end
+  end
 end
