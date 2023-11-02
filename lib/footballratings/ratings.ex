@@ -62,7 +62,7 @@ defmodule Footballratings.Ratings do
       # Must do it with changesets, otherwise the transaction raises instead of rolling back
       players
       |> players_ratings_maps(scores, match_ratings.id)
-      |> Enum.map(&create_player_ratings!/1)
+      |> Enum.each(&create_player_ratings!/1)
 
       match_ratings
     end)

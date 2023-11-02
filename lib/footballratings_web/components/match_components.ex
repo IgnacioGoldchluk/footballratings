@@ -53,8 +53,7 @@ defmodule FootballratingsWeb.MatchComponents do
   def acronym(words) do
     words
     |> String.split()
-    |> Enum.map(&String.first/1)
-    |> Enum.join("")
+    |> Enum.map_join("", &String.first/1)
   end
 
   defp result(assigns) do

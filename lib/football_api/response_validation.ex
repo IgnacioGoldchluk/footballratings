@@ -57,8 +57,7 @@ defmodule FootballApi.ResponseValidation do
 
   defp format_errors(errors) do
     errors
-    |> Enum.map(fn {error_type, error_val} -> "#{error_type}: #{error_val}" end)
-    |> Enum.join(", ")
+    |> Enum.map_join(", ", fn {err_type, err_val} -> "#{err_type} #{err_val}" end)
   end
 
   defp extract_response(%{"response" => response}), do: {:ok, response}

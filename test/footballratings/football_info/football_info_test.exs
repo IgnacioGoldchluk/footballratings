@@ -42,7 +42,7 @@ defmodule Footballratings.FootballInfo.FootballInfoTest do
 
       matches = FootballInfo.matches_available_for_rating_for_team(non_existing_team_id)
 
-      assert length(matches) == 0
+      assert Enum.empty?(matches)
     end
 
     test "teams_a_player_has_played_for/1 returns unique teams" do
