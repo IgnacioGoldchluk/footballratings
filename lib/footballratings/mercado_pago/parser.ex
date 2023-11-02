@@ -14,8 +14,7 @@ defmodule Footballratings.MercadoPago.Parser do
     {:ok, formatted_plan}
   end
 
-  def parse_plan(plan),
-    do: {:error, "Invalid plan format received, #{Jason.encode!(plan)}"}
+  def parse_plan(plan), do: {:error, "Invalid plan format received, #{Jason.encode!(plan)}"}
 
   def parse_subscription(%{"id" => id, "status" => status, "preapproval_plan_id" => plan_id}) do
     parsed =
