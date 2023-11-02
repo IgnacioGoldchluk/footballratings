@@ -1,4 +1,8 @@
 defmodule Footballratings.MercadoPagoResponses do
+  @moduledoc """
+  Real(ish) responses that can be used as mocks when testing.
+  """
+
   def get_plan_mock_response() do
     {:ok,
      %Req.Response{

@@ -1,4 +1,8 @@
 defmodule FootballratingsWeb.PlayerComponents do
+  @moduledoc """
+  Components for `Player` records.
+  """
+
   use FootballratingsWeb, :html
   use Phoenix.Component
 

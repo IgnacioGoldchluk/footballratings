@@ -1,4 +1,8 @@
 defmodule Footballratings.Workers.WorkersLogger do
+  @moduledoc """
+  Callbacks to log Oban events.
+  """
+
   require Logger
 
   def handle_event([:oban, :job, :start], measure, meta, _) do

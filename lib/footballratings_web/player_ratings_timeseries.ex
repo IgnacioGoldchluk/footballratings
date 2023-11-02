@@ -1,4 +1,7 @@
 defmodule FootballratingsWeb.PlayerRatingsTimeseries do
+  @moduledoc """
+  Plot generator for a given player.
+  """
   alias Contex.{Dataset, Plot, ContinuousLinearScale, Scale, TimeScale}
 
   def make_line_plot_dataset(data) do

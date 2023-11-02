@@ -1,4 +1,7 @@
 defmodule Footballratings.Accounts.UsersToken do
+  @moduledoc """
+  In-DB token handling for authentication.
+  """
   use Ecto.Schema
   import Ecto.Query
   alias Footballratings.Accounts.UsersToken

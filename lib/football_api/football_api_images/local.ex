@@ -1,4 +1,8 @@
 defmodule FootballApi.FootballApiImages.Local do
+  @moduledoc """
+  Local path to images when testing.
+  """
+
   @behaviour FootballApi.FootballApiImages.Behaviour
 
   @impl FootballApi.FootballApiImages.Behaviour

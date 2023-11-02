@@ -1,4 +1,7 @@
 defmodule Footballratings.FootballInfo.Match.Query do
+  @moduledoc """
+  Query utilities for Match records.
+  """
   import Ecto.Query
 
   alias Footballratings.FootballInfo.{Match}

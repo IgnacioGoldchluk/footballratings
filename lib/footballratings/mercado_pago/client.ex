@@ -1,4 +1,8 @@
 defmodule Footballratings.MercadoPago.Client do
+  @moduledoc """
+  Base client for Galperin's evil corporation API.
+  """
+
   @behaviour Footballratings.MercadoPago.ClientBehaviour
   @base_url "https://api.mercadopago.com"
 

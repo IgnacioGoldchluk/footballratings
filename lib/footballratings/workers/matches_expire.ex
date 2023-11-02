@@ -1,4 +1,10 @@
 defmodule Footballratings.Workers.MatchesExpire do
+  @moduledoc """
+  Expires matches older than the specified days.
+
+  The goal is to prevent users from rating outdated/irrelevant matches.
+  """
+
   use Oban.Worker, queue: :default
 
   alias Footballratings.FootballInfo

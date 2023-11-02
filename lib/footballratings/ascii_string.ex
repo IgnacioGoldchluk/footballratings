@@ -1,4 +1,7 @@
 defmodule Footballratings.AsciiString do
+  @moduledoc """
+  Converts strings to ASCII types
+  """
   use Ecto.Type
 
   def type(), do: :string

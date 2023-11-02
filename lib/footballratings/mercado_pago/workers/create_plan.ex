@@ -1,4 +1,7 @@
 defmodule Footballratings.MercadoPago.Workers.CreatePlan do
+  @moduledoc """
+  Fetches plans from the 3rd party provider and inserts them into the DB.
+  """
   use Oban.Worker
 
   alias Footballratings.{Billing, MercadoPago}

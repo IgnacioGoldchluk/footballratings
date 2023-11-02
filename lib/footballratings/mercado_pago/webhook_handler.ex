@@ -1,4 +1,7 @@
 defmodule Footballratings.MercadoPago.WebhookHandler do
+  @moduledoc """
+  Receives webhook notifications and delegates to workers.
+  """
   alias Footballratings.MercadoPago.Workers
 
   def handle(req) when is_map_key(req, "type"), do: handle(req["type"], req)

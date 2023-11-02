@@ -1,4 +1,7 @@
 defmodule Footballratings.Accounts.Users do
+  @moduledoc """
+  Users records. The plural noun was a mistake.
+  """
   use Ecto.Schema
   import Ecto.Changeset
 

@@ -1,4 +1,8 @@
 defmodule FootballApi.Models.Matches do
+  @moduledoc """
+  External API schema for validation.
+  """
+
   @schema """
           {
             "type": "object",

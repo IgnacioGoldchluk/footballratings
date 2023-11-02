@@ -1,4 +1,8 @@
 defmodule Footballratings.LiveStats do
+  @moduledoc """
+  Periodically fetches basic stats and broadcasts the results.
+  """
+
   use GenServer
   @update_interval_milliseconds 60_000
 

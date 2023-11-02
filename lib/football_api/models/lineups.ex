@@ -1,4 +1,7 @@
 defmodule FootballApi.Models.Lineups do
+  @moduledoc """
+  External API schema for validation.
+  """
   @schema """
           {
             "type": "object",

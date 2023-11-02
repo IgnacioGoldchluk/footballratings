@@ -1,4 +1,9 @@
 defmodule Footballratings.Billing do
+  @moduledoc """
+  The Billing context.
+
+  Handles plans, subscriptions, etc.
+  """
   alias Footballratings.Billing.{Plan, Subscription}
   alias Footballratings.Repo
 

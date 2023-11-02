@@ -1,4 +1,7 @@
 defmodule FootballratingsWeb.UsersAuth do
+  @moduledoc """
+  Authorization records.
+  """
   use FootballratingsWeb, :verified_routes
 
   import Plug.Conn

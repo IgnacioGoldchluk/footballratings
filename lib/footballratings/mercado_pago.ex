@@ -1,4 +1,7 @@
 defmodule Footballratings.MercadoPago do
+  @moduledoc """
+  Interface with MercadoPago
+  """
   alias Footballratings.MercadoPago
   alias Footballratings.MercadoPago.Parser
 

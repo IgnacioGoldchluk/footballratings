@@ -1,4 +1,9 @@
 defmodule Footballratings.BillingFixtures do
+  @moduledoc """
+  This module defines test helpers for creating
+  entities via the `Footballratings.Billing` context.
+  """
+
   def unique_external_id(), do: Ecto.UUID.generate()
 
   def valid_plan_attributes(attrs \\ %{}) do

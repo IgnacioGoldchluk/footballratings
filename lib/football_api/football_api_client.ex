@@ -1,4 +1,8 @@
 defmodule FootballApi.FootballApiClient do
+  @moduledoc """
+  Base implementation of the 3rd party API client.
+  """
+
   @behaviour FootballApi.FootballApiClientBehaviour
 
   @impl FootballApi.FootballApiClientBehaviour

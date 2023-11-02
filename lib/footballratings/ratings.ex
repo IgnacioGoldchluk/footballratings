@@ -1,4 +1,8 @@
 defmodule Footballratings.Ratings do
+  @moduledoc """
+  The Ratings context.
+  """
+
   alias Footballratings.Repo
   alias Footballratings.Ratings.{PlayerRatings, MatchRatings}
   alias Footballratings.FootballInfo.Match

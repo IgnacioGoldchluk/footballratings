@@ -1,4 +1,7 @@
 defmodule Footballratings.MercadoPago.Parser do
+  @moduledoc """
+  Converts 3rd party API response objects into internal representation.
+  """
   alias Footballratings.Billing
 
   def parse_plan(%{"auto_recurring" => recurring, "id" => id, "status" => status}) do

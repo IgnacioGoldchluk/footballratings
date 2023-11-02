@@ -1,4 +1,8 @@
 defmodule Footballratings.Notifiers.Match do
+  @moduledoc """
+  Handles broadcasting of a new Match.
+  """
+
   alias Footballratings.FootballInfo.Match
   alias Phoenix.PubSub
 

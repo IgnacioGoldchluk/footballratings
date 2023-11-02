@@ -1,5 +1,9 @@
 defmodule Footballratings.RatingsFixtures do
-  # Alias instead of import because I don't want to accidentally fill the local namespace.
+  @moduledoc """
+  This module defines test helpers for creating
+  entities via the `Footballratings.Ratings` context.
+  """
+
   alias Footballratings.InternalDataFixtures
   alias Footballratings.AccountsFixtures
 

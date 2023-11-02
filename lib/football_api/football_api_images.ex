@@ -1,4 +1,8 @@
 defmodule FootballApi.FootballApiImages do
+  @moduledoc """
+  Fetches/stores player and team images/logos.
+  """
+
   @behaviour FootballApi.FootballApiImages.Behaviour
 
   defp client_impl() do

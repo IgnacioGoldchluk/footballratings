@@ -1,4 +1,7 @@
 defmodule Footballratings.Billing.Subscription do
+  @moduledoc """
+  Subscriptions of plans for users.
+  """
   use Ecto.Schema
   import Ecto.Changeset
 

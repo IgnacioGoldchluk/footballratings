@@ -1,4 +1,7 @@
 defmodule FootballratingsWeb.TeamComponents do
+  @moduledoc """
+  Components for `Team` records.
+  """
   use Phoenix.Component
 
   attr(:name, :string, required: true)

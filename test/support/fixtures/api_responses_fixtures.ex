@@ -1,4 +1,8 @@
 defmodule Footballratings.ApiResponsesFixtures do
+  @moduledoc """
+  Real(ish) responses that can be used for mocks when testing
+  """
+
   @path "test/support/fixtures/responses"
 
   def read_file(filename), do: File.read!("#{@path}/#{filename}")

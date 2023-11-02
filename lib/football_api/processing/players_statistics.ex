@@ -1,4 +1,8 @@
 defmodule FootballApi.Processing.PlayersStatistics do
+  @moduledoc """
+  Handles and converts 3rd party provider respones into internal representation.
+  """
+
   def extract_players_that_played(%{"players" => players, "team" => %{"id" => team_id}}) do
     players
     |> Enum.map(&to_internal_schema/1)

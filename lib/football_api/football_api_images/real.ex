@@ -1,4 +1,8 @@
 defmodule FootballApi.FootballApiImages.Real do
+  @moduledoc """
+  Real path to images (to be deleted).
+  """
+
   @behaviour FootballApi.FootballApiImages.Behaviour
 
   @impl FootballApi.FootballApiImages.Behaviour

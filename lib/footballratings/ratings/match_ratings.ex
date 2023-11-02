@@ -1,4 +1,7 @@
 defmodule Footballratings.Ratings.MatchRatings do
+  @moduledoc """
+  Ratings for a specific match by a given user.
+  """
   use Ecto.Schema
   import Ecto.Changeset
 

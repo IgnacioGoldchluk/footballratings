@@ -1,4 +1,8 @@
 defmodule FootballApi.ResponseValidation do
+  @moduledoc """
+  Validates responses from 3rd party API, since they tend to be a bit unreliable.
+  """
+
   def validate_response(%HTTPoison.Response{} = response, json_schema) do
     with {:ok, response} <- validate_headers(response),
          {:ok, response} <- validate_status(response),
