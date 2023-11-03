@@ -23,6 +23,7 @@ defmodule FootballratingsWeb.BillingLive.Checkout do
           />
         </div>
         <div id="cardPaymentBrick_container"></div>
+        <.button class="btn btn-primary text-white" id="payment-button">Pagar</.button>
         <script>
           const mp = new MercadoPago('<%= @public_key %>', {
             locale: 'es-AR'
@@ -38,6 +39,7 @@ defmodule FootballratingsWeb.BillingLive.Checkout do
               },
               customization: {
                 visual: {
+                  hidePaymentButton: true,
                   style: {
                     customVariables: {
                       theme: 'default',
