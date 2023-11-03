@@ -7,6 +7,8 @@ defmodule Footballratings.Billing do
   alias Footballratings.Billing.{Plan, Subscription}
   alias Footballratings.Repo
 
+  import Ecto.Query
+
   def get_plan_by_external_id(external_id) do
     Repo.get_by(Plan, external_id: external_id)
   end
@@ -34,5 +36,13 @@ defmodule Footballratings.Billing do
     get_subscription_by_external_id(external_id)
     |> Ecto.Changeset.change(status: status)
     |> Repo.update()
+  end
+
+  def latest_active_plan do
+    Plan
+    |> where([p], p.status == :active)
+    |> order_by([p], desc: p.updated_at)
+    |> first()
+    |> Repo.one()
   end
 end

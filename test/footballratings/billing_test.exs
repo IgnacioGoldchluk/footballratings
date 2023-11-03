@@ -125,4 +125,14 @@ defmodule Footballratings.BillingTest do
       assert updated_sub.external_id == id
     end
   end
+
+  describe "latest_active_plan/1" do
+    test "returns the latest active plan" do
+      p1 = plan_fixture(%{status: :active})
+      _p2 = plan_fixture(%{status: :cancelled})
+
+      plan = Billing.latest_active_plan()
+      assert plan.external_id == p1.external_id
+    end
+  end
 end
