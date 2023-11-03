@@ -29,4 +29,16 @@ defmodule Footballratings.MercadoPago do
       {:error, exception} -> {:error, exception}
     end
   end
+
+  def create_subscription(data) do
+    endpoint = "/preapproval"
+
+    with {:ok, sub_data} <- Parser.to_subscription_data(data),
+         {:ok, %Req.Response{body: body}} <- api_client().request(:post, endpoint, sub_data),
+         {:ok, new_sub} <- Parser.parse_created_subscription(body) do
+      {:ok, new_sub}
+    else
+      {:error, exception} -> {:error, exception}
+    end
+  end
 end

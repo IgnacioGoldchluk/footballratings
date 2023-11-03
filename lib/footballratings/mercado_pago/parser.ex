@@ -34,4 +34,37 @@ defmodule Footballratings.MercadoPago.Parser do
 
   defp parse_subscription_status("authorized"), do: "active"
   defp parse_subscription_status(status), do: status
+
+  def to_subscription_data(%{
+        "token" => token,
+        "preapproval_plan_id" => plan_id,
+        "payer" => %{"email" => payer_email}
+      }) do
+    data = %{
+      "card_token_id" => token,
+      "payer_email" => payer_email,
+      "preapproval_plan_id" => plan_id
+    }
+
+    {:ok, data}
+  end
+
+  def to_subscription_data(sub), do: {:error, "Invalid subscription format #{Jason.encode!(sub)}"}
+
+  def parse_created_subscription(%{
+        "external_id" => id,
+        "preapproval_plan_id" => plan_id,
+        "status" => status
+      }) do
+    data = %{
+      "external_id" => id,
+      "plan_id" => plan_id,
+      "status" => status
+    }
+
+    {:ok, data}
+  end
+
+  def parse_created_subscription(sub),
+    do: {:error, "Invalid created subscription format #{Jason.encode!(sub)}"}
 end
