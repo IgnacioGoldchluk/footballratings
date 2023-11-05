@@ -45,4 +45,11 @@ defmodule Footballratings.Billing do
     |> first()
     |> Repo.one()
   end
+
+  def subscriptions_for_user(user_id) do
+    Subscription
+    |> where([s], s.users_id == ^user_id)
+    |> order_by([s], desc: s.inserted_at)
+    |> Repo.all()
+  end
 end

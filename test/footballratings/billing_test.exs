@@ -3,6 +3,7 @@ defmodule Footballratings.BillingTest do
   alias Footballratings.Billing
   alias Footballratings.Billing.{Plan, Subscription}
   import Footballratings.BillingFixtures
+  import Footballratings.AccountsFixtures
 
   describe "get_plan_by_external_id/1" do
     test "returns plan if external_id exists" do
@@ -133,6 +134,24 @@ defmodule Footballratings.BillingTest do
 
       plan = Billing.latest_active_plan()
       assert plan.external_id == p1.external_id
+    end
+  end
+
+  describe "subscriptions_for_user/1" do
+    setup do
+      %{user: users_fixture()}
+    end
+
+    test "returns empty when no subscriptions", %{user: user} do
+      assert Enum.empty?(Billing.subscriptions_for_user(user.id))
+    end
+
+    test "returns subscriptions sorted by date", %{user: user} do
+      sub1 = subscription_fixture(%{users_id: user.id})
+
+      assert [sub] = Billing.subscriptions_for_user(user.id)
+
+      assert sub1.external_id == sub.external_id
     end
   end
 end
