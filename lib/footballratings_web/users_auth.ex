@@ -190,7 +190,7 @@ defmodule FootballratingsWeb.UsersAuth do
     socket =
       socket
       |> Phoenix.LiveView.put_flash(:error, "You must set your username first.")
-      |> Phoenix.LiveView.redirect(to: ~p"/user/settings")
+      |> Phoenix.LiveView.redirect(to: ~p"/user/settings/set-username")
 
     {:halt, socket}
   end

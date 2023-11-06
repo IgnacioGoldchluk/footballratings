@@ -22,6 +22,11 @@
         <li class="text-m">
           (<%= @current_users.email %>)
         </li>
+        <li class="text-m hover:text-primary">
+          <a href={~p"/user/settings"}>
+            Settings
+          </a>
+        </li>
         <li>
           <.link href={~p"/users/log_out"} method="delete" class="hover:text-primary">
             <.button class="btn-primary">Log out</.button>

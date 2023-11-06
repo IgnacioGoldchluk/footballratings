@@ -4,6 +4,8 @@ defmodule FootballratingsWeb.SubscriptionsControllerTest do
 
   use FootballratingsWeb.ConnCase
 
+  @subscriptions_endpoint "/user/settings/subscriptions"
+
   describe "subscriptions page" do
     setup do
       user = users_fixture()
@@ -17,12 +19,12 @@ defmodule FootballratingsWeb.SubscriptionsControllerTest do
     end
 
     test "does not render if not logged in", %{conn: conn} do
-      conn = get(conn, ~p"/user/subscriptions")
+      conn = get(conn, @subscriptions_endpoint)
       assert redirected_to(conn) == ~p"/"
     end
 
     test "shows the subscriptions for a logged in user", %{conn: conn, user: user} do
-      conn = conn |> log_in_users(user) |> get(~p"/user/subscriptions")
+      conn = conn |> log_in_users(user) |> get(@subscriptions_endpoint)
 
       html = html_response(conn, 200)
 

@@ -72,12 +72,14 @@ defmodule FootballratingsWeb.Router do
   scope "/", FootballratingsWeb do
     pipe_through([:browser, :require_authenticated_users])
 
-    get("/user/subscriptions", SubscriptionController, :index)
+    get("/user/settings", UserSettingsController, :index)
+
+    get("/user/settings/subscriptions", SubscriptionController, :index)
 
     live_session :require_authenticated_users,
       on_mount: [{FootballratingsWeb.UsersAuth, :ensure_authenticated}] do
-      live("/user/settings", UsersSetUsernameLive, :set_username)
-      live("/user/checkout", BillingLive.Checkout, :checkout)
+      live("/user/settings/set-username", UsersSetUsernameLive, :set_username)
+      live("/user/settings/checkout", BillingLive.Checkout, :checkout)
     end
 
     live_session :ensure_username_set,

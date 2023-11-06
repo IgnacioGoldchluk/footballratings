@@ -33,7 +33,7 @@ defmodule FootballratingsWeb.MatchLive.RateTest do
     test "redirects to set username if not set", %{conn: conn, match: match, team: team} do
       user = AccountsFixtures.users_fixture(%{username: nil})
 
-      {:error, {:redirect, %{to: "/user/settings"}}} =
+      {:error, {:redirect, %{to: "/user/settings/set-username"}}} =
         conn |> log_in_users(user) |> live(~p"/matches/#{match.id}/rate/#{team.id}")
     end
 

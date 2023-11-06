@@ -3,20 +3,22 @@ defmodule FootballratingsWeb.UsersSetUsernameLiveTest do
   import Phoenix.LiveViewTest
   import Footballratings.AccountsFixtures
 
+  @set_username_endpoint "/user/settings/set-username"
+
   setup do
     %{users: users_fixture(username: nil)}
   end
 
   describe "Main page" do
     test "Prompts for username creation", %{conn: conn, users: users} do
-      {:ok, _view, html} = conn |> log_in_users(users) |> live(~p"/user/settings")
+      {:ok, _view, html} = conn |> log_in_users(users) |> live(@set_username_endpoint)
 
       assert html =~ "Set username"
       assert html =~ "Set a unique username to continue"
     end
 
     test "Happy path", %{conn: conn, users: users} do
-      {:ok, view, html} = conn |> log_in_users(users) |> live(~p"/user/settings")
+      {:ok, view, html} = conn |> log_in_users(users) |> live(@set_username_endpoint)
 
       # Initial render, shouldn't show availability
       refute html =~ "Username is available!"
@@ -39,7 +41,7 @@ defmodule FootballratingsWeb.UsersSetUsernameLiveTest do
       assert path =~ "/"
 
       # We already set the username and cannot change it!
-      {:ok, _view, html} = conn |> log_in_users(users) |> live(~p"/user/settings")
+      {:ok, _view, html} = conn |> log_in_users(users) |> live(@set_username_endpoint)
 
       assert "You already set your username"
       refute html =~ "Set username"
@@ -49,7 +51,7 @@ defmodule FootballratingsWeb.UsersSetUsernameLiveTest do
       duplicated = "TakenUser"
       users_fixture(%{username: duplicated})
 
-      {:ok, view, _html} = conn |> log_in_users(users) |> live(~p"/user/settings")
+      {:ok, view, _html} = conn |> log_in_users(users) |> live(@set_username_endpoint)
 
       view
       |> form("#username-form", %{"set-username" => %{username: duplicated}})
