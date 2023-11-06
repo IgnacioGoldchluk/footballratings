@@ -19,6 +19,7 @@ defmodule Footballratings.MercadoPago.Client do
       base_url: @base_url,
       auth: {:bearer, access_token()}
     )
+    |> Req.Request.put_header("Content-Type", "application/json")
   end
 
   def request(method, endpoint, body \\ nil) do
