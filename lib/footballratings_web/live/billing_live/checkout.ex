@@ -23,11 +23,13 @@ defmodule FootballratingsWeb.BillingLive.Checkout do
           frequency_type={@plan.frequency_type}
         />
       </div>
-      <div id="cardPaymentBrick_container"></div>
+      <div id="cardPaymentBrick_container" phx-update="ignore"></div>
     </div>
-    <button class="btn btn-primary text-white" onclick="window.createPayment()" id="payment-button">
-      Pagar
-    </button>
+    <%= if @checkout_loaded do %>
+      <button class="btn btn-primary text-white" onclick="window.createPayment()" id="payment-button">
+        Pagar
+      </button>
+    <% end %>
     """
   end
 
@@ -37,6 +39,7 @@ defmodule FootballratingsWeb.BillingLive.Checkout do
       socket
       |> assign(:public_key, MercadoPago.Client.public_key())
       |> assign(:plan, Billing.latest_active_plan())
+      |> assign(:checkout_loaded, false)
 
     {:ok, socket}
   end
@@ -45,5 +48,11 @@ defmodule FootballratingsWeb.BillingLive.Checkout do
   def handle_event("pay", _params, socket) do
     # TODO: Create payment here
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("checkout-ready", _, socket) do
+    IO.inspect("asd")
+    {:noreply, assign(socket, :checkout_loaded, true)}
   end
 end

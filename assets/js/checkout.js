@@ -38,7 +38,10 @@ export default Checkout = {
           }
         },
         callbacks: {
-          onReady: () => { },
+          onReady: () => {
+            const e = new Event("checkout:ready");
+            document.dispatchEvent(e);
+          },
           onSubmit: (cardFormData) => { },
           onError: (error) => { },
         },
