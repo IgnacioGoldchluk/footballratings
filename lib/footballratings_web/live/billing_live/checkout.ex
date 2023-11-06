@@ -51,13 +51,35 @@ defmodule FootballratingsWeb.BillingLive.Checkout do
   end
 
   @impl true
-  def handle_event("pay", _params, socket) do
-    # TODO: Create payment here
-    {:noreply, socket}
+  def handle_event("pay", params, %{assigns: assigns} = socket) do
+    %{current_users: %{id: user_id}, plan: %{external_id: plan_id}} = assigns
+
+    case create_subscription(params, plan_id, user_id) do
+      {:ok, _} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Subscribed successfully!")
+         |> redirect(to: ~p"/")}
+
+      {:error, reason} ->
+        {:noreply,
+         socket
+         |> put_flash(:error, "An error occurred, please try again later")}
+    end
   end
 
   @impl true
   def handle_event("checkout-ready", _, socket) do
     {:noreply, assign(socket, :checkout_loaded, true)}
+  end
+
+  defp create_subscription(params, plan_id, user_id) do
+    with {:ok, external_subscription} <-
+           MercadoPago.create_subscription(params, plan_id, user_id),
+         {:ok, internal_subscription} <- Billing.create_subscription(external_subscription) do
+      {:ok, internal_subscription}
+    else
+      {:error, reason} -> {:error, reason}
+    end
   end
 end

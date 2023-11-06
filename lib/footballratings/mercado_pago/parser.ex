@@ -34,4 +34,37 @@ defmodule Footballratings.MercadoPago.Parser do
 
   defp parse_subscription_status("authorized"), do: "active"
   defp parse_subscription_status(status), do: status
+
+  def create_subscription(%{"token" => token, "payer" => %{"email" => email}}, plan_id) do
+    parsed = %{
+      "card_token_id" => token,
+      "payer_email" => email,
+      "preapproval_plan_id" => plan_id,
+      "status" => "authorized"
+    }
+
+    {:ok, parsed}
+  end
+
+  def create_subscription(sub, _, _),
+    do: {:error, "Invalid subscription format: #{Jason.encode!(sub)}"}
+
+  def created_subscription(%{"id" => id, "preapproval_plan_id" => plan_id, "status" => status}) do
+    parsed = %{
+      "external_id" => id,
+      "plan_id" => plan_id,
+      "status" => parse_subscription_status(status)
+    }
+
+    {:ok, parsed}
+  end
+
+  def created_subscription(sub),
+    do: {:error, "Invalid subscription format: #{Jason.encode!(sub)}"}
+
+  def add_user_to_subscription(subscription, user_id) when is_map(subscription) do
+    {:ok, Map.put(subscription, "user_id", user_id)}
+  end
+
+  def add_user_to_subscription(_, _), do: {:error, "subscription is not a map"}
 end
