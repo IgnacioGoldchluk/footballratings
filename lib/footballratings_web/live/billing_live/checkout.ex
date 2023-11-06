@@ -14,7 +14,7 @@ defmodule FootballratingsWeb.BillingLive.Checkout do
     <div id="plan-amount" class="hidden"><%= @plan.amount %></div>
     <div id="public-key" class="hidden"><%= @public_key %></div>
     <div id="main-checkout-container" phx-hook="Checkout">
-      <div class="text-xl">
+      <div class="text-xl font-semibold px-4">
         Subscribe for
         <FootballratingsWeb.PlanComponents.plan_billing
           currency={@plan.currency}
@@ -26,9 +26,15 @@ defmodule FootballratingsWeb.BillingLive.Checkout do
       <div id="cardPaymentBrick_container" phx-update="ignore"></div>
     </div>
     <%= if @checkout_loaded do %>
-      <button class="btn btn-primary text-white" onclick="window.createPayment()" id="payment-button">
-        Pagar
-      </button>
+      <div class="px-4">
+        <button
+          class="btn btn-primary text-white"
+          onclick="window.createPayment()"
+          id="payment-button"
+        >
+          Pagar
+        </button>
+      </div>
     <% end %>
     """
   end
@@ -52,7 +58,6 @@ defmodule FootballratingsWeb.BillingLive.Checkout do
 
   @impl true
   def handle_event("checkout-ready", _, socket) do
-    IO.inspect("asd")
     {:noreply, assign(socket, :checkout_loaded, true)}
   end
 end
