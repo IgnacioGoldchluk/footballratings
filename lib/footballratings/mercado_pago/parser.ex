@@ -46,7 +46,7 @@ defmodule Footballratings.MercadoPago.Parser do
     {:ok, parsed}
   end
 
-  def create_subscription(sub, _, _),
+  def create_subscription(sub, _),
     do: {:error, "Invalid subscription format: #{Jason.encode!(sub)}"}
 
   def created_subscription(%{"id" => id, "preapproval_plan_id" => plan_id, "status" => status}) do

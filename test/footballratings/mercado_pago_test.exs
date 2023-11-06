@@ -6,6 +6,9 @@ defmodule Footballratings.MercadoPagoTest do
 
   alias Footballratings.MercadoPago
 
+  import Footballratings.AccountsFixtures
+  import Footballratings.BillingFixtures
+
   describe "get_plan/1" do
     test "returns formatted plan when success" do
       stub(MercadoPagoClientMock, :request, fn
@@ -46,6 +49,45 @@ defmodule Footballratings.MercadoPagoTest do
       end)
 
       assert {:error, _} = MercadoPago.get_subscription("123")
+    end
+  end
+
+  describe "create_subscription/1" do
+    setup do
+      %{user: users_fixture(), plan: plan_fixture()}
+    end
+
+    test "creates the subscription when params are valid", %{user: user, plan: plan} do
+      stub(MercadoPagoClientMock, :request, fn
+        :post, "/preapproval", _ -> MercadoPagoResponses.created_subscription()
+      end)
+
+      params = %{"token" => Ecto.UUID.generate(), "payer" => %{"email" => user.email}}
+
+      assert {:ok, subscription} =
+               MercadoPago.create_subscription(params, plan.external_id, user.id)
+
+      assert subscription["user_id"] == user.id
+    end
+
+    test "returns error if payload is invalid", %{user: user, plan: plan} do
+      stub(MercadoPagoClientMock, :request, fn
+        :post, "/preapproval", _ -> MercadoPagoResponses.created_subscription()
+      end)
+
+      params = %{"token" => Ecto.UUID.generate(), "user_email" => user.email}
+
+      assert {:error, _} = MercadoPago.create_subscription(params, plan.external_id, user.id)
+    end
+
+    test "returns error if the response is invalid", %{user: user, plan: plan} do
+      stub(MercadoPagoClientMock, :request, fn
+        :post, "/preapproval", _ -> {:ok, %Req.Response{body: %{"id" => "123"}}}
+      end)
+
+      params = %{"token" => Ecto.UUID.generate(), "payer" => %{"email" => user.email}}
+
+      assert {:error, _} = MercadoPago.create_subscription(params, plan.id, user.id)
     end
   end
 end

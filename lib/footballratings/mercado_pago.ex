@@ -32,11 +32,10 @@ defmodule Footballratings.MercadoPago do
 
   def create_subscription(params, plan_id, user_id) do
     with {:ok, sub} <- Parser.create_subscription(params, plan_id),
-         {:ok, %Req.Response{body: body}} <-
-           api_client().request(:post, "/preapproval", sub |> Jason.encode!()),
-         {:ok, parsed_response} <- Parser.created_subscription(body),
-         {:ok, subscription_with_user} <-
-           Parser.add_user_to_subscription(parsed_response, user_id) do
+         {:ok, encoded} <- Jason.encode(sub),
+         {:ok, %Req.Response{body: body}} <- api_client().request(:post, "/preapproval", encoded),
+         {:ok, parsed} <- Parser.created_subscription(body),
+         {:ok, subscription_with_user} <- Parser.add_user_to_subscription(parsed, user_id) do
       {:ok, subscription_with_user}
     else
       {:error, reason} -> {:error, reason}
