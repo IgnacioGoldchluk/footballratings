@@ -25,17 +25,6 @@ defmodule FootballratingsWeb.BillingLive.Checkout do
       </div>
       <div id="cardPaymentBrick_container" phx-update="ignore"></div>
     </div>
-    <%= if @checkout_loaded do %>
-      <div class="px-4">
-        <button
-          class="btn btn-primary text-white"
-          onclick="window.createPayment()"
-          id="payment-button"
-        >
-          Pagar
-        </button>
-      </div>
-    <% end %>
     """
   end
 
@@ -45,7 +34,6 @@ defmodule FootballratingsWeb.BillingLive.Checkout do
       socket
       |> assign(:public_key, MercadoPago.Client.public_key())
       |> assign(:plan, Billing.latest_active_plan())
-      |> assign(:checkout_loaded, false)
 
     {:ok, socket}
   end
@@ -61,16 +49,11 @@ defmodule FootballratingsWeb.BillingLive.Checkout do
          |> put_flash(:info, "Subscribed successfully!")
          |> redirect(to: ~p"/")}
 
-      {:error, reason} ->
+      {:error, _} ->
         {:noreply,
          socket
          |> put_flash(:error, "An error occurred, please try again later")}
     end
-  end
-
-  @impl true
-  def handle_event("checkout-ready", _, socket) do
-    {:noreply, assign(socket, :checkout_loaded, true)}
   end
 
   defp create_subscription(params, plan_id, user_id) do

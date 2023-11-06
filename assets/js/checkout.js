@@ -5,9 +5,6 @@ export default Checkout = {
     document.addEventListener("checkout:pay", e => {
       this.pushEvent("pay", e.detail.payload)
     });
-    document.addEventListener("checkout:ready", e => {
-      this.pushEvent("checkout-ready")
-    });
 
     const publicKey = document.getElementById("public-key").textContent;
     const planAmount = parseInt(document.getElementById("plan-amount").textContent);
@@ -26,7 +23,6 @@ export default Checkout = {
         },
         customization: {
           visual: {
-            hidePaymentButton: true,
             style: {
               customVariables: {
                 theme: 'default', // | 'dark' | 'bootstrap' | 'flat'
@@ -38,27 +34,19 @@ export default Checkout = {
           }
         },
         callbacks: {
-          onReady: () => {
-            const e = new Event("checkout:ready");
+          onReady: () => { },
+          onSubmit: (cardFormData) => {
+            const e = new CustomEvent("checkout:pay", {
+              detail: { payload: cardFormData }
+            });
             document.dispatchEvent(e);
           },
-          onSubmit: (cardFormData) => { },
           onError: (error) => { },
         },
       };
       window.cardPaymentBrickController = await bricksBuilder.create('cardPayment', 'cardPaymentBrick_container', settings);
     };
     renderCardPaymentBrick(bricksBuilder);
-
-    const createPayment = async () => {
-      const payload = await window.cardPaymentBrickController.getFormData();
-      console.log(payload);
-      const e = new CustomEvent("checkout:pay", {
-        detail: { payload }
-      });
-      document.dispatchEvent(e);
-    };
-    window.createPayment = createPayment;
   },
   destroyed() {
     window.cardPaymentBrickController.unmount();
