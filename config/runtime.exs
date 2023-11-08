@@ -20,6 +20,14 @@ if System.get_env("PHX_SERVER") do
   config :footballratings, FootballratingsWeb.Endpoint, server: true
 end
 
+config :ueberauth, Ueberauth.Strategy.Google.OAuth,
+  client_id: System.get_env("CLIENT_ID"),
+  client_secret: System.get_env("CLIENT_SECRET")
+
+config :footballratings, MercadoPago,
+  access_token: System.get_env("MERCADOPAGO_ACCESS_TOKEN"),
+  public_key: System.get_env("MERCADOPAGO_PUBLIC_KEY")
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||
