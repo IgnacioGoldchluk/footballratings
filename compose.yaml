@@ -11,29 +11,10 @@ services:
     ports:
       - ${POSTGRES_PORT}:5432
     healthcheck:
-      test: [ "CMD", "pg_isready", "-q", "-U", "postgres"]
+      test: [ "CMD", "pg_isready", "-q", "-U", "postgres" ]
       timeout: 45s
       interval: 10s
       retries: 10
-
-  application:
-    container_name: footballratings
-    restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile
-    depends_on:
-      postgres:
-        condition: service_healthy
-    ports:
-      - 4000:4000
-    environment:
-      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
-      - CLIENT_ID=${CLIENT_ID}
-      - CLIENT_SECRET=${CLIENT_SECRET}
-      - MERCADOPAGO_ACCESS_TOKEN=${MERCADOPAGO_ACCESS_TOKEN}
-      - MERCADOPAGO_PUBLIC_KEY=${MERCADOPAGO_PUBLIC_KEY}
-      - DATABASE_URL=ecto://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_DB}
 
 volumes:
   dbdata:
