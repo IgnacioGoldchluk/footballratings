@@ -26,6 +26,13 @@ defmodule Footballratings.BillingFixtures do
     })
   end
 
+  def valid_temporal_subscription_attributes(attrs \\ %{}) do
+    Enum.into(attrs, %{
+      plan_id: plan_fixture().external_id,
+      users_id: Footballratings.AccountsFixtures.users_fixture().id
+    })
+  end
+
   def plan_fixture(attrs \\ %{}) do
     {:ok, plan} =
       attrs
@@ -42,5 +49,14 @@ defmodule Footballratings.BillingFixtures do
       |> Footballratings.Billing.create_subscription()
 
     subscription
+  end
+
+  def temporal_subscription_fixture(attrs \\ %{}) do
+    {:ok, temporal_subscription} =
+      attrs
+      |> valid_temporal_subscription_attributes()
+      |> Footballratings.Billing.create_temporal_subscription()
+
+    temporal_subscription
   end
 end

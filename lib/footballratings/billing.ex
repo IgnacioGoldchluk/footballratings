@@ -4,7 +4,7 @@ defmodule Footballratings.Billing do
 
   Handles plans, subscriptions, etc.
   """
-  alias Footballratings.Billing.{Plan, Subscription}
+  alias Footballratings.Billing.{Plan, Subscription, TemporalSubscription}
   alias Footballratings.Repo
 
   import Ecto.Query
@@ -51,5 +51,17 @@ defmodule Footballratings.Billing do
     |> where([s], s.users_id == ^user_id)
     |> order_by([s], desc: s.inserted_at)
     |> Repo.all()
+  end
+
+  def create_temporal_subscription(attrs) do
+    %TemporalSubscription{}
+    |> TemporalSubscription.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def delete_temporal_subscriptions(user_id) do
+    TemporalSubscription
+    |> where([tp], tp.users_id == ^user_id)
+    |> Repo.delete_all()
   end
 end

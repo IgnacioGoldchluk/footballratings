@@ -1,7 +1,7 @@
 defmodule Footballratings.BillingTest do
   use Footballratings.DataCase
   alias Footballratings.Billing
-  alias Footballratings.Billing.{Plan, Subscription}
+  alias Footballratings.Billing.{Plan, Subscription, TemporalSubscription}
   import Footballratings.BillingFixtures
   import Footballratings.AccountsFixtures
 
@@ -152,6 +152,40 @@ defmodule Footballratings.BillingTest do
       assert [sub] = Billing.subscriptions_for_user(user.id)
 
       assert sub1.external_id == sub.external_id
+    end
+  end
+
+  describe "create_temporal_subscription/1" do
+    setup do
+      %{user: users_fixture(), plan: plan_fixture()}
+    end
+
+    test "creates if both user and plan exist", %{user: u, plan: p} do
+      assert {:ok, %TemporalSubscription{} = subscription} =
+               Billing.create_temporal_subscription(%{users_id: u.id, plan_id: p.external_id})
+
+      assert subscription.plan_id == p.external_id
+      assert subscription.users_id == u.id
+    end
+
+    test "fails if either plan or user are invalid", %{user: u, plan: p} do
+      invalid_user_attrs = %{users_id: System.unique_integer([:positive]), plan_id: p.external_id}
+      assert {:error, _} = Billing.create_temporal_subscription(invalid_user_attrs)
+
+      invalid_plan_attrs = %{users_id: u.id, plan_id: Ecto.UUID.generate()}
+      assert {:error, _} = Billing.create_temporal_subscription(invalid_plan_attrs)
+    end
+  end
+
+  describe "delete_temporal_subscriptions/1" do
+    test "deletes only for the specified user" do
+      ts1 = temporal_subscription_fixture()
+      ts2 = temporal_subscription_fixture()
+
+      assert ts1.users_id != ts2.users_id
+
+      {deleted, _} = Billing.delete_temporal_subscriptions(ts1.users_id)
+      assert deleted == 1
     end
   end
 end
