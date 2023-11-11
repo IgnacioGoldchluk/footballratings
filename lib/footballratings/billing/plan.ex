@@ -10,7 +10,7 @@ defmodule Footballratings.Billing.Plan do
     field :frequency, :integer
     field :frequency_type, Ecto.Enum, values: [:days, :months, :years]
     field :amount, :integer
-    field :currency, Ecto.Enum, values: [:ARS]
+    field :currency, Ecto.Enum, values: [:ARS, :USD]
     field :status, Ecto.Enum, values: [:active, :cancelled]
     timestamps()
   end

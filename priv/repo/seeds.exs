@@ -10,10 +10,10 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 Footballratings.Repo.insert!(%Footballratings.Billing.Plan{
-  external_id: Ecto.UUID.generate(),
+  external_id: "1b58f321-8e46-4690-a7e9-eb63ec908bbf",
   frequency: 1,
   frequency_type: :months,
-  amount: 399,
-  currency: :ARS,
+  amount: 1500,
+  currency: :USD,
   status: :active
 })

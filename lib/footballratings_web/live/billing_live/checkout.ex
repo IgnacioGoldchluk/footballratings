@@ -2,29 +2,19 @@ defmodule FootballratingsWeb.BillingLive.Checkout do
   use FootballratingsWeb, :live_view
 
   alias Footballratings.Billing
-  alias Footballratings.MercadoPago
+
+  @base_url "https://unoporuno.lemonsqueezy.com/checkout/buy/"
 
   @impl true
   def render(assigns) do
     ~H"""
-    <head>
-      <script src="https://sdk.mercadopago.com/js/v2">
-      </script>
-    </head>
-    <div id="plan-amount" class="hidden"><%= @plan.amount %></div>
-    <div id="public-key" class="hidden"><%= @public_key %></div>
-    <div id="main-checkout-container" phx-hook="Checkout">
-      <div class="text-xl font-semibold px-4">
-        Subscribe for
-        <FootballratingsWeb.PlanComponents.plan_billing
-          currency={@plan.currency}
-          amount={@plan.amount}
-          frequency={@plan.frequency}
-          frequency_type={@plan.frequency_type}
-        />
-      </div>
-      <div id="cardPaymentBrick_container" phx-update="ignore"></div>
-    </div>
+    <a href={@checkout_url} class="lemonsqueezy-button">
+      <.button class="btn btn-primary">
+        Upgrade to Pro
+      </.button>
+    </a>
+    <script src="https://assets.lemonsqueezy.com/lemon.js" defer>
+    </script>
     """
   end
 
@@ -32,37 +22,16 @@ defmodule FootballratingsWeb.BillingLive.Checkout do
   def mount(_params, _session, socket) do
     socket =
       socket
-      |> assign(:public_key, MercadoPago.Client.public_key())
       |> assign(:plan, Billing.latest_active_plan())
+      |> assign_checkout_url()
 
     {:ok, socket}
   end
 
-  @impl true
-  def handle_event("pay", params, %{assigns: assigns} = socket) do
-    %{current_users: %{id: user_id}, plan: %{external_id: plan_id}} = assigns
+  defp assign_checkout_url(%{assigns: %{current_users: user, plan: plan}} = socket) do
+    url =
+      "#{@base_url}#{plan.external_id}?embed=1&media=0&desc=0&discount=0&checkout[email]=#{user.email}&checkout[custom][user_id]=#{user.id}"
 
-    case create_subscription(params, plan_id, user_id) do
-      {:ok, _} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Subscribed successfully!")
-         |> redirect(to: ~p"/")}
-
-      {:error, _} ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "An error occurred, please try again later")}
-    end
-  end
-
-  defp create_subscription(params, plan_id, user_id) do
-    with {:ok, external_subscription} <-
-           MercadoPago.create_subscription(params, plan_id, user_id),
-         {:ok, internal_subscription} <- Billing.create_subscription(external_subscription) do
-      {:ok, internal_subscription}
-    else
-      {:error, reason} -> {:error, reason}
-    end
+    assign(socket, :checkout_url, url)
   end
 end
