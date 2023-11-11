@@ -7,7 +7,18 @@ defmodule Footballratings.Billing.Subscription do
 
   schema "subscriptions" do
     field :external_id, :string
-    field :status, Ecto.Enum, values: [:pending, :active, :cancelled, :paused]
+
+    field :status, Ecto.Enum,
+      values: [
+        :on_trial,
+        :active,
+        :paused,
+        :past_due,
+        :unpaid,
+        :cancelled,
+        :expired
+      ]
+
     belongs_to :users, Footballratings.Accounts.Users
     belongs_to :plan, Footballratings.Billing.Plan, references: :external_id, type: :string
 

@@ -9,7 +9,7 @@ defmodule FootballratingsWeb.SubscriptionsControllerTest do
   describe "subscriptions page" do
     setup do
       user = users_fixture()
-      statuses = [:active, :pending, :cancelled, :paused]
+      statuses = [:active, :on_trial, :cancelled, :paused]
 
       subscriptions =
         statuses
@@ -30,7 +30,7 @@ defmodule FootballratingsWeb.SubscriptionsControllerTest do
 
       # Assert all statuses are displayed
       assert html =~ "active"
-      assert html =~ "pending"
+      assert html =~ "paused"
       assert html =~ "paused"
       assert html =~ "cancelled"
 

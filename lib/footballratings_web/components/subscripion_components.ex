@@ -20,10 +20,17 @@ defmodule FootballratingsWeb.SubscripionComponents do
 
   defp status_color(status) do
     case status do
+      # Good
+      :on_trial -> "text-green-600"
       :active -> "text-green-600"
-      :pending -> "text-neutral-400"
-      :cancelled -> "text-red-600"
-      :paused -> "text-yellow-300"
+      # Neutral
+      :paused -> "text-neutral-400"
+      :cancelled -> "text-neutral-400"
+      # Warning
+      :past_due -> "text-yellow-300"
+      :unpaid -> "text-yellow-300"
+      # Bad
+      :expired -> "text-red-600"
     end
   end
 end
