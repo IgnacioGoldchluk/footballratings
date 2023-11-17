@@ -1,0 +1,10 @@
+{
+  "coverage_options": {
+    "minimum_coverage": 90
+  },
+  "skip_files": [
+    "lib/football_api/football_api_client.ex",
+    "lib/football_api/football_api_client/football_api_client_base.ex",
+    "lib/footballratings_web/components/core_components.ex"
+  ]
+}

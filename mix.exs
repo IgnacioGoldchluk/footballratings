@@ -11,6 +11,7 @@ defmodule Footballratings.MixProject do
       aliases: aliases(),
       deps: deps(),
       test_coverage: [
+        tool: ExCoveralls,
         ignore_modules: [
           FootballApi.FootballApiClient,
           FootballApi.FootballApiClient.FootballApiClientBase,
@@ -66,6 +67,7 @@ defmodule Footballratings.MixProject do
       {:scrivener_ecto, "~> 2.0"},
       {:json_xema, "~> 0.6.2"},
       {:ueberauth_google, "~> 0.12"},
+      {:excoveralls, "~> 0.18", only: [:dev, :test]},
       {:plug_cowboy, "~> 2.5"}
     ]
   end
